@@ -3,7 +3,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "npx serve -s . -l tcp://0.0.0.0:$PORT",
+    "startCommand": "npx serve . -l tcp://0.0.0.0:$PORT",
     "restartPolicyType": "ON_FAILURE"
   }
 }
