@@ -15,6 +15,7 @@
     "@types/jest": "*",
     "@types/node": "*",
     "jest": "*",
+    "serve": "^14.2.6",
     "ts-jest": "*",
     "ts-node": "*",
     "typescript": "*"
