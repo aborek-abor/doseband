@@ -1,0 +1,22 @@
+{
+  "name": "doseband",
+  "version": "1.0.0",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "test": "jest --config jest.config.json",
+    "test:coverage": "jest --config jest.config.json --coverage",
+    "build": "tsc",
+    "build:check": "tsc --noEmit",
+    "synthetic": "ts-node synthetic/run.ts",
+    "synthetic:fast": "ts-node synthetic/run.ts --fast",
+    "synthetic:full": "ts-node synthetic/run.ts --n 10000"
+  },
+  "devDependencies": {
+    "@types/jest": "*",
+    "@types/node": "*",
+    "jest": "*",
+    "ts-jest": "*",
+    "ts-node": "*",
+    "typescript": "*"
+  }
+}

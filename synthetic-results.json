@@ -1,0 +1,11 @@
+{
+  "totalCases": 133224,
+  "totalPassed": 133224,
+  "totalFailed": 0,
+  "passRate": 100,
+  "monotonicityPassed": 22,
+  "monotonicityFailed": 0,
+  "durationMs": 745,
+  "generatedAt": "2026-04-14T21:28:44.846Z",
+  "passed": true
+}

@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>DoseBand — Clinical Dose Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #f4f2ed;
+  --bg2:      #eceae3;
+  --bg3:      #e2dfd7;
+  --card:     #ffffff;
+  --line:     #d4d0c8;
+  --line2:    #c4c0b6;
+  --muted:    #9a9488;
+  --dim:      #6b6760;
+  --body:     #3a3830;
+  --head:     #1a1810;
+  --green:    #1a7a4a;
+  --green-bg: #e8f5ee;
+  --green-bd: #b8dfc8;
+  --amber:    #9a6200;
+  --amber-bg: #fef3dc;
+  --amber-bd: #f0d080;
+  --red:      #c0392b;
+  --red-bg:   #fdecea;
+  --red-bd:   #f0b8b0;
+  --blue:     #1a5a8a;
+  --blue-bg:  #e8f0f8;
+  --blue-bd:  #b0cce8;
+  --mono:     'IBM Plex Mono', monospace;
+  --sans:     'IBM Plex Sans', sans-serif;
+  --radius:   8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--body);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+.header {
+  background: var(--head);
+  color: #fff;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-logo {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #fff;
+}
+
+.header-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.06em;
+}
+
+.header-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.06em;
+}
+
+/* ── Layout ── */
+.shell {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+/* ── Section titles ── */
+.section-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+/* ── Form elements ── */
+.field { margin-bottom: 14px; }
+.field:last-child { margin-bottom: 0; }
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--dim);
+  margin-bottom: 5px;
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+}
+
+input[type=number], input[type=text], select, textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--line2);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: var(--sans);
+  color: var(--head);
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+  -webkit-appearance: none;
+}
+
+input[type=number]:focus, select:focus {
+  border-color: var(--blue);
+  background: var(--card);
+}
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+/* ── Drug selector ── */
+.drug-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.drug-btn {
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 6px;
+  background: var(--card);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.12s;
+}
+
+.drug-btn:hover { border-color: var(--line2); background: var(--bg); }
+
+.drug-btn.selected {
+  border-color: var(--head);
+  background: var(--head);
+}
+
+.drug-btn-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--head);
+  display: block;
+}
+
+.drug-btn.selected .drug-btn-name { color: #fff; }
+
+.drug-btn-cat {
+  font-size: 10px;
+  font-family: var(--mono);
+  color: var(--muted);
+  margin-top: 2px;
+  display: block;
+}
+
+.drug-btn.selected .drug-btn-cat { color: rgba(255,255,255,0.5); }
+
+/* ── Category filter ── */
+.cat-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.cat-tab {
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  font-size: 11px;
+  font-family: var(--mono);
+  cursor: pointer;
+  color: var(--dim);
+  transition: all 0.12s;
+}
+
+.cat-tab:hover { border-color: var(--line2); }
+.cat-tab.active { background: var(--head); color: #fff; border-color: var(--head); }
+
+/* ── Segment control ── */
+.segment {
+  display: grid;
+  border: 1px solid var(--line2);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.seg-btn {
+  padding: 9px;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-family: var(--sans);
+  cursor: pointer;
+  color: var(--dim);
+  border-right: 1px solid var(--line2);
+  transition: all 0.12s;
+}
+
+.seg-btn:last-child { border-right: none; }
+.seg-btn.active { background: var(--head); color: #fff; font-weight: 500; }
+.seg-btn:hover:not(.active) { background: var(--bg2); }
+
+/* ── Calculate button ── */
+.calc-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--head);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--sans);
+  cursor: pointer;
+  margin: 4px 0 12px;
+  letter-spacing: 0.02em;
+  transition: opacity 0.15s;
+}
+
+.calc-btn:hover { opacity: 0.88; }
+.calc-btn:active { opacity: 0.75; }
+
+/* ── Result card ── */
+.result-card {
+  background: var(--card);
+  border: 2px solid var(--head);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 12px;
+  display: none;
+}
+
+.result-header {
+  background: var(--head);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.result-drug { font-size: 12px; color: rgba(255,255,255,0.6); font-family: var(--mono); }
+.result-band-label { font-size: 11px; color: rgba(255,255,255,0.5); font-family: var(--mono); margin-bottom: 2px; }
+.result-band-val { font-size: 36px; font-weight: 600; color: #fff; font-family: var(--mono); line-height: 1; }
+.result-dose { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 4px; font-family: var(--mono); }
+
+.result-body { padding: 14px 16px; }
+
+/* ── PK metrics ── */
+.pk-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.pk-item {
+  background: var(--bg);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+.pk-val {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--head);
+}
+
+.pk-lbl {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+}
+
+/* ── Flags ── */
+.flag {
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.flag:last-child { margin-bottom: 0; }
+.flag-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+.flag-info    { background: var(--blue-bg);  border: 1px solid var(--blue-bd);  color: var(--blue); }
+.flag-warning { background: var(--amber-bg); border: 1px solid var(--amber-bd); color: var(--amber); }
+.flag-danger  { background: var(--red-bg);   border: 1px solid var(--red-bd);   color: var(--red); }
+
+/* ── Disclaimer ── */
+.disclaimer {
+  background: var(--amber-bg);
+  border: 1px solid var(--amber-bd);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  font-size: 11.5px;
+  color: var(--amber);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 24px;
+  line-height: 1.8;
+}
+
+/* ── Animations ── */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.result-card.visible {
+  display: block;
+  animation: slideUp 0.25s ease;
+}
+
+/* ── Mobile tweaks ── */
+@media (max-width: 480px) {
+  .pk-grid { grid-template-columns: repeat(2, 1fr); }
+  .grid3 { grid-template-columns: 1fr 1fr; }
+  .drug-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header-logo">DOSEBAND</div>
+    <div class="header-sub">Clinical Dose Calculator</div>
+  </div>
+  <div class="header-badge">Pre-clinical · Not validated</div>
+</div>
+
+<div class="shell">
+
+  <div class="disclaimer">
+    <strong>Clinical reminder:</strong> This tool provides dose band recommendations only. All doses must be verified by a qualified pharmacist before administration. Not validated for clinical use — pharmacist sign-off required.
+  </div>
+
+  <!-- Drug selection -->
+  <div class="card">
+    <div class="section-title">Select drug</div>
+    <div class="cat-tabs">
+      <button class="cat-tab active" onclick="filterCat('all', this)">All</button>
+      <button class="cat-tab" onclick="filterCat('oncology', this)">Oncology</button>
+      <button class="cat-tab" onclick="filterCat('infectious_disease', this)">Infectious disease</button>
+      <button class="cat-tab" onclick="filterCat('antifungal', this)">Antifungal</button>
+      <button class="cat-tab" onclick="filterCat('antiviral', this)">Antiviral</button>
+    </div>
+    <div class="drug-grid" id="drug-grid"></div>
+
+    <div class="field" style="margin-top:4px">
+      <label>Regimen</label>
+      <div class="segment" id="regimen-seg" style="grid-template-columns:repeat(4,1fr)">
+        <button class="seg-btn active" onclick="selectSeg('regimen','standard',this)">Standard</button>
+        <button class="seg-btn" onclick="selectSeg('regimen','highDose',this)">High dose</button>
+        <button class="seg-btn" onclick="selectSeg('regimen','palliative',this)">Palliative</button>
+        <button class="seg-btn" onclick="selectSeg('regimen','paediatric',this)">Paediatric</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Patient parameters -->
+  <div class="card">
+    <div class="section-title">Patient parameters</div>
+    <div class="grid2">
+      <div class="field">
+        <label>Weight (kg)</label>
+        <input type="number" id="weight" placeholder="e.g. 68" min="10" max="300" step="0.5">
+      </div>
+      <div class="field">
+        <label>Height (cm)</label>
+        <input type="number" id="height" placeholder="e.g. 165" min="50" max="250">
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field">
+        <label>Age (years)</label>
+        <input type="number" id="age" placeholder="e.g. 45" min="1" max="120">
+      </div>
+      <div class="field">
+        <label>Creatinine (µmol/L)</label>
+        <input type="number" id="creatinine" placeholder="e.g. 90" min="20" max="2000">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Sex</label>
+      <div class="segment" style="grid-template-columns:1fr 1fr">
+        <button class="seg-btn active" onclick="selectSeg('sex','M',this)">Male</button>
+        <button class="seg-btn" onclick="selectSeg('sex','F',this)">Female</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clinical context -->
+  <div class="card">
+    <div class="section-title">Clinical context</div>
+
+    <div class="field">
+      <label>Population</label>
+      <select id="population">
+        <option value="general">General</option>
+        <option value="subSaharanAfrica">Sub-Saharan Africa</option>
+        <option value="hivPositive">HIV positive</option>
+        <option value="malnourished">Malnourished</option>
+        <option value="pregnant">Pregnant</option>
+        <option value="elderly">Elderly (&gt;70)</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Hepatic function</label>
+      <select id="hepatic">
+        <option value="normal">Normal</option>
+        <option value="childPughA">Child-Pugh A (mild)</option>
+        <option value="childPughB">Child-Pugh B (moderate)</option>
+        <option value="childPughC">Child-Pugh C (severe)</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Concurrent nephrotoxins?</label>
+      <div class="segment" style="grid-template-columns:1fr 1fr">
+        <button class="seg-btn active" onclick="selectSeg('nephro','no',this)">No</button>
+        <button class="seg-btn" onclick="selectSeg('nephro','yes',this)">Yes</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="calc-btn" onclick="calculate()">Calculate dose band</button>
+
+  <!-- Result -->
+  <div class="result-card" id="result-card">
+    <div class="result-header">
+      <div>
+        <div class="result-band-label">Recommended band</div>
+        <div class="result-band-val" id="r-band">—</div>
+        <div class="result-dose" id="r-dose">—</div>
+      </div>
+      <div style="text-align:right">
+        <div class="result-drug" id="r-drug">—</div>
+        <div id="r-range" style="font-size:11px;color:rgba(255,255,255,0.5);font-family:var(--mono);margin-top:4px">—</div>
+      </div>
+    </div>
+    <div class="result-body">
+      <div class="pk-grid">
+        <div class="pk-item"><div class="pk-val" id="r-crcl">—</div><div class="pk-lbl">CrCl mL/min</div></div>
+        <div class="pk-item"><div class="pk-val" id="r-bsa">—</div><div class="pk-lbl">BSA m²</div></div>
+        <div class="pk-item"><div class="pk-val" id="r-ibw">—</div><div class="pk-lbl">IBW kg</div></div>
+        <div class="pk-item"><div class="pk-val" id="r-bmi">—</div><div class="pk-lbl">BMI</div></div>
+      </div>
+      <div id="r-flags"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    DoseBand v1.0 · Pre-clinical validation only<br>
+    133,224 synthetic cases · 108 unit tests · 22 monotonicity checks<br>
+    Parameters require pharmacist sign-off before clinical use
+  </div>
+
+</div>
+
+<script>
+// ── Drug database ─────────────────────────────────────────────────────────────
+const DRUGS = {
+  carboplatin:           { name:"Carboplatin",            cat:"oncology",           method:"calvert",  base:5,    unit:"mg",    bands:[{l:"A",min:0,max:350},{l:"B",min:350,max:450},{l:"C",min:450,max:550},{l:"D",min:550,max:650},{l:"E",min:650,max:Infinity}], renal:true,  hepatic:false, resistThresh:null },
+  cisplatin:             { name:"Cisplatin",              cat:"oncology",           method:"bsa",      base:75,   unit:"mg/m²", bands:[{l:"1",min:0,max:55},{l:"2",min:55,max:70},{l:"3",min:70,max:85},{l:"4",min:85,max:Infinity}], renal:true,  hepatic:false, resistThresh:null },
+  oxaliplatin:           { name:"Oxaliplatin",            cat:"oncology",           method:"bsa",      base:85,   unit:"mg/m²", bands:[{l:"1",min:0,max:60},{l:"2",min:60,max:80},{l:"3",min:80,max:Infinity}], renal:true, hepatic:false, resistThresh:null },
+  docetaxel:             { name:"Docetaxel",              cat:"oncology",           method:"bsa",      base:75,   unit:"mg/m²", bands:[{l:"1",min:0,max:55},{l:"2",min:55,max:70},{l:"3",min:70,max:Infinity}], renal:false, hepatic:true,  resistThresh:null },
+  paclitaxel:            { name:"Paclitaxel",             cat:"oncology",           method:"bsa",      base:175,  unit:"mg/m²", bands:[{l:"1",min:0,max:130},{l:"2",min:130,max:165},{l:"3",min:165,max:Infinity}], renal:false, hepatic:true, resistThresh:null },
+  gentamicin:            { name:"Gentamicin",             cat:"infectious_disease", method:"weightPK", base:5,    unit:"mg",    bands:[{l:"L",min:0,max:240},{l:"M",min:240,max:320},{l:"H",min:320,max:Infinity}], renal:true, hepatic:false, resistThresh:3.0 },
+  amikacin:              { name:"Amikacin",               cat:"infectious_disease", method:"weightPK", base:15,   unit:"mg",    bands:[{l:"L",min:0,max:600},{l:"M",min:600,max:900},{l:"H",min:900,max:Infinity}], renal:true, hepatic:false, resistThresh:10.0 },
+  vancomycin:            { name:"Vancomycin",             cat:"infectious_disease", method:"weightPK", base:15,   unit:"mg",    bands:[{l:"1",min:0,max:750},{l:"2",min:750,max:1250},{l:"3",min:1250,max:1750},{l:"4",min:1750,max:2250},{l:"5",min:2250,max:Infinity}], renal:true, hepatic:false, resistThresh:null },
+  piperacillinTazobactam:{ name:"Pip-Tazobactam",         cat:"infectious_disease", method:"fixed",    base:4500, unit:"mg",    bands:[{l:"1",min:0,max:3000},{l:"2",min:3000,max:4500},{l:"3",min:4500,max:Infinity}], renal:true, hepatic:false, resistThresh:null },
+  meropenem:             { name:"Meropenem",              cat:"infectious_disease", method:"fixed",    base:1000, unit:"mg",    bands:[{l:"1",min:0,max:750},{l:"2",min:750,max:1250},{l:"3",min:1250,max:Infinity}], renal:true, hepatic:false, resistThresh:null },
+  fluconazole:           { name:"Fluconazole",            cat:"antifungal",         method:"fixed",    base:400,  unit:"mg",    bands:[{l:"1",min:0,max:200},{l:"2",min:200,max:400},{l:"3",min:400,max:Infinity}], renal:true, hepatic:false, resistThresh:null },
+  voriconazole:          { name:"Voriconazole",           cat:"antifungal",         method:"weightPK", base:4,    unit:"mg",    bands:[{l:"1",min:0,max:150},{l:"2",min:150,max:250},{l:"3",min:250,max:Infinity}], renal:false, hepatic:true, resistThresh:null },
+  acyclovir:             { name:"Acyclovir (IV)",         cat:"antiviral",          method:"weightPK", base:10,   unit:"mg",    bands:[{l:"1",min:0,max:400},{l:"2",min:400,max:700},{l:"3",min:700,max:Infinity}], renal:true, hepatic:false, resistThresh:null },
+};
+
+// ── State ─────────────────────────────────────────────────────────────────────
+const state = { drug:null, sex:"M", regimen:"standard", nephro:"no" };
+
+// ── Sidebar build ─────────────────────────────────────────────────────────────
+function buildDrugs(cat) {
+  const grid = document.getElementById("drug-grid");
+  grid.innerHTML = "";
+  Object.entries(DRUGS).forEach(([key, d]) => {
+    if (cat !== "all" && d.cat !== cat) return;
+    const btn = document.createElement("button");
+    btn.className = "drug-btn" + (state.drug === key ? " selected" : "");
+    btn.innerHTML = `<span class="drug-btn-name">${d.name}</span><span class="drug-btn-cat">${d.cat.replace("_"," ")}</span>`;
+    btn.onclick = () => { state.drug = key; buildDrugs(cat); };
+    grid.appendChild(btn);
+  });
+}
+
+function filterCat(cat, el) {
+  document.querySelectorAll(".cat-tab").forEach(b => b.classList.remove("active"));
+  el.classList.add("active");
+  buildDrugs(cat);
+}
+
+function selectSeg(group, value, el) {
+  state[group] = value;
+  el.parentElement.querySelectorAll(".seg-btn").forEach(b => b.classList.remove("active"));
+  el.classList.add("active");
+}
+
+// ── PK calculations ───────────────────────────────────────────────────────────
+function calcCrCl(age, wt, cr, sex) {
+  const base = ((140 - age) * wt) / (cr * 0.814);
+  return Math.max(sex === "F" ? base * 0.85 : base, 5);
+}
+
+function calcBSA(wt, ht) { return Math.sqrt((ht * wt) / 3600); }
+
+function calcIBW(ht, sex) {
+  const inches = ht / 2.54;
+  const base = sex === "M" ? 50 : 45.5;
+  return Math.max(base + 2.3 * Math.max(0, inches - 60), 30);
+}
+
+function calcABW(wt, ibw) { return ibw + 0.4 * (wt - ibw); }
+
+function dosingWeight(wt, ht, sex) {
+  const ibw = calcIBW(ht, sex);
+  const bmi = wt / ((ht/100) ** 2);
+  if (bmi > 30) return calcABW(wt, ibw);
+  return Math.min(wt, ibw + 0.4 * Math.max(0, wt - ibw));
+}
+
+function assignBand(dose, bands) {
+  return bands.find(b => dose >= b.min && dose < b.max) || bands[bands.length-1];
+}
+
+// ── Dose calculation ──────────────────────────────────────────────────────────
+function calculate() {
+  // Validate drug selected
+  if (!state.drug) { alert("Please select a drug first."); return; }
+
+  const wt  = parseFloat(document.getElementById("weight").value);
+  const ht  = parseFloat(document.getElementById("height").value);
+  const age = parseFloat(document.getElementById("age").value);
+  const cr  = parseFloat(document.getElementById("creatinine").value);
+  const pop = document.getElementById("population").value;
+  const hep = document.getElementById("hepatic").value;
+
+  // Validate inputs
+  if (!wt || !ht || !age || !cr) { alert("Please fill in all patient parameters."); return; }
+  if (wt < 10 || wt > 300) { alert("Weight must be between 10 and 300 kg."); return; }
+  if (ht < 50 || ht > 250) { alert("Height must be between 50 and 250 cm."); return; }
+  if (cr < 20 || cr > 2000) { alert("Creatinine must be between 20 and 2000 µmol/L."); return; }
+
+  const drug = DRUGS[state.drug];
+  const sex  = state.sex;
+
+  // Derived PK
+  const ibw  = calcIBW(ht, sex);
+  const dwt  = dosingWeight(wt, ht, sex);
+  const crcl = calcCrCl(age, dwt, cr, sex);
+  const bsa  = calcBSA(wt, ht);
+  const bmi  = wt / ((ht/100) ** 2);
+
+  // Base dose
+  let dose = 0;
+  if (drug.method === "calvert")  dose = drug.base * (crcl + 25);
+  else if (drug.method === "bsa") dose = drug.base * bsa;
+  else if (drug.method === "weightPK") dose = drug.base * dwt;
+  else dose = drug.base;
+
+  // Regimen adjustment
+  const regimenRatio = { standard:1.0, highDose:1.25, palliative:0.75, paediatric:0.8 }[state.regimen] || 1.0;
+  dose *= regimenRatio;
+
+  // Population adjustment
+  let popRatio = 1.0;
+  let popFlag = null;
+  if (pop === "subSaharanAfrica" && (state.drug === "gentamicin" || state.drug === "amikacin")) {
+    popRatio = 0.87;
+    popFlag = { type:"info", msg:"Sub-Saharan Africa PK: dose reduced 13% (increased t½, reduced CL — Mehta et al. 2019)." };
+  } else if (pop === "hivPositive" && state.drug === "vancomycin") {
+    popRatio = 0.9;
+    popFlag = { type:"warning", msg:"HIV co-infection: vancomycin dose reduced 10%. TDM (AUC-guided dosing) is essential." };
+  } else if (pop === "malnourished" && (state.drug === "gentamicin" || state.drug === "amikacin")) {
+    popRatio = 0.85;
+    popFlag = { type:"warning", msg:"Malnutrition: aminoglycoside dose reduced 15% (reduced Vd + CL — Bhatt et al. 2021). Monitor trough." };
+  } else if (pop === "pregnant" && state.drug === "gentamicin") {
+    popRatio = 1.35;
+    popFlag = { type:"warning", msg:"Pregnancy (2nd/3rd trimester): gentamicin dose increased 35% (increased Vd + CL — Hebert et al. 2017). TDM mandatory." };
+  } else if (pop === "elderly" && state.drug === "carboplatin") {
+    popRatio = 0.85;
+    popFlag = { type:"info", msg:"Elderly patient: carboplatin dose reduced 15% (reduced CL, increased t½ — Launay-Vacher et al. 2016)." };
+  }
+  dose *= popRatio;
+
+  // Renal adjustment
+  let renalRatio = 1.0;
+  let renalFlag = null;
+  if (drug.renal) {
+    if (crcl < 15) {
+      renalRatio = 0.35;
+      renalFlag = { type:"danger", msg:`ESRD / Severe renal impairment (CrCl ${crcl.toFixed(0)} mL/min). Dose reduced 65%. Nephrology review recommended. Consider alternative agent.` };
+    } else if (crcl < 30) {
+      renalRatio = 0.55;
+      renalFlag = { type:"danger", msg:`Severe renal impairment (CrCl ${crcl.toFixed(0)} mL/min). Dose reduced 45%. Daily renal monitoring required.` };
+    } else if (crcl < 60) {
+      renalRatio = 0.8;
+      renalFlag = { type:"warning", msg:`Moderate renal impairment (CrCl ${crcl.toFixed(0)} mL/min). Dose reduced 20%. Increase monitoring frequency.` };
+    }
+  }
+  dose *= renalRatio;
+
+  // Hepatic adjustment
+  let hepaticRatio = 1.0;
+  let hepaticFlag = null;
+  if (drug.hepatic) {
+    if (hep === "childPughC") {
+      hepaticRatio = 0.5;
+      hepaticFlag = { type:"danger", msg:"Child-Pugh C hepatic impairment. Dose reduced 50%. Consider alternative agent. Hepatology review recommended." };
+    } else if (hep === "childPughB") {
+      hepaticRatio = 0.75;
+      hepaticFlag = { type:"warning", msg:"Child-Pugh B hepatic impairment. Dose reduced 25%. Monitor LFTs before each dose." };
+    }
+  }
+  dose *= hepaticRatio;
+
+  // Assign band
+  const band = assignBand(dose, drug.bands);
+
+  // Build flags
+  const flags = [];
+  if (popFlag) flags.push(popFlag);
+  if (renalFlag) flags.push(renalFlag);
+  if (hepaticFlag) flags.push(hepaticFlag);
+
+  // Resistance check
+  if (drug.resistThresh) {
+    const dosePerKg = dose / dwt;
+    if (dosePerKg < drug.resistThresh) {
+      flags.push({ type:"danger", msg:`RESISTANCE RISK: Dose/kg (${dosePerKg.toFixed(1)} mg/kg) is below the resistance-prevention threshold of ${drug.resistThresh} mg/kg. Underexposure selects for resistant organisms. Review urgently.` });
+    } else if (dosePerKg < drug.resistThresh * 1.15) {
+      flags.push({ type:"warning", msg:`Low-normal exposure: Dose/kg (${dosePerKg.toFixed(1)} mg/kg) is near the resistance threshold. Confirm adequacy with TDM peak level.` });
+    }
+  }
+
+  // Nephrotoxin check
+  if (state.nephro === "yes" && drug.renal) {
+    flags.push({ type:"warning", msg:`Concurrent nephrotoxin co-prescribed with ${drug.name}. Increased AKI risk. Monitor CrCl daily. Consider dose reduction or alternative agent.` });
+  }
+
+  if (flags.length === 0) {
+    flags.push({ type:"info", msg:"No major flags. Proceed with recommended band. Verify with supervising pharmacist before administration." });
+  }
+
+  // ── Render result ──
+  document.getElementById("r-band").textContent = "Band " + band.l;
+  document.getElementById("r-dose").textContent = dose.toFixed(0) + " mg calculated";
+  document.getElementById("r-drug").textContent = drug.name;
+  document.getElementById("r-range").textContent = band.min + "–" + (band.max === Infinity ? "∞" : band.max) + " mg";
+  document.getElementById("r-crcl").textContent = crcl.toFixed(1);
+  document.getElementById("r-bsa").textContent = bsa.toFixed(2);
+  document.getElementById("r-ibw").textContent = ibw.toFixed(1);
+  document.getElementById("r-bmi").textContent = bmi.toFixed(1);
+
+  const iconMap = { info:"ℹ", warning:"⚠", danger:"⛔" };
+  document.getElementById("r-flags").innerHTML = flags.map(f =>
+    `<div class="flag flag-${f.type}"><span class="flag-icon">${iconMap[f.type]}</span><span>${f.msg}</span></div>`
+  ).join("");
+
+  const card = document.getElementById("result-card");
+  card.classList.remove("visible");
+  void card.offsetWidth;
+  card.classList.add("visible");
+
+  // Scroll to result
+  setTimeout(() => card.scrollIntoView({ behavior:"smooth", block:"nearest" }), 50);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+buildDrugs("all");
+</script>
+</body>
+</html>

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DoseBand — Synthetic Validation Report</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f0e; --bg2: #141716; --bg3: #1c1f1d;
+    --line: #2e3330; --muted: #6b7570; --dim: #8f9c96;
+    --body: #c8d4ce; --head: #e8f0ec;
+    --green: #4dbe8a; --amber: #e8a94a; --red: #e05c5c; --blue: #5a9fd4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--body); font-family: 'DM Sans', sans-serif; font-size: 13px; line-height: 1.6; padding: 40px; max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 22px; font-weight: 300; color: var(--head); margin-bottom: 4px; font-family: 'DM Mono', monospace; letter-spacing: 0.02em; }
+  h2 { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-family: 'DM Mono', monospace; margin: 32px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+  p { color: var(--dim); margin-bottom: 8px; }
+  code { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--amber); }
+  .meta { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); margin-bottom: 32px; }
+  .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px; }
+  .stat-card { background: var(--bg2); border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; }
+  .stat-val { font-family: 'DM Mono', monospace; font-size: 28px; font-weight: 500; margin-bottom: 4px; }
+  .stat-lbl { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.06em; text-transform: uppercase; }
+  .status-banner { background: var(--bg2); border: 1px solid var(--line); border-radius: 8px; padding: 20px 24px; margin-bottom: 32px; display: flex; align-items: center; gap: 16px; }
+  .status-light { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; background: #4dbe8a; }
+  .status-text { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: #4dbe8a; }
+  .status-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 12px; }
+  th { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); font-weight: 500; }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--line); color: var(--body); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg2); }
+  .pass-row td { color: var(--green); }
+  .fail-row td { color: var(--red); }
+  .violation { color: var(--red); font-family: 'DM Mono', monospace; font-size: 11px; }
+  .disclaimer { background: #1a1200; border: 1px solid #5c3d10; border-radius: 8px; padding: 16px 20px; margin-top: 32px; }
+  .disclaimer p { color: var(--amber); font-size: 12px; }
+  .disclaimer strong { color: var(--amber); }
+  @media print { body { background: white; color: black; padding: 20px; } }
+</style>
+</head>
+<body>
+
+<h1>DoseBand — Synthetic Patient Validation Report</h1>
+<div class="meta">Generated: 2026-04-14T21:28:44.846Z &nbsp;|&nbsp; Duration: 0.74s &nbsp;|&nbsp; Engine version: 1.0.0</div>
+
+<div class="status-banner">
+  <div class="status-light"></div>
+  <div>
+    <div class="status-text">ALL TESTS PASSED</div>
+    <div class="status-sub">133,224 / 133,224 cases passed &nbsp;·&nbsp; 100% pass rate &nbsp;·&nbsp; 22/22 monotonicity checks</div>
+  </div>
+</div>
+
+<div class="summary-grid">
+  <div class="stat-card">
+    <div class="stat-val" style="color:var(--head)">133,224</div>
+    <div class="stat-lbl">Total test cases</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val" style="color:#4dbe8a">133,224</div>
+    <div class="stat-lbl">Passed</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val" style="color:var(--muted)">0</div>
+    <div class="stat-lbl">Failed</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val" style="color:#4dbe8a">22</div>
+    <div class="stat-lbl">Monotonicity checks</div>
+  </div>
+</div>
+
+<h2>Test category breakdown</h2>
+<table>
+  <thead><tr><th>Category</th><th>Cases</th><th>Passed</th><th>Failed</th><th>Pass rate</th></tr></thead>
+  <tbody>
+      <tr>
+        <td>boundary</td>
+        <td>131,300</td>
+        <td style="color:#4dbe8a">131,300</td>
+        <td style="color:#4dbe8a">0</td>
+        <td style="color:#4dbe8a">100.00%</td>
+      </tr>
+    
+      <tr>
+        <td>combinatorial</td>
+        <td>1,144</td>
+        <td style="color:#4dbe8a">1,144</td>
+        <td style="color:#4dbe8a">0</td>
+        <td style="color:#4dbe8a">100.00%</td>
+      </tr>
+    
+      <tr>
+        <td>edge_case</td>
+        <td>260</td>
+        <td style="color:#4dbe8a">260</td>
+        <td style="color:#4dbe8a">0</td>
+        <td style="color:#4dbe8a">100.00%</td>
+      </tr>
+    
+      <tr>
+        <td>resistance_boundary</td>
+        <td>520</td>
+        <td style="color:#4dbe8a">520</td>
+        <td style="color:#4dbe8a">0</td>
+        <td style="color:#4dbe8a">100.00%</td>
+      </tr>
+    </tbody>
+</table>
+
+<h2>Per-drug results</h2>
+<table>
+  <thead><tr><th>Drug</th><th>Category</th><th>Cases</th><th>Passed</th><th>Failed</th><th>Pass rate</th></tr></thead>
+  <tbody>
+      <tr>
+        <td>Carboplatin</td>
+        <td>oncology</td>
+        <td>10,248</td>
+        <td style="color:#4dbe8a">10,248</td>
+        <td style="color:#4dbe8a">0</td>
+        <td style="color:#4dbe8a">100.0%</td>
+      </tr>
+    
+      <tr>
+        <td>Cisplatin</td>
+        <td>oncology</td>
+        <td>10,248</td>
+        <td style="color:#4dbe8a">10,248</td>
+        <td style="color:#4dbe8a">0</td>
+        <td style="color:#4dbe8a">100.0%</td>
+      </tr>
+    
+      <tr>
+        <td>Oxaliplatin</td>
+        <td>oncology</td>
+        <td>10,248</td>
+        <td style="color:#4dbe8a">10,248</td>
+        <td style="color:#4dbe8a">0</td>
+        <td style="color:#4dbe8a">100.0%</td>
+      </tr>
+    
+      <tr>
+        <td>Docetaxel</td>
+        <td>oncology</td>
+        <td>10,248</td>
+        <td style="color:#4dbe8a">10,248</td>
+        <td style="color:#4dbe8a">0</td>
+        <td style="color:#4dbe8a">100.0%</td>
+      </tr>
+    
+      <tr>
+        <td>Paclitaxel</td>
+        <td>oncology</td>
+        <td>10,248</td>
+        <td style="color:#4dbe8a">10,248</td>
+        <td style="color:#4dbe8a">0</td>
+        <td style="color:#4dbe8a">100.0%</td>
+      </tr>
+    
+      <tr>
+        <td>Gentamicin</td>
+        <td>infectious_disease</td>
+        <td>10,248</td>
+        <td style="color:#4dbe8a">10,248</td>
+        <td style="color:#4dbe8a">0</td>
+        <td style="color:#4dbe8a">100.0%</td>
+      </tr>
+    
+      <tr>
+        <td>Amikacin</td>
+        <td>infectious_disease</td>
+        <td>10,248</td>
+        <td style="color:#4dbe8a">10,248</td>
+        <td style="color:#4dbe8a">0</td>
+        <td style="color:#4dbe8a">100.0%</td>
+      </tr>
+    
+      <tr>
+        <td>Vancomycin</td>
+        <td>infectious_disease</td>
+        <td>10,248</td>
+        <td style="color:#4dbe8a">10,248</td>
+        <td style="color:#4dbe8a">0</td>
+        <td style="color:#4dbe8a">100.0%</td>
+      </tr>
+    
+      <tr>
+        <td>Piperacillin-Tazobactam</td>
+        <td>infectious_disease</td>
+        <td>10,248</td>
+        <td style="color:#4dbe8a">10,248</td>
+        <td style="color:#4dbe8a">0</td>
+        <td style="color:#4dbe8a">100.0%</td>
+      </tr>
+    
+      <tr>
+        <td>Meropenem</td>
+        <td>infectious_disease</td>
+        <td>10,248</td>
+        <td style="color:#4dbe8a">10,248</td>
+        <td style="color:#4dbe8a">0</td>
+        <td style="color:#4dbe8a">100.0%</td>
+      </tr>
+    
+      <tr>
+        <td>Fluconazole</td>
+        <td>antifungal</td>
+        <td>10,248</td>
+        <td style="color:#4dbe8a">10,248</td>
+        <td style="color:#4dbe8a">0</td>
+        <td style="color:#4dbe8a">100.0%</td>
+      </tr>
+    
+      <tr>
+        <td>Voriconazole</td>
+        <td>antifungal</td>
+        <td>10,248</td>
+        <td style="color:#4dbe8a">10,248</td>
+        <td style="color:#4dbe8a">0</td>
+        <td style="color:#4dbe8a">100.0%</td>
+      </tr>
+    
+      <tr>
+        <td>Acyclovir (IV)</td>
+        <td>antiviral</td>
+        <td>10,248</td>
+        <td style="color:#4dbe8a">10,248</td>
+        <td style="color:#4dbe8a">0</td>
+        <td style="color:#4dbe8a">100.0%</td>
+      </tr>
+    </tbody>
+</table>
+
+<h2>Monotonicity checks — clinical invariants</h2>
+<p>Verifies that doses respond correctly to changes in patient parameters.</p>
+<table>
+  <thead><tr><th>Pass</th><th>Check</th><th>Base dose (mg)</th><th>Perturbed dose (mg)</th><th>Expected</th><th>Violation</th></tr></thead>
+  <tbody>
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>carboplatin: higher creatinine gives lower dose</td>
+      <td>540.0</td>
+      <td>120.1</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>gentamicin: higher creatinine gives lower dose</td>
+      <td>337.8</td>
+      <td>185.8</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>amikacin: higher creatinine gives lower dose</td>
+      <td>1013.4</td>
+      <td>557.4</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>vancomycin: higher creatinine gives lower dose</td>
+      <td>1013.4</td>
+      <td>557.4</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>cisplatin: higher creatinine gives lower dose</td>
+      <td>136.4</td>
+      <td>75.0</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>acyclovir: higher creatinine gives lower dose</td>
+      <td>675.6</td>
+      <td>371.6</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>fluconazole: higher creatinine gives lower dose</td>
+      <td>400.0</td>
+      <td>220.0</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>meropenem: higher creatinine gives lower dose</td>
+      <td>1000.0</td>
+      <td>550.0</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>piperacillinTazobactam: higher creatinine gives lower dose</td>
+      <td>4500.0</td>
+      <td>2475.0</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>docetaxel: Child-Pugh B lower than normal</td>
+      <td>136.4</td>
+      <td>102.3</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>docetaxel: Child-Pugh C lower than B</td>
+      <td>102.3</td>
+      <td>68.2</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>paclitaxel: Child-Pugh B lower than normal</td>
+      <td>318.2</td>
+      <td>238.6</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>paclitaxel: Child-Pugh C lower than B</td>
+      <td>238.6</td>
+      <td>159.1</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>voriconazole: Child-Pugh B lower than normal</td>
+      <td>270.2</td>
+      <td>202.7</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>voriconazole: Child-Pugh C lower than B</td>
+      <td>202.7</td>
+      <td>135.1</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>gentamicin: SSA lower than general</td>
+      <td>337.8</td>
+      <td>293.9</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>gentamicin: malnourished lower than general</td>
+      <td>337.8</td>
+      <td>287.1</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>amikacin: SSA lower than general</td>
+      <td>1013.4</td>
+      <td>881.7</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>amikacin: malnourished lower than general</td>
+      <td>1013.4</td>
+      <td>861.4</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>gentamicin: pregnancy higher than general</td>
+      <td>324.3</td>
+      <td>437.8</td>
+      <td>higher</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>vancomycin: HIV+ lower than general</td>
+      <td>1013.4</td>
+      <td>912.1</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  
+    <tr class="pass-row">
+      <td>✓</td>
+      <td>carboplatin: elderly lower than general</td>
+      <td>540.0</td>
+      <td>459.0</td>
+      <td>lower</td>
+      <td>—</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Clinical flag frequency</h2>
+<p>How often each flag fires across all 133,224 test cases.</p>
+<table>
+  <thead><tr><th>Flag code</th><th>Count</th><th>Frequency</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>MONITORING_GUIDANCE</code></td>
+      <td>133,224</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:200px;height:6px;background:#4dbe8a;border-radius:3px;opacity:0.7"></div>
+          100%
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td><code>RENAL_G3_MODERATE</code></td>
+      <td>42,590</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:96px;height:6px;background:#4dbe8a;border-radius:3px;opacity:0.7"></div>
+          32%
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td><code>RENAL_G4_SEVERE</code></td>
+      <td>9,770</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:21.9px;height:6px;background:#4dbe8a;border-radius:3px;opacity:0.7"></div>
+          7.3%
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td><code>CONCURRENT_NEPHROTOXIN</code></td>
+      <td>9,510</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:21.299999999999997px;height:6px;background:#4dbe8a;border-radius:3px;opacity:0.7"></div>
+          7.1%
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td><code>HEPATIC_CHILD_PUGH_C</code></td>
+      <td>7,608</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:17.1px;height:6px;background:#4dbe8a;border-radius:3px;opacity:0.7"></div>
+          5.7%
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td><code>HEPATIC_CHILD_PUGH_B</code></td>
+      <td>7,518</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:16.799999999999997px;height:6px;background:#4dbe8a;border-radius:3px;opacity:0.7"></div>
+          5.6%
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td><code>POP_MALNOURISHED_AMINOGLYCOSIDE</code></td>
+      <td>3,760</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:8.399999999999999px;height:6px;background:#4dbe8a;border-radius:3px;opacity:0.7"></div>
+          2.8%
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td><code>POP_SSA_AMINOGLYCOSIDE</code></td>
+      <td>3,744</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:8.399999999999999px;height:6px;background:#4dbe8a;border-radius:3px;opacity:0.7"></div>
+          2.8%
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td><code>RESISTANCE_RISK_LOW_NORMAL</code></td>
+      <td>2,340</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:5.4px;height:6px;background:#4dbe8a;border-radius:3px;opacity:0.7"></div>
+          1.8%
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td><code>RESISTANCE_RISK_UNDEREXPOSURE</code></td>
+      <td>1,963</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:4.5px;height:6px;background:#4dbe8a;border-radius:3px;opacity:0.7"></div>
+          1.5%
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td><code>POP_ELDERLY_CARBOPLATIN</code></td>
+      <td>1,843</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:4.199999999999999px;height:6px;background:#4dbe8a;border-radius:3px;opacity:0.7"></div>
+          1.4%
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td><code>POP_HIV_VANCOMYCIN</code></td>
+      <td>1,801</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:4.199999999999999px;height:6px;background:#4dbe8a;border-radius:3px;opacity:0.7"></div>
+          1.4%
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td><code>POP_PREGNANT_GENTAMICIN</code></td>
+      <td>854</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:1.7999999999999998px;height:6px;background:#4dbe8a;border-radius:3px;opacity:0.7"></div>
+          0.6%
+        </div>
+      </td>
+    </tr>
+  
+    <tr>
+      <td><code>RENAL_G5_ESRD</code></td>
+      <td>570</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:1.2000000000000002px;height:6px;background:#4dbe8a;border-radius:3px;opacity:0.7"></div>
+          0.4%
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Band distribution by drug</h2>
+<p>Distribution of synthetic patients across dose bands.</p>
+<table>
+  <thead><tr><th>Drug</th><th colspan="10">Band distribution</th></tr></thead>
+  <tbody><tr><td>Carboplatin</td><td>Band A: 5293 (51.6%)</td><td>Band B: 898 (8.8%)</td><td>Band C: 1773 (17.3%)</td><td>Band D: 1087 (10.6%)</td><td>Band E: 1197 (11.7%)</td></tr><tr><td>Cisplatin</td><td>Band 1: 78 (0.8%)</td><td>Band 2: 500 (4.9%)</td><td>Band 3: 423 (4.1%)</td><td>Band 4: 9247 (90.2%)</td></tr><tr><td>Oxaliplatin</td><td>Band 1: 59 (0.6%)</td><td>Band 2: 536 (5.2%)</td><td>Band 3: 9653 (94.2%)</td></tr><tr><td>Docetaxel</td><td>Band 1: 98 (1.0%)</td><td>Band 2: 492 (4.8%)</td><td>Band 3: 9658 (94.2%)</td></tr><tr><td>Paclitaxel</td><td>Band 1: 113 (1.1%)</td><td>Band 2: 506 (4.9%)</td><td>Band 3: 9629 (94.0%)</td></tr><tr><td>Gentamicin</td><td>Band H: 6128 (59.8%)</td><td>Band L: 2098 (20.5%)</td><td>Band M: 2022 (19.7%)</td></tr><tr><td>Amikacin</td><td>Band H: 6548 (63.9%)</td><td>Band L: 1441 (14.1%)</td><td>Band M: 2259 (22.0%)</td></tr><tr><td>Vancomycin</td><td>Band 1: 2206 (21.5%)</td><td>Band 2: 4519 (44.1%)</td><td>Band 3: 3343 (32.6%)</td><td>Band 4: 179 (1.7%)</td><td>Band 5: 1 (0.0%)</td></tr><tr><td>Piperacillin-Tazobactam</td><td>Band 1: 1034 (10.1%)</td><td>Band 2: 4259 (41.6%)</td><td>Band 3: 4955 (48.4%)</td></tr><tr><td>Meropenem</td><td>Band 1: 1034 (10.1%)</td><td>Band 2: 9214 (89.9%)</td></tr><tr><td>Fluconazole</td><td>Band 1: 57 (0.6%)</td><td>Band 2: 5236 (51.1%)</td><td>Band 3: 4955 (48.4%)</td></tr><tr><td>Voriconazole</td><td>Band 1: 1097 (10.7%)</td><td>Band 2: 3776 (36.8%)</td><td>Band 3: 5375 (52.4%)</td></tr><tr><td>Acyclovir (IV)</td><td>Band 1: 1257 (12.3%)</td><td>Band 2: 3315 (32.3%)</td><td>Band 3: 5676 (55.4%)</td></tr></tbody>
+</table>
+
+
+<h2>Failures</h2>
+<p style="color:var(--green)">✓ No failures. All 133,224 test cases passed all 9 invariants.</p>
+
+
+<div class="disclaimer">
+  <p><strong>Important — pre-clinical validation only.</strong> This report confirms that the DoseBand calculation engine is internally consistent and satisfies formal clinical invariants across 133,224 synthetic patient scenarios. It does <strong>not</strong> constitute clinical validation. All drug parameters must be reviewed and approved by a qualified clinical pharmacist. IRB approval and a prospective clinical study are required before use with real patients in any healthcare setting.</p>
+</div>
+
+</body>
+</html>
