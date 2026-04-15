@@ -9,91 +9,155 @@
 :root{--ink:#0a0c0b;--surface:#f5f3ef;--surface2:#eceae4;--border:#d0ccc4;--border2:#b8b4aa;--muted:#7a7670;--dim:#5a5650;--amber:#b86800;--amber-bg:#fef5e4;--amber-bd:#f0d080;--red:#b82020;--red-bg:#fdecea;--red-bd:#f0b0a8;--blue:#1a4a8a;--blue-bg:#e8eef8;--blue-bd:#a8c0e8;--green:#1a7a4a;--green-bg:#e8f5ee;--green-bd:#b8dfc8;--mono:"JetBrains Mono",monospace;--display:"Syne",sans-serif}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--surface);color:var(--ink);font-family:var(--display);font-size:14px;line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased}
-.nav{background:var(--ink);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.nav{background:var(--ink);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
 .nav-brand{font-family:var(--display);font-size:18px;font-weight:800;color:#fff;letter-spacing:-0.02em;text-decoration:none}
 .nav-links{display:flex;gap:4px}
-.nav-link{font-family:var(--mono);font-size:10px;padding:6px 12px;border-radius:5px;color:rgba(255,255,255,0.55);text-decoration:none;letter-spacing:0.06em;transition:all 0.15s;border:1px solid transparent}
+.nav-link{font-family:var(--mono);font-size:10px;padding:5px 10px;border-radius:5px;color:rgba(255,255,255,0.55);text-decoration:none;letter-spacing:0.06em;transition:all 0.15s;border:1px solid transparent}
 .nav-link:hover{color:#fff;background:rgba(255,255,255,0.08)}
 .nav-link.active{color:#fff;background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.15)}
 .nav-status{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.4)}
 .status-dot{width:6px;height:6px;border-radius:50%;background:#4dbe8a;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-.shell{max-width:720px;margin:0 auto;padding:28px 20px 60px}
-.disclaimer{background:var(--amber-bg);border:1px solid var(--amber-bd);border-left:3px solid var(--amber);border-radius:6px;padding:11px 14px;font-family:var(--mono);font-size:11px;color:var(--amber);line-height:1.6;margin-bottom:24px}
-.section{margin-bottom:20px}
-.slabel{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.shell{max-width:720px;margin:0 auto;padding:24px 16px 60px}
+.disclaimer{background:var(--amber-bg);border:1px solid var(--amber-bd);border-left:3px solid var(--amber);border-radius:6px;padding:10px 14px;font-family:var(--mono);font-size:11px;color:var(--amber);line-height:1.6;margin-bottom:20px}
+.section{margin-bottom:18px}
+.slabel{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .slabel::after{content:"";flex:1;height:1px;background:var(--border)}
 .card{background:#fff;border:1px solid var(--border);border-radius:10px}
-.card-body{padding:18px}
-.cat-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.cpill{font-family:var(--mono);font-size:10px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--dim);cursor:pointer;transition:all 0.15s;letter-spacing:0.04em}
+.card-body{padding:16px}
+.cat-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.cpill{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--dim);cursor:pointer;transition:all 0.15s}
 .cpill:hover{border-color:var(--border2);background:var(--surface2)}
 .cpill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-
 .search-wrap{position:relative;margin-bottom:10px}
-.search-input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:7px;padding:10px 13px 10px 36px;font-size:14px;font-family:var(--display);font-weight:500;color:var(--ink);outline:none;transition:border-color 0.15s;-webkit-appearance:none}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none}
+.search-input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:7px;padding:9px 36px;font-size:13px;font-family:var(--display);color:var(--ink);outline:none;transition:border-color 0.15s;-webkit-appearance:none}
 .search-input:focus{border-color:var(--ink);background:#fff}
-.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--muted);pointer-events:none}
-.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;padding:2px 6px;display:none;font-family:var(--mono)}
+.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;padding:2px 6px;display:none}
 .search-clear.show{display:block}
-.no-results{font-family:var(--mono);font-size:11px;color:var(--muted);padding:12px 0;text-align:center;letter-spacing:0.04em}
-
-.dcount{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:10px}
-.dgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.dcount{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:8px}
+.dgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
 @media(min-width:480px){.dgrid{grid-template-columns:repeat(3,1fr)}}
-.dtile{padding:11px 13px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;transition:all 0.14s;text-align:left}
+.dtile{padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;transition:all 0.14s;text-align:left}
 .dtile:hover{border-color:var(--border2);background:#fff;transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,0.06)}
 .dtile.on{border-color:var(--ink);background:var(--ink);transform:translateY(-1px);box-shadow:0 3px 12px rgba(0,0,0,0.18)}
 .dname{font-size:12px;font-weight:600;color:var(--ink);display:block;line-height:1.3}
 .dtile.on .dname{color:#fff}
-.dcat{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:3px;display:block}
+.dcat{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px;display:block}
 .dtile.on .dcat{color:rgba(255,255,255,0.45)}
-.dfdc{font-family:var(--mono);font-size:8px;color:var(--green);background:var(--green-bg);border:1px solid var(--green-bd);padding:1px 5px;border-radius:3px;display:inline-block;margin-top:3px}
+.dfdc{font-family:var(--mono);font-size:8px;color:var(--green);background:var(--green-bg);border:1px solid var(--green-bd);padding:1px 5px;border-radius:3px;display:inline-block;margin-top:2px}
 .dtile.on .dfdc{color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2)}
+.no-results{font-family:var(--mono);font-size:11px;color:var(--muted);padding:12px 0;text-align:center}
 .fg2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.fld{margin-bottom:14px}
+.fld{margin-bottom:12px}
 .fld:last-child{margin-bottom:0}
-.flbl{display:block;font-family:var(--mono);font-size:10px;font-weight:500;color:var(--dim);margin-bottom:6px;letter-spacing:0.06em;text-transform:uppercase}
-input[type=number],select{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:7px;padding:10px 13px;font-size:14px;font-family:var(--display);font-weight:500;color:var(--ink);outline:none;transition:border-color 0.15s;-webkit-appearance:none}
-input[type=number]:focus,select:focus{border-color:var(--ink);background:#fff}
+.flbl{display:block;font-family:var(--mono);font-size:10px;font-weight:500;color:var(--dim);margin-bottom:5px;letter-spacing:0.06em;text-transform:uppercase}
+input[type=number],input[type=text],select{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:7px;padding:9px 12px;font-size:14px;font-family:var(--display);font-weight:500;color:var(--ink);outline:none;transition:border-color 0.15s;-webkit-appearance:none}
+input:focus,select:focus{border-color:var(--ink);background:#fff}
 .seg{display:grid;border:1.5px solid var(--border);border-radius:7px;overflow:hidden;background:var(--surface)}
-.sbtn{padding:9px 6px;border:none;background:transparent;font-size:12px;font-weight:600;font-family:var(--display);cursor:pointer;color:var(--dim);border-right:1px solid var(--border);transition:all 0.12s}
+.sbtn{padding:8px 6px;border:none;background:transparent;font-size:12px;font-weight:600;font-family:var(--display);cursor:pointer;color:var(--dim);border-right:1px solid var(--border);transition:all 0.12s}
 .sbtn:last-child{border-right:none}
 .sbtn.on{background:var(--ink);color:#fff}
 .sbtn:hover:not(.on){background:var(--surface2)}
-.divider{height:1px;background:var(--border);margin:16px 0}
-.cbtn{width:100%;padding:16px;background:var(--ink);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:var(--display);cursor:pointer;margin:4px 0 20px;transition:all 0.15s}
+.divider{height:1px;background:var(--border);margin:14px 0}
+.cbtn{width:100%;padding:15px;background:var(--ink);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:var(--display);cursor:pointer;margin:4px 0 16px;transition:all 0.15s}
 .cbtn:hover{opacity:0.88}
 .cbtn:active{transform:scale(0.98)}
 .result{display:none;animation:rise 0.3s ease;margin-bottom:20px}
 .result.show{display:block}
 @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.rhero{background:var(--ink);border-radius:10px 10px 0 0;padding:24px 22px 20px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.rhero{background:var(--ink);border-radius:10px 10px 0 0;padding:22px 20px 18px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
 .reyebrow{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.4);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px}
-.rband{font-family:var(--display);font-size:56px;font-weight:800;color:#fff;line-height:1;letter-spacing:-0.04em}
-.rdose{font-family:var(--mono);font-size:13px;color:rgba(255,255,255,0.6);margin-top:8px}
+.rband{font-family:var(--display);font-size:52px;font-weight:800;color:#fff;line-height:1;letter-spacing:-0.04em}
+.rdose{font-family:var(--mono);font-size:12px;color:rgba(255,255,255,0.6);margin-top:6px}
 .rright{text-align:right}
 .rdrug{font-family:var(--display);font-size:13px;font-weight:700;color:#fff}
-.rrange{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px}
-.rbody{background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;padding:18px}
-.pkrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
-.pkc{background:var(--surface);border-radius:7px;padding:10px 12px}
-.pkv{font-family:var(--mono);font-size:16px;font-weight:600;color:var(--ink);line-height:1}
-.pkl{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px}
-.flag{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border-radius:7px;margin-bottom:8px;font-size:12px;line-height:1.6;font-family:var(--mono)}
+.rrange{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px}
+.rbody{background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;padding:16px}
+.pkrow{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px}
+.pkc{background:var(--surface);border-radius:7px;padding:9px 11px}
+.pkv{font-family:var(--mono);font-size:15px;font-weight:600;color:var(--ink);line-height:1}
+.pkl{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:3px}
+.flag{display:flex;gap:9px;align-items:flex-start;padding:10px 12px;border-radius:7px;margin-bottom:7px;font-size:12px;line-height:1.6;font-family:var(--mono)}
 .flag:last-child{margin-bottom:0}
-.fi{font-size:13px;flex-shrink:0;margin-top:2px}
+.fi{font-size:12px;flex-shrink:0;margin-top:2px}
 .flag-info{background:var(--blue-bg);border:1px solid var(--blue-bd);color:var(--blue)}
 .flag-warning{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber)}
 .flag-danger{background:var(--red-bg);border:1px solid var(--red-bd);color:var(--red)}
-.adjrow{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
-.apill{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:20px;border:1px solid}
+.flag-green{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green)}
+.adjrow{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.apill{font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:20px;border:1px solid}
 .ar{background:var(--red-bg);border-color:var(--red-bd);color:var(--red)}
 .ai{background:var(--amber-bg);border-color:var(--amber-bd);color:var(--amber)}
 .an{background:var(--surface2);border-color:var(--border);color:var(--muted)}
-.fdcbanner{background:var(--green-bg);border:1px solid var(--green-bd);border-radius:7px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:11px;color:var(--green);line-height:1.6;display:none}
-.footer{text-align:center;font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:32px;line-height:2}
+.fdcbanner{background:var(--green-bg);border:1px solid var(--green-bd);border-radius:7px;padding:9px 13px;margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--green);line-height:1.6;display:none}
+
+/* ── PHARMACIST WORKFLOW ── */
+.pharm-section{background:#fff;border:1px solid var(--border);border-radius:10px;margin-bottom:20px;overflow:hidden;display:none}
+.pharm-section.show{display:block}
+.pharm-head{padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:space-between}
+.pharm-title{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+.pharm-status{font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:3px;font-weight:600;letter-spacing:0.06em}
+.ps-pending{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd)}
+.ps-approved{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
+.pharm-body{padding:16px}
+.pharm-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.pharm-notes{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:7px;padding:9px 12px;font-size:13px;font-family:var(--display);color:var(--ink);outline:none;resize:vertical;min-height:70px;transition:border-color 0.15s;margin-bottom:12px}
+.pharm-notes:focus{border-color:var(--ink);background:#fff}
+.pharm-btns{display:flex;gap:10px}
+.pharm-btn{flex:1;padding:11px;border-radius:8px;font-size:13px;font-weight:600;font-family:var(--display);cursor:pointer;transition:all 0.15s;border:1.5px solid}
+.pharm-btn-approve{background:var(--green-bg);color:var(--green);border-color:var(--green-bd)}
+.pharm-btn-approve:hover{background:#d4eddf}
+.pharm-btn-query{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bd)}
+.pharm-btn-query:hover{background:#fde9c0}
+.approved-banner{background:var(--green-bg);border:1px solid var(--green-bd);border-radius:8px;padding:14px 16px;display:flex;align-items:flex-start;gap:12px}
+.approved-icon{font-size:20px;flex-shrink:0}
+.approved-detail{font-family:var(--mono);font-size:11px;color:var(--green);line-height:1.8}
+
+/* ── AUDIT + EXPORT ── */
+.action-row{display:flex;gap:8px;margin-bottom:20px}
+.action-btn{flex:1;padding:11px 8px;border-radius:8px;font-size:12px;font-weight:600;font-family:var(--mono);cursor:pointer;transition:all 0.15s;border:1.5px solid var(--border);background:#fff;color:var(--dim);letter-spacing:0.04em;text-align:center;display:none}
+.action-btn.show{display:block}
+.action-btn:hover{border-color:var(--border2);background:var(--surface);color:var(--ink)}
+.action-btn.primary{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd)}
+.action-btn.primary:hover{background:#d8e6f4}
+
+/* ── AUDIT MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:12px 12px 0 0;width:100%;max-width:720px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column}
+.modal-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-title{font-family:var(--display);font-size:15px;font-weight:700;color:var(--ink)}
+.modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);padding:0 4px;line-height:1}
+.modal-body{overflow-y:auto;flex:1;padding:16px 20px}
+.modal-foot{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0}
+.modal-btn{flex:1;padding:11px;border-radius:8px;font-size:13px;font-weight:600;font-family:var(--display);cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--dim);transition:all 0.15s}
+.modal-btn:hover{background:var(--surface2)}
+.modal-btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.modal-btn.primary:hover{opacity:0.88}
+.audit-entry{padding:12px 0;border-bottom:1px solid var(--border);font-size:12px}
+.audit-entry:last-child{border-bottom:none}
+.audit-ts{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:4px}
+.audit-drug{font-weight:700;color:var(--ink);margin-bottom:2px}
+.audit-band{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:4px;margin-bottom:4px}
+.audit-params{font-family:var(--mono);font-size:10px;color:var(--dim);line-height:1.7}
+.audit-approved{font-family:var(--mono);font-size:10px;color:var(--green);margin-top:3px}
+.audit-empty{text-align:center;color:var(--muted);font-family:var(--mono);font-size:11px;padding:32px 0}
+
+/* ── PDF PRINT ── */
+@media print{
+  .nav,.disclaimer,.cat-row,.search-wrap,.dgrid,.dcount,.fdcbanner,.divider,.cbtn,.action-row,.pharm-btns,.modal-overlay,#pdf-hide{display:none!important}
+  body{background:#fff;font-size:12px}
+  .shell{max-width:100%;padding:0}
+  .result.show,.pharm-section.show{display:block!important}
+  .rhero{background:#1a1810!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .pdf-header{display:block!important}
+}
+.pdf-header{display:none;margin-bottom:16px}
+.pdf-header h2{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.pdf-header p{font-family:var(--mono);font-size:10px;color:var(--muted)}
+
+.footer{text-align:center;font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:28px;line-height:2}
 .footer strong{color:var(--dim)}
 </style>
 </head>
@@ -102,21 +166,31 @@ input[type=number]:focus,select:focus{border-color:var(--ink);background:#fff}
   <a href="index.html" class="nav-brand">DoseBand</a>
   <div class="nav-links">
     <a href="index.html" class="nav-link active">Calculator</a>
-    <a href="pkpd.html" class="nav-link">PK/PD Suite</a>
-    <a href="pharmacist.html" class="nav-link">Pharmacist Portal</a>
+    <a href="pkpd.html" class="nav-link">PK/PD</a>
+    <a href="pharmacist.html" class="nav-link">Portal</a>
   </div>
   <div class="nav-status"><div class="status-dot"></div>v1.3</div>
 </nav>
+
 <div class="shell">
-  <div class="disclaimer">Pre-clinical validation only — all recommendations must be verified by a qualified pharmacist before administration.</div>
+  <div class="disclaimer" id="pdf-hide">Pre-clinical validation only — all recommendations must be verified by a qualified pharmacist before administration.</div>
+
+  <!-- PDF HEADER (print only) -->
+  <div class="pdf-header">
+    <h2>DoseBand — Clinical Dose Calculation Record</h2>
+    <p id="pdf-timestamp"></p>
+    <p id="pdf-patientid"></p>
+  </div>
+
+  <!-- DRUG SELECTION -->
   <div class="section">
-    <div class="slabel">Select drug</div>
+    <div class="slabel">Drug</div>
     <div class="card"><div class="card-body">
       <div class="cat-row" id="cats"></div>
       <div class="search-wrap">
         <span class="search-icon">&#x2315;</span>
-        <input type="text" class="search-input" id="drug-search" placeholder="Search drugs... (e.g. vancomycin, rifampicin, TDF)" oninput="onSearch(this.value)" autocomplete="off">
-        <button class="search-clear" id="search-clear" onclick="clearSearch()">x</button>
+        <input type="text" class="search-input" id="drug-search" placeholder="Search drugs..." oninput="onSearch(this.value)" autocomplete="off">
+        <button class="search-clear" id="search-clear" onclick="clearSearch()">&#x2715;</button>
       </div>
       <div class="dcount" id="dcount"></div>
       <div class="fdcbanner" id="fdcbanner">Fixed-dose combination — confirm regimen with prescriber before dispensing.</div>
@@ -133,9 +207,15 @@ input[type=number]:focus,select:focus{border-color:var(--ink);background:#fff}
       </div>
     </div></div>
   </div>
+
+  <!-- PATIENT -->
   <div class="section">
     <div class="slabel">Patient parameters</div>
     <div class="card"><div class="card-body">
+      <div class="fg2" style="margin-bottom:12px">
+        <div class="fld" style="margin-bottom:0"><label class="flbl">Patient ID / Ward (optional)</label><input type="text" id="patient-id" placeholder="e.g. PT-0042 / Ward 4B"></div>
+        <div class="fld" style="margin-bottom:0"><label class="flbl">Clinician / Prescriber</label><input type="text" id="prescriber" placeholder="e.g. Dr. Omondi"></div>
+      </div>
       <div class="fg2">
         <div class="fld"><label class="flbl">Weight (kg)</label><input type="number" id="wt" placeholder="68" min="10" max="300"></div>
         <div class="fld"><label class="flbl">Height (cm)</label><input type="number" id="ht" placeholder="165" min="50" max="250"></div>
@@ -153,11 +233,12 @@ input[type=number]:focus,select:focus{border-color:var(--ink);background:#fff}
       </div>
     </div></div>
   </div>
+
+  <!-- CLINICAL CONTEXT -->
   <div class="section">
     <div class="slabel">Clinical context</div>
     <div class="card"><div class="card-body">
-      <div class="fld">
-        <label class="flbl">Population</label>
+      <div class="fld"><label class="flbl">Population</label>
         <select id="pop">
           <option value="general">General population</option>
           <option value="subSaharanAfrica">Sub-Saharan Africa</option>
@@ -170,8 +251,7 @@ input[type=number]:focus,select:focus{border-color:var(--ink);background:#fff}
           <option value="tbHivCoinfection">TB-HIV co-infection</option>
         </select>
       </div>
-      <div class="fld">
-        <label class="flbl">Hepatic function</label>
+      <div class="fld"><label class="flbl">Hepatic function</label>
         <select id="hep">
           <option value="normal">Normal</option>
           <option value="childPughA">Child-Pugh A</option>
@@ -179,8 +259,7 @@ input[type=number]:focus,select:focus{border-color:var(--ink);background:#fff}
           <option value="childPughC">Child-Pugh C</option>
         </select>
       </div>
-      <div class="fld" style="margin-bottom:0">
-        <label class="flbl">Concurrent nephrotoxins</label>
+      <div class="fld" style="margin-bottom:0"><label class="flbl">Concurrent nephrotoxins</label>
         <div class="seg" style="grid-template-columns:1fr 1fr">
           <button class="sbtn on" onclick="pick('neph','no',this)">No</button>
           <button class="sbtn" onclick="pick('neph','yes',this)">Yes</button>
@@ -188,7 +267,10 @@ input[type=number]:focus,select:focus{border-color:var(--ink);background:#fff}
       </div>
     </div></div>
   </div>
+
   <button class="cbtn" onclick="calculate()">Calculate dose band</button>
+
+  <!-- RESULT -->
   <div class="result" id="result">
     <div class="rhero">
       <div>
@@ -203,7 +285,7 @@ input[type=number]:focus,select:focus{border-color:var(--ink);background:#fff}
     </div>
     <div class="rbody">
       <div class="pkrow">
-        <div class="pkc"><div class="pkv" id="r-crcl">-</div><div class="pkl">CrCl mL/min</div></div>
+        <div class="pkc"><div class="pkv" id="r-crcl">-</div><div class="pkl">CrCl</div></div>
         <div class="pkc"><div class="pkv" id="r-bsa">-</div><div class="pkl">BSA m2</div></div>
         <div class="pkc"><div class="pkv" id="r-ibw">-</div><div class="pkl">IBW kg</div></div>
         <div class="pkc"><div class="pkv" id="r-bmi">-</div><div class="pkl">BMI</div></div>
@@ -212,22 +294,86 @@ input[type=number]:focus,select:focus{border-color:var(--ink);background:#fff}
       <div id="r-flags"></div>
     </div>
   </div>
+
+  <!-- ACTION BUTTONS -->
+  <div class="action-row" id="action-row">
+    <button class="action-btn primary show" onclick="showPharmWorkflow()">Pharmacist review</button>
+    <button class="action-btn show" onclick="exportPDF()">Export PDF</button>
+    <button class="action-btn show" onclick="exportFHIR()">Export / FHIR</button>
+    <button class="action-btn show" onclick="showAudit()">Audit trail</button>
+  </div>
+
+  <!-- PHARMACIST WORKFLOW -->
+  <div class="pharm-section" id="pharm-section">
+    <div class="pharm-head">
+      <span class="pharm-title">Pharmacist Review &amp; Approval</span>
+      <span class="pharm-status ps-pending" id="pharm-status-badge">Pending review</span>
+    </div>
+    <div class="pharm-body" id="pharm-body">
+      <div class="pharm-fields">
+        <div class="fld" style="margin-bottom:0"><label class="flbl">Pharmacist name</label><input type="text" id="pharm-name" placeholder="Full name"></div>
+        <div class="fld" style="margin-bottom:0"><label class="flbl">Staff ID / Initials</label><input type="text" id="pharm-id" placeholder="e.g. RO / RPh-041"></div>
+      </div>
+      <textarea class="pharm-notes" id="pharm-notes" placeholder="Clinical notes, dose modification rationale, or sign-off comment (required for approval)..."></textarea>
+      <div class="pharm-btns">
+        <button class="pharm-btn pharm-btn-approve" onclick="pharmApprove()">Approve &amp; sign off</button>
+        <button class="pharm-btn pharm-btn-query" onclick="pharmQuery()">Flag for query</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FHIR MODAL -->
+  <div class="modal-overlay" id="fhir-modal">
+    <div class="modal">
+      <div class="modal-head">
+        <span class="modal-title">Export — FHIR R4 MedicationRequest</span>
+        <button class="modal-close" onclick="closeModal('fhir-modal')">&#x2715;</button>
+      </div>
+      <div class="modal-body">
+        <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.7">HL7 FHIR R4 MedicationRequest resource. Paste into your EHR system or save as .json for import. Patient identifiers are pseudonymised.</div>
+        <textarea id="fhir-output" style="width:100%;min-height:320px;background:var(--surface);border:1.5px solid var(--border);border-radius:7px;padding:12px;font-family:var(--mono);font-size:11px;color:var(--ink);outline:none;resize:vertical;line-height:1.6"></textarea>
+      </div>
+      <div class="modal-foot">
+        <button class="modal-btn" onclick="closeModal('fhir-modal')">Close</button>
+        <button class="modal-btn primary" onclick="copyFHIR()">Copy to clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUDIT MODAL -->
+  <div class="modal-overlay" id="audit-modal">
+    <div class="modal">
+      <div class="modal-head">
+        <span class="modal-title">Audit Trail</span>
+        <button class="modal-close" onclick="closeModal('audit-modal')">&#x2715;</button>
+      </div>
+      <div class="modal-body" id="audit-body"></div>
+      <div class="modal-foot">
+        <button class="modal-btn" onclick="clearAudit()">Clear log</button>
+        <button class="modal-btn" onclick="closeModal('audit-modal')">Close</button>
+        <button class="modal-btn primary" onclick="exportAuditCSV()">Export CSV</button>
+      </div>
+    </div>
+  </div>
+
   <div class="footer">
     <strong>DoseBand v1.3</strong> — Pre-clinical validation only<br>
-    53 drugs — Oncology, Antibiotics, TB, HIV ARVs, FDCs, Monoclonal Antibodies, OI Prophylaxis<br>
-    All parameters require pharmacist sign-off before clinical use
+    53 drugs · Audit trail · Pharmacist workflow · PDF &amp; FHIR export<br>
+    doseband-production.up.railway.app
   </div>
 </div>
+
 <script>
+// ── DRUG DATABASE ─────────────────────────────────────────────────────────────
 var DRUGS = {};
 var CATS = {all:"All",oncology:"Oncology",id:"Antibiotics",antifungal:"Antifungal",antiviral:"Antiviral",tb:"TB",hiv:"HIV ARVs",hiv_fdc:"HIV FDCs",oi_px:"OI Prophylaxis",mab:"Monoclonal Abs"};
 var S = {drug:null,reg:"standard",sex:"M",neph:"no",cat:"all",query:""};
+var lastResult = null;
 
 function addDrug(key,name,cat,method,base,bands,renal,hepatic,thresh,fdc,mon,popAdj){
   DRUGS[key]={name:name,cat:cat,method:method,base:base,bands:bands,renal:renal,hepatic:hepatic,thresh:thresh,fdc:fdc||false,mon:mon||"",popAdj:popAdj||{}};
 }
-
-function b(l,lo,hi){return {l:l,lo:lo,hi:hi};}
+function b(l,lo,hi){return{l:l,lo:lo,hi:hi};}
 
 // ONCOLOGY
 addDrug("carboplatin","Carboplatin","oncology","calvert",5,[b("A",0,350),b("B",350,450),b("C",450,550),b("D",550,650),b("E",650,Infinity)],true,false,null,false,"CrCl each cycle. FBC nadir d14-21. Audiometry if cumulative >400mg/m2.",{elderly:{r:0.85,t:"info",m:"Elderly: dose reduced 15% (Launay-Vacher 2016)."}});
@@ -235,249 +381,382 @@ addDrug("cisplatin","Cisplatin","oncology","bsa",75,[b("1",0,55),b("2",55,70),b(
 addDrug("oxaliplatin","Oxaliplatin","oncology","bsa",85,[b("1",0,60),b("2",60,80),b("3",80,Infinity)],true,false,null,false,"Neuropathy grading each cycle. CrCl. Hold if CrCl <30.",{});
 addDrug("docetaxel","Docetaxel","oncology","bsa",75,[b("1",0,55),b("2",55,70),b("3",70,Infinity)],false,true,null,false,"LFTs before each cycle. FBC nadir d7-11.",{});
 addDrug("paclitaxel","Paclitaxel","oncology","bsa",175,[b("1",0,130),b("2",130,165),b("3",165,Infinity)],false,true,null,false,"LFTs. Neuropathy grading. Dexamethasone+antihistamine premedication mandatory.",{});
-addDrug("cyclophosphamide","Cyclophosphamide","oncology","bsa",600,[b("1",0,400),b("2",400,700),b("3",700,1000),b("4",1000,Infinity)],true,true,null,false,"Mesna mandatory >600mg/m2. FBC nadir d8-12. Monitor urine output.",{});
+addDrug("cyclophosphamide","Cyclophosphamide","oncology","bsa",600,[b("1",0,400),b("2",400,700),b("3",700,1000),b("4",1000,Infinity)],true,true,null,false,"Mesna mandatory >600mg/m2. FBC nadir d8-12.",{});
 addDrug("doxorubicin","Doxorubicin","oncology","bsa",60,[b("1",0,40),b("2",40,70),b("3",70,90),b("4",90,Infinity)],false,true,null,false,"Lifetime cumulative limit 450-550mg/m2. Baseline ECHO mandatory.",{});
 addDrug("fluorouracil","5-Fluorouracil","oncology","bsa",400,[b("1",0,300),b("2",300,500),b("3",500,700),b("4",700,Infinity)],false,true,null,false,"DPD deficiency screening recommended. Mucositis monitoring.",{});
-addDrug("vincristine","Vincristine","oncology","bsa",1.4,[b("1",0,1),b("2",1,1.5),b("3",1.5,2),b("4",2,Infinity)],false,true,null,false,"MAX DOSE 2mg - cap regardless of BSA. FATAL if intrathecal. Neuropathy grading.",{});
-
+addDrug("vincristine","Vincristine","oncology","bsa",1.4,[b("1",0,1),b("2",1,1.5),b("3",1.5,2),b("4",2,Infinity)],false,true,null,false,"MAX DOSE 2mg. FATAL if intrathecal. Neuropathy grading.",{});
 // ANTIBIOTICS
 addDrug("gentamicin","Gentamicin","id","wt",5,[b("L",0,240),b("M",240,320),b("H",320,Infinity)],true,false,3.0,false,"Hartford nomogram: level 6-14h post-dose. CrCl 3x/week.",{subSaharanAfrica:{r:0.87,t:"info",m:"SSA PK: dose reduced 13% (Mehta 2019)."},malnourished:{r:0.85,t:"warning",m:"Malnutrition: dose reduced 15%. Monitor trough."},pregnant:{r:1.35,t:"warning",m:"Pregnancy: dose increased 35% (Hebert 2017). TDM mandatory."}});
 addDrug("amikacin","Amikacin","id","wt",15,[b("L",0,600),b("M",600,900),b("H",900,Infinity)],true,false,10.0,false,"Level 6-14h post-dose. Trough <5 mg/L.",{subSaharanAfrica:{r:0.87,t:"info",m:"SSA PK: dose reduced 13%."},malnourished:{r:0.85,t:"warning",m:"Malnutrition: dose reduced 15%."}});
 addDrug("vancomycin","Vancomycin","id","wt",15,[b("1",0,750),b("2",750,1250),b("3",1250,1750),b("4",1750,2250),b("5",2250,Infinity)],true,false,null,false,"AUC-guided TDM preferred. Trough after dose 3-4. CrCl q48-72h.",{hivPositive:{r:0.9,t:"warning",m:"HIV on ART: dose reduced 10%. TDM essential."},hivNaive:{r:0.9,t:"warning",m:"HIV naive: PK altered. TDM essential."}});
 addDrug("piperacillinTazobactam","Pip-Tazobactam","id","fixed",4500,[b("1",0,3000),b("2",3000,4500),b("3",4500,Infinity)],true,false,null,false,"Reduce if CrCl <20. Extended infusion 4h preferred.",{});
 addDrug("meropenem","Meropenem","id","fixed",1000,[b("1",0,750),b("2",750,1250),b("3",1250,Infinity)],true,false,null,false,"Adjust if CrCl <50. Extended infusion 3h preferred.",{});
-addDrug("ceftriaxone","Ceftriaxone","id","fixed",2000,[b("1",0,1500),b("2",1500,2500),b("3",2500,Infinity)],false,false,null,false,"No renal adjustment unless combined renal+hepatic failure.",{malnourished:{r:0.85,t:"info",m:"Malnutrition: reduced protein binding. Monitor clinically."}});
+addDrug("ceftriaxone","Ceftriaxone","id","fixed",2000,[b("1",0,1500),b("2",1500,2500),b("3",2500,Infinity)],false,false,null,false,"No renal adjustment unless combined renal+hepatic failure.",{});
 addDrug("ampicillin","Ampicillin IV","id","fixed",2000,[b("1",0,1500),b("2",1500,2500),b("3",2500,Infinity)],true,false,null,false,"Rash monitoring. EBV maculopapular rash common.",{});
-addDrug("metronidazole","Metronidazole IV","id","fixed",500,[b("1",0,375),b("2",375,625),b("3",625,Infinity)],false,true,null,false,"Reduce 50% in severe hepatic impairment. Neuropathy with prolonged use.",{hivPositive:{r:0.9,t:"info",m:"HIV+: monitor for CNS toxicity."}});
-addDrug("azithromycin","Azithromycin IV","id","fixed",500,[b("1",0,400),b("2",400,600),b("3",600,Infinity)],false,true,null,false,"QTc monitoring mandatory. Avoid with other QT-prolonging drugs.",{});
-addDrug("cotrimoxazole","Co-trimoxazole IV","id","wt",5,[b("1",0,240),b("2",240,480),b("3",480,Infinity)],true,false,null,false,"Based on TMP component 5mg/kg. FBC weekly. Folate if prolonged.",{hivPositive:{r:1.0,t:"info",m:"HIV+: standard PCP treatment dosing. Monitor K and renal function."}});
-
+addDrug("metronidazole","Metronidazole IV","id","fixed",500,[b("1",0,375),b("2",375,625),b("3",625,Infinity)],false,true,null,false,"Reduce 50% in severe hepatic impairment.",{});
+addDrug("azithromycin","Azithromycin IV","id","fixed",500,[b("1",0,400),b("2",400,600),b("3",600,Infinity)],false,true,null,false,"QTc monitoring mandatory.",{});
+addDrug("cotrimoxazole","Co-trimoxazole IV","id","wt",5,[b("1",0,240),b("2",240,480),b("3",480,Infinity)],true,false,null,false,"Based on TMP component 5mg/kg. FBC weekly.",{});
 // ANTIFUNGAL
-addDrug("fluconazole","Fluconazole","antifungal","fixed",400,[b("1",0,200),b("2",200,400),b("3",400,Infinity)],true,false,null,false,"LFTs weekly. 50% reduction if CrCl <50. Loading dose 800mg day 1.",{hivPositive:{r:1.0,t:"info",m:"HIV+: first-line for cryptococcal consolidation/maintenance."}});
-addDrug("voriconazole","Voriconazole","antifungal","wt",4,[b("1",0,150),b("2",150,250),b("3",250,Infinity)],false,true,null,false,"TDM mandatory. Trough after day 5 then weekly. Visual disturbances. QTc.",{});
-
+addDrug("fluconazole","Fluconazole","antifungal","fixed",400,[b("1",0,200),b("2",200,400),b("3",400,Infinity)],true,false,null,false,"LFTs weekly. 50% reduction if CrCl <50.",{});
+addDrug("voriconazole","Voriconazole","antifungal","wt",4,[b("1",0,150),b("2",150,250),b("3",250,Infinity)],false,true,null,false,"TDM mandatory. Trough after day 5 then weekly.",{});
 // ANTIVIRAL
-addDrug("acyclovir","Acyclovir IV","antiviral","wt",10,[b("1",0,400),b("2",400,700),b("3",700,Infinity)],true,false,null,false,"Aggressive IV hydration mandatory. CrCl before each dose.",{});
-
+addDrug("acyclovir","Acyclovir IV","antiviral","wt",10,[b("1",0,400),b("2",400,700),b("3",700,Infinity)],true,false,null,false,"Aggressive IV hydration mandatory.",{});
 // TB
-addDrug("rifampicin","Rifampicin","tb","wt",10,[b("1",0,450),b("2",450,600),b("3",600,Infinity)],false,true,null,false,"Potent CYP450 inducer. Major ARV interactions. LFTs monthly. Max 600mg.",{hivPositive:{r:1.0,t:"danger",m:"HIV on ART: rifampicin MAJOR interactions with most ARVs. Specialist review MANDATORY."},tbHivCoinfection:{r:1.0,t:"danger",m:"TB-HIV: rifampicin critically interacts with most ARVs. Switch to rifabutin if on PI-based ART."}});
-addDrug("isoniazid","Isoniazid","tb","wt",5,[b("1",0,200),b("2",200,300),b("3",300,Infinity)],false,true,null,false,"Pyridoxine B6 10-25mg/day MANDATORY. LFTs monthly. Max 300mg.",{malnourished:{r:1.0,t:"warning",m:"Malnutrition: increase pyridoxine to 25-50mg/day."}});
-addDrug("pyrazinamide","Pyrazinamide","tb","wt",25,[b("1",0,1000),b("2",1000,1500),b("3",1500,2000),b("4",2000,Infinity)],true,true,null,false,"LFTs monthly. Uric acid monitoring. Initial 2-month phase only. Max 2g.",{});
-addDrug("ethambutol","Ethambutol","tb","wt",15,[b("1",0,600),b("2",600,900),b("3",900,1200),b("4",1200,Infinity)],true,false,null,false,"Visual acuity and colour vision monthly. Reduce if CrCl <30. Max 1.6g.",{});
-addDrug("streptomycin","Streptomycin IM","tb","wt",15,[b("L",0,500),b("M",500,750),b("H",750,Infinity)],true,false,3.0,false,"IM only. Audiometry monthly. Elderly max 10mg/kg. Avoid pregnancy. Max 1g.",{subSaharanAfrica:{r:0.87,t:"info",m:"SSA: aminoglycoside PK adjustment - dose reduced 13%."},elderly:{r:0.75,t:"warning",m:"Elderly: dose reduced 25%, max 750mg."}});
-
+addDrug("rifampicin","Rifampicin","tb","wt",10,[b("1",0,450),b("2",450,600),b("3",600,Infinity)],false,true,null,false,"Potent CYP450 inducer. Major ARV interactions. LFTs monthly.",{hivPositive:{r:1.0,t:"danger",m:"HIV on ART: rifampicin MAJOR interactions with most ARVs. Specialist review MANDATORY."},tbHivCoinfection:{r:1.0,t:"danger",m:"TB-HIV: rifampicin critically interacts with most ARVs. Specialist review required."}});
+addDrug("isoniazid","Isoniazid","tb","wt",5,[b("1",0,200),b("2",200,300),b("3",300,Infinity)],false,true,null,false,"Pyridoxine B6 MANDATORY. LFTs monthly. Max 300mg.",{malnourished:{r:1.0,t:"warning",m:"Malnutrition: increase pyridoxine to 25-50mg/day."}});
+addDrug("pyrazinamide","Pyrazinamide","tb","wt",25,[b("1",0,1000),b("2",1000,1500),b("3",1500,2000),b("4",2000,Infinity)],true,true,null,false,"LFTs monthly. Uric acid monitoring. Max 2g.",{});
+addDrug("ethambutol","Ethambutol","tb","wt",15,[b("1",0,600),b("2",600,900),b("3",900,1200),b("4",1200,Infinity)],true,false,null,false,"Visual acuity and colour vision monthly. Max 1.6g.",{});
+addDrug("streptomycin","Streptomycin IM","tb","wt",15,[b("L",0,500),b("M",500,750),b("H",750,Infinity)],true,false,3.0,false,"IM only. Audiometry monthly. Max 1g.",{subSaharanAfrica:{r:0.87,t:"info",m:"SSA: aminoglycoside PK adjustment."},elderly:{r:0.75,t:"warning",m:"Elderly: dose reduced 25%, max 750mg."}});
 // HIV ARVs
-addDrug("tenofovir","Tenofovir (TDF)","hiv","fixed",300,[b("1",0,300),b("2",300,Infinity)],true,false,null,false,"Reduce/extend interval if CrCl 30-50. Avoid if CrCl <30. Monitor renal and bone density.",{hivNaive:{r:1.0,t:"info",m:"ART naive: TDF is WHO-preferred NRTI backbone. Baseline renal function essential."}});
-addDrug("lamivudine","Lamivudine (3TC)","hiv","fixed",150,[b("1",0,150),b("2",150,Infinity)],true,false,null,false,"150mg BD or 300mg OD. Reduce if CrCl <50. HBV flare risk if stopped in HBV co-infection.",{hivNaive:{r:1.0,t:"info",m:"ART naive: 3TC is universal NRTI partner. Check HBV status before starting."}});
-addDrug("zidovudine","Zidovudine (AZT)","hiv","fixed",300,[b("1",0,200),b("2",200,350),b("3",350,Infinity)],true,true,null,false,"FBC at baseline, 2 weeks, monthly. Avoid if Hb <7g/dL. Lactic acidosis risk.",{malnourished:{r:0.85,t:"warning",m:"Malnutrition: increased AZT toxicity. FBC more frequently."},pregnant:{r:1.0,t:"info",m:"Pregnancy: AZT safe, used for PMTCT. Standard dosing."}});
-addDrug("efavirenz","Efavirenz (EFV)","hiv","fixed",600,[b("1",0,600),b("2",600,Infinity)],false,true,null,false,"600mg once daily at night. CYP inducer. Avoid 1st trimester. CNS side effects first 4 weeks.",{hivNaive:{r:1.0,t:"warning",m:"ART naive: take at bedtime. Screen psychiatric history. CNS side effects common first 4 weeks."},tbHivCoinfection:{r:1.0,t:"info",m:"TB-HIV: EFV preferred NNRTI with rifampicin. No dose adjustment needed."}});
-addDrug("dolutegravir","Dolutegravir (DTG)","hiv","fixed",50,[b("1",0,50),b("2",50,Infinity)],false,true,null,false,"50mg OD standard; 50mg BD if on rifampicin. Neural tube defect risk - counsel women.",{tbHivCoinfection:{r:2.0,t:"warning",m:"TB-HIV on rifampicin: DTG doubled to 50mg BD (rifampicin induces DTG metabolism - WHO 2019)."},tbCoinfection:{r:2.0,t:"warning",m:"TB co-treatment with rifampicin: DTG doubled to 50mg BD."},pregnant:{r:1.0,t:"warning",m:"Pregnancy: neural tube defect risk. Counsel patient. WHO recommends DTG - benefit outweighs risk in 2nd/3rd trimester."}});
-addDrug("nevirapine","Nevirapine (NVP)","hiv","fixed",200,[b("1",0,200),b("2",200,Infinity)],false,true,null,false,"200mg OD x2 weeks lead-in then 200mg BD. LFTs at 2,4,8,12,18 weeks. Stevens-Johnson risk.",{hivNaive:{r:1.0,t:"danger",m:"ART naive: DO NOT start if CD4 >250 (F) or >400 (M) - hepatotoxicity risk. Use EFV or DTG first-line."},hivPositive:{r:1.0,t:"warning",m:"HIV on ART: if switching, full lead-in may not be required. Check guidelines."}});
-addDrug("lopinavirRitonavir","Lopinavir/r (LPV/r)","hiv","fixed",400,[b("1",0,400),b("2",400,Infinity)],false,true,null,false,"400/100mg BD. GI side effects. Lipids and glucose monitoring. CYP3A4 inhibitor.",{tbHivCoinfection:{r:1.0,t:"danger",m:"TB-HIV on rifampicin: LPV/r levels reduced 75% by rifampicin. AVOID or use rifabutin 150mg OD instead."},pregnant:{r:1.0,t:"info",m:"Pregnancy: LPV/r is second-line. Use DTG-based regimen if possible."}});
-
+addDrug("tenofovir","Tenofovir (TDF)","hiv","fixed",300,[b("Standard",0,300),b("Adjusted",300,Infinity)],true,false,null,false,"Monitor renal function and bone density.",{});
+addDrug("lamivudine","Lamivudine (3TC)","hiv","fixed",150,[b("Standard",0,300),b("Higher",300,Infinity)],true,false,null,false,"150mg BD or 300mg OD. HBV flare risk if stopped.",{});
+addDrug("zidovudine","Zidovudine (AZT)","hiv","fixed",300,[b("Standard",0,300),b("Higher",300,Infinity)],true,true,null,false,"FBC monitoring. Avoid if Hb <7g/dL.",{malnourished:{r:0.85,t:"warning",m:"Malnutrition: increased AZT toxicity. FBC more frequently."},pregnant:{r:1.0,t:"info",m:"Pregnancy: AZT safe, used for PMTCT."}});
+addDrug("efavirenz","Efavirenz (EFV)","hiv","fixed",600,[b("Standard",0,600),b("High",600,Infinity)],false,true,null,false,"600mg OD at night. CNS side effects first 4 weeks.",{tbHivCoinfection:{r:1.0,t:"info",m:"TB-HIV: EFV compatible with rifampicin."}});
+addDrug("dolutegravir","Dolutegravir (DTG)","hiv","fixed",50,[b("Standard",0,50),b("Double (TB)",50,Infinity)],false,true,null,false,"50mg OD; 50mg BD if on rifampicin. Neural tube defect risk.",{tbHivCoinfection:{r:2.0,t:"warning",m:"TB-HIV on rifampicin: DTG doubled to 50mg BD (WHO 2019)."},tbCoinfection:{r:2.0,t:"warning",m:"TB co-treatment with rifampicin: DTG doubled to 50mg BD."},pregnant:{r:1.0,t:"warning",m:"Pregnancy: neural tube defect risk. Counsel patient."}});
+addDrug("nevirapine","Nevirapine (NVP)","hiv","fixed",200,[b("Lead-in",0,200),b("Full dose",200,Infinity)],false,true,null,false,"200mg OD x2 weeks lead-in then 200mg BD. LFTs q2 weeks x18.",{hivNaive:{r:1.0,t:"danger",m:"ART naive: DO NOT start if CD4 >250(F) or >400(M)."}});
+addDrug("lopinavirRitonavir","Lopinavir/r (LPV/r)","hiv","fixed",400,[b("Standard",0,400),b("Higher",400,Infinity)],false,true,null,false,"400/100mg BD. GI side effects. CYP3A4 inhibitor.",{tbHivCoinfection:{r:1.0,t:"danger",m:"TB-HIV on rifampicin: LPV/r levels reduced 75%. AVOID."}});
 // HIV FDCs
-addDrug("tdf_3tc_dtg","TDF/3TC/DTG","hiv_fdc","fixed",1,[b("1 tab",0,1.5),b("2 tabs",1.5,Infinity)],true,true,null,true,"WHO first-line 2019. One tablet OD. Renal monitoring (TDF). Neural tube defect counselling.",{tbHivCoinfection:{r:1.0,t:"danger",m:"TB co-treatment: if on rifampicin add DTG 50mg separately (total DTG = 50mg BD)."},pregnant:{r:1.0,t:"warning",m:"Pregnancy: WHO-recommended 2nd/3rd trimester. Counsel re neural tube defect risk 1st trimester."}});
-addDrug("tdf_3tc_efv","TDF/3TC/EFV 600","hiv_fdc","fixed",1,[b("1 tab",0,1.5),b("2 tabs",1.5,Infinity)],true,true,null,true,"One tablet OD at night. Previous WHO first-line. EFV CNS effects 4 weeks. Avoid 1st trimester.",{tbHivCoinfection:{r:1.0,t:"info",m:"TB-HIV: TDF/3TC/EFV compatible with rifampicin-based TB therapy. No dose adjustment."},pregnant:{r:1.0,t:"warning",m:"Pregnancy: avoid 1st trimester (EFV teratogenic). Use TDF/3TC/DTG instead."}});
-addDrug("azt_3tc_nvp","AZT/3TC/NVP","hiv_fdc","fixed",1,[b("1 tab",0,1.5),b("2 tabs",1.5,Infinity)],true,true,null,true,"One tablet BD. FBC monitoring (AZT). LFTs every 2 weeks x18 weeks (NVP). Do not start if CD4 >250(F)/400(M).",{malnourished:{r:1.0,t:"warning",m:"Malnutrition: increased AZT haematotoxicity. FBC fortnightly."},tbHivCoinfection:{r:1.0,t:"danger",m:"TB co-treatment: AVOID NVP with rifampicin - NVP levels drop 55%. Switch to EFV or DTG-based regimen."}});
-addDrug("tdf_3tc_nvp","TDF/3TC/NVP","hiv_fdc","fixed",1,[b("1 tab",0,1.5),b("2 tabs",1.5,Infinity)],true,true,null,true,"One tablet BD or OD. LFTs every 2 weeks x18 weeks. Renal monitoring (TDF).",{tbHivCoinfection:{r:1.0,t:"danger",m:"TB co-treatment: AVOID NVP with rifampicin. Switch to TDF/3TC/EFV or TDF/3TC/DTG."}});
-addDrug("azt_3tc","AZT/3TC (backbone)","hiv_fdc","fixed",1,[b("1 tab",0,1.5),b("2 tabs",1.5,Infinity)],true,true,null,true,"One tablet BD. Dual NRTI backbone - add 3rd agent. FBC monitoring. Check HBV status.",{pregnant:{r:1.0,t:"info",m:"Pregnancy: AZT/3TC backbone safe. Add DTG or NVP as 3rd agent per PMTCT guidelines."}});
-
+addDrug("tdf_3tc_dtg","TDF/3TC/DTG","hiv_fdc","fixed",1,[b("1 tab",0,1.5),b("2 tabs",1.5,Infinity)],true,true,null,true,"WHO first-line 2019. Neural tube defect counselling.",{tbHivCoinfection:{r:1.0,t:"danger",m:"TB co-treatment: add extra DTG 50mg (total 50mg BD)."},pregnant:{r:1.0,t:"warning",m:"Pregnancy: WHO-recommended. Counsel re neural tube defect risk."}});
+addDrug("tdf_3tc_efv","TDF/3TC/EFV 600","hiv_fdc","fixed",1,[b("1 tab",0,1.5),b("2 tabs",1.5,Infinity)],true,true,null,true,"One tablet OD at night. EFV CNS effects 4 weeks.",{tbHivCoinfection:{r:1.0,t:"info",m:"TB-HIV: compatible with rifampicin-based TB therapy."}});
+addDrug("azt_3tc_nvp","AZT/3TC/NVP","hiv_fdc","fixed",1,[b("1 tab",0,1.5),b("2 tabs",1.5,Infinity)],true,true,null,true,"One tablet BD. FBC monitoring. LFTs q2 weeks x18.",{tbHivCoinfection:{r:1.0,t:"danger",m:"TB co-treatment: AVOID NVP with rifampicin."}});
+addDrug("tdf_3tc_nvp","TDF/3TC/NVP","hiv_fdc","fixed",1,[b("1 tab",0,1.5),b("2 tabs",1.5,Infinity)],true,true,null,true,"LFTs q2 weeks x18. Renal monitoring.",{tbHivCoinfection:{r:1.0,t:"danger",m:"TB co-treatment: AVOID NVP with rifampicin."}});
+addDrug("azt_3tc","AZT/3TC (backbone)","hiv_fdc","fixed",1,[b("1 tab",0,1.5),b("2 tabs",1.5,Infinity)],true,true,null,true,"One tablet BD. Dual backbone. FBC monitoring.",{pregnant:{r:1.0,t:"info",m:"Pregnancy: AZT/3TC backbone safe."}});
 // OI PROPHYLAXIS
-addDrug("cotrimoxazole_px","Co-trimoxazole (prophylaxis)","oi_px","fixed",960,[b("Standard",0,960),b("Double",960,Infinity)],true,false,null,false,"960mg (1 DS tablet) OD. CD4 <200 or WHO stage 3/4. FBC every 3 months.",{hivPositive:{r:1.0,t:"info",m:"HIV+: recommended for all CD4 <200 or WHO stage 3/4. Reduces PCP, toxoplasmosis, malaria risk by 40-50%."},hivNaive:{r:1.0,t:"info",m:"HIV (ART naive): start cotrimoxazole immediately. Do not wait for ART."}});
-addDrug("fluconazole_px","Fluconazole (prophylaxis)","oi_px","fixed",200,[b("Maintenance",0,200),b("Induction",200,Infinity)],true,false,null,false,"200mg OD for cryptococcal secondary prophylaxis. Continue until CD4 >100 x6 months on ART.",{hivPositive:{r:1.0,t:"info",m:"HIV+: after cryptococcal meningitis - induction amphotericin B then consolidation fluconazole 400mg then maintenance 200mg."}});
-addDrug("dapsone_px","Dapsone (PCP prophylaxis)","oi_px","fixed",100,[b("Standard",0,100),b("Reduced",0,50)],false,false,null,false,"100mg OD. Use when cotrimoxazole not tolerated. G6PD testing MANDATORY before starting.",{hivPositive:{r:1.0,t:"warning",m:"HIV+: G6PD testing mandatory before dapsone. High G6PD deficiency prevalence in SSA - haemolytic anaemia risk."}});
-
+addDrug("cotrimoxazole_px","Co-trimoxazole (PX)","oi_px","fixed",960,[b("Standard",0,960),b("Double",960,Infinity)],true,false,null,false,"960mg OD. FBC every 3 months.",{hivPositive:{r:1.0,t:"info",m:"HIV+: start immediately if CD4 <200 or WHO stage 3/4."}});
+addDrug("fluconazole_px","Fluconazole (PX)","oi_px","fixed",200,[b("Maintenance",0,200),b("Induction",200,Infinity)],true,false,null,false,"Secondary cryptococcal prophylaxis. Continue until CD4 >100 x6 months.",{});
+addDrug("dapsone_px","Dapsone (PCP PX)","oi_px","fixed",100,[b("Standard",0,100),b("Reduced",0,50)],false,false,null,false,"G6PD testing MANDATORY before starting.",{hivPositive:{r:1.0,t:"warning",m:"HIV+ (SSA): G6PD testing mandatory. High G6PD deficiency prevalence."}});
 // MONOCLONAL ANTIBODIES
-addDrug("rituximab","Rituximab","mab","bsa",375,[b("1",0,500),b("2",500,650),b("3",650,750),b("4",750,Infinity)],false,false,null,false,"Pre-medicate: paracetamol + antihistamine + prednisolone. Start at 50mg/hr. HBV reactivation screen ALL patients. PML risk.",{hivPositive:{r:1.0,t:"danger",m:"HIV+: profound B-cell depletion - major infection risk (PCP, cryptococcus, CMV). Ensure cotrimoxazole prophylaxis. CD4 monitoring. Extreme caution if CD4 <200."},subSaharanAfrica:{r:1.0,t:"warning",m:"SSA: mandatory HBV and TB screening before rituximab. Consider antiviral prophylaxis if HBsAg positive."}});
-addDrug("trastuzumab","Trastuzumab","mab","wt",6,[b("1",0,300),b("2",300,450),b("3",450,600),b("4",600,Infinity)],false,false,null,false,"HER2 testing MANDATORY. Loading 8mg/kg then 6mg/kg q3w. Baseline ECHO mandatory. Do NOT give with anthracyclines. ECHO every 3 months.",{hivPositive:{r:1.0,t:"warning",m:"HIV+: can be used with CD4 >200. Optimise ART before starting."},subSaharanAfrica:{r:1.0,t:"info",m:"SSA: breast cancer most common cancer in African women. HER2+ accounts for 20-25%."}});
-addDrug("bevacizumab","Bevacizumab","mab","wt",5,[b("1",0,250),b("2",250,400),b("3",400,550),b("4",550,Infinity)],false,false,null,false,"5mg/kg q2w or 15mg/kg q3w. BP monitoring each cycle. Hold 4 weeks before/after surgery. Proteinuria monitoring. Teratogenic.",{subSaharanAfrica:{r:1.0,t:"info",m:"SSA: cervical cancer highest global incidence in SSA - bevacizumab indicated for recurrent/metastatic disease."},elderly:{r:1.0,t:"warning",m:"Elderly: higher thromboembolic and hypertension risk."}});
-addDrug("cetuximab","Cetuximab","mab","bsa",400,[b("1",0,500),b("2",500,700),b("3",700,900),b("4",900,Infinity)],false,false,null,false,"Loading 400mg/m2 then 250mg/m2 weekly. KRAS/RAS testing MANDATORY. Acneiform rash in 80% (response marker). Mg supplementation.",{subSaharanAfrica:{r:1.0,t:"info",m:"SSA: head and neck cancers common. Cetuximab used for HNSCC and platinum-refractory disease."}});
-addDrug("ibalizumab","Ibalizumab","mab","fixed",2000,[b("Loading",0,2001),b("Maintenance",2001,Infinity)],false,false,null,false,"Loading 2000mg IV then 800mg IV q2 weeks. MULTIDRUG-RESISTANT HIV ONLY. Requires resistance genotype with >2 class resistance.",{hivPositive:{r:1.0,t:"warning",m:"HIV (MDR): treatment-experienced patients with documented multidrug resistance only. Specialist HIV physician mandatory."}});
-addDrug("lenacapavir","Lenacapavir (6-monthly)","mab","fixed",927,[b("Induction",0,928),b("Maintenance",928,Infinity)],false,true,null,false,"SC 927mg at weeks 0 and 26. Oral lead-in: 600mg D1, 600mg D2, 300mg D8. PURPOSE trials showed >99% PrEP efficacy in SSA.",{hivPositive:{r:1.0,t:"info",m:"HIV on ART: twice-yearly injection. WHO recommended 2024."},hivNaive:{r:1.0,t:"info",m:"HIV prevention (PrEP): PURPOSE 1 and 2 trials >99% efficacy in cisgender women in SSA. WHO recommended 2024."},subSaharanAfrica:{r:1.0,t:"info",m:"SSA: PURPOSE trials in South Africa, Uganda, Zimbabwe, Kenya, Eswatini. Gilead access programme expanding."}});
+addDrug("rituximab","Rituximab","mab","bsa",375,[b("1",0,500),b("2",500,650),b("3",650,750),b("4",750,Infinity)],false,false,null,false,"Pre-medicate mandatory. HBV reactivation screen ALL patients.",{hivPositive:{r:1.0,t:"danger",m:"HIV+: profound B-cell depletion risk. Ensure cotrimoxazole prophylaxis. CD4 monitoring."},subSaharanAfrica:{r:1.0,t:"warning",m:"SSA: mandatory HBV and TB screening before rituximab."}});
+addDrug("trastuzumab","Trastuzumab","mab","wt",6,[b("1",0,300),b("2",300,450),b("3",450,600),b("4",600,Infinity)],false,false,null,false,"HER2 testing MANDATORY. Baseline ECHO mandatory. ECHO every 3 months.",{subSaharanAfrica:{r:1.0,t:"info",m:"SSA: breast cancer most common in African women. HER2+ 20-25%."}});
+addDrug("bevacizumab","Bevacizumab","mab","wt",5,[b("1",0,250),b("2",250,400),b("3",400,550),b("4",550,Infinity)],false,false,null,false,"BP monitoring each cycle. Hold 4 weeks before/after surgery. Teratogenic.",{subSaharanAfrica:{r:1.0,t:"info",m:"SSA: cervical cancer highest global incidence - bevacizumab for recurrent/metastatic disease."}});
+addDrug("cetuximab","Cetuximab","mab","bsa",400,[b("1",0,500),b("2",500,700),b("3",700,900),b("4",900,Infinity)],false,false,null,false,"KRAS/RAS testing MANDATORY. Mg supplementation often required.",{});
+addDrug("ibalizumab","Ibalizumab","mab","fixed",2000,[b("Loading",0,2001),b("Maintenance",2001,Infinity)],false,false,null,false,"Loading 2000mg IV then 800mg IV q2 weeks. MULTIDRUG-RESISTANT HIV ONLY.",{hivPositive:{r:1.0,t:"warning",m:"HIV (MDR): treatment-experienced patients only. Resistance genotype required."}});
+addDrug("lenacapavir","Lenacapavir (6-monthly)","mab","fixed",927,[b("Induction",0,928),b("Maintenance",928,Infinity)],false,true,null,false,"SC 927mg at weeks 0 and 26. PURPOSE trials >99% PrEP efficacy in SSA.",{hivNaive:{r:1.0,t:"info",m:"HIV prevention (PrEP): PURPOSE trials >99% efficacy in SSA women. WHO recommended 2024."},subSaharanAfrica:{r:1.0,t:"info",m:"SSA: Gilead access programme expanding. Game-changing for HIV prevention."}});
 
-// BUILD UI
+// ── PK ────────────────────────────────────────────────────────────────────────
+function crcl(a,w,c,s){return Math.max(((140-a)*w)/(c*0.814)*(s==="F"?0.85:1),5);}
+function bsa(w,h){return Math.sqrt((h*w)/3600);}
+function ibw(h,s){return Math.max((s==="M"?50:45.5)+2.3*Math.max(0,h/2.54-60),30);}
+function dwt(w,h,s){var i=ibw(h,s),bmi=w/((h/100)*(h/100));return bmi>30?i+0.4*(w-i):Math.min(w,i+0.4*Math.max(0,w-i));}
+function band(dose,bands){return bands.find(function(bx){return dose>=bx.lo&&dose<bx.hi;})||bands[bands.length-1];}
+
+// ── UI ────────────────────────────────────────────────────────────────────────
 function buildUI(){
-  var cr = document.getElementById("cats");
-  cr.innerHTML = "";
+  var cr=document.getElementById("cats");
+  cr.innerHTML="";
   Object.keys(CATS).forEach(function(k){
-    var b = document.createElement("button");
-    b.className = "cpill" + (k==="all" ? " on" : "");
-    b.textContent = CATS[k];
-    b.onclick = function(){
-      S.cat = k;
-      document.querySelectorAll(".cpill").forEach(function(x){ x.classList.remove("on"); });
-      b.classList.add("on");
-      buildDrugs();
-    };
-    cr.appendChild(b);
+    var btn=document.createElement("button");
+    btn.className="cpill"+(k==="all"?" on":"");
+    btn.textContent=CATS[k];
+    btn.onclick=function(){S.cat=k;document.querySelectorAll(".cpill").forEach(function(x){x.classList.remove("on");});btn.classList.add("on");buildDrugs();};
+    cr.appendChild(btn);
   });
   buildDrugs();
 }
 
-function buildDrugs(query){
-  query = (query||S.query||"").toLowerCase().trim();
-  S.query = query;
-  var g = document.getElementById("dgrid");
-  g.innerHTML = "";
-  var visible = Object.keys(DRUGS).filter(function(k){
-    var d = DRUGS[k];
-    if(S.cat!=="all" && d.cat!==S.cat) return false;
-    if(query){
-      var searchable = (d.name+" "+d.cat+" "+(CATS[d.cat]||"")).toLowerCase();
-      return searchable.indexOf(query) >= 0;
-    }
+function buildDrugs(){
+  var q=(S.query||"").toLowerCase().trim();
+  var g=document.getElementById("dgrid");
+  g.innerHTML="";
+  var visible=Object.keys(DRUGS).filter(function(k){
+    var d=DRUGS[k];
+    if(S.cat!=="all"&&d.cat!==S.cat)return false;
+    if(q){var s=(d.name+" "+d.cat+" "+(CATS[d.cat]||"")).toLowerCase();return s.indexOf(q)>=0;}
     return true;
   });
-  if(visible.length===0){
-    document.getElementById("dcount").textContent = "No drugs found";
-    g.innerHTML = '<div class="no-results">No drugs match your search.</div>';
-    return;
-  }
-  document.getElementById("dcount").textContent = visible.length + " drugs";
+  document.getElementById("dcount").textContent=visible.length+" drugs";
+  if(!visible.length){g.innerHTML='<div class="no-results">No drugs match your search.</div>';return;}
   visible.forEach(function(k){
-    var d = DRUGS[k];
-    var t = document.createElement("button");
-    t.className = "dtile" + (S.drug===k ? " on" : "");
-    var inner = '<span class="dname">' + d.name + '</span>';
-    inner += '<span class="dcat">' + (CATS[d.cat]||d.cat) + '</span>';
-    if(d.fdc){ inner += '<span class="dfdc">FDC</span>'; }
-    t.innerHTML = inner;
-    t.onclick = function(){
-      S.drug = k;
-      buildDrugs();
-      document.getElementById("fdcbanner").style.display = d.fdc ? "block" : "none";
-    };
+    var d=DRUGS[k];
+    var t=document.createElement("button");
+    t.className="dtile"+(S.drug===k?" on":"");
+    var inner='<span class="dname">'+d.name+'</span><span class="dcat">'+(CATS[d.cat]||d.cat)+'</span>';
+    if(d.fdc)inner+='<span class="dfdc">FDC</span>';
+    t.innerHTML=inner;
+    t.onclick=function(){S.drug=k;buildDrugs();document.getElementById("fdcbanner").style.display=d.fdc?"block":"none";};
     g.appendChild(t);
   });
 }
 
-function pick(group, val, el){
-  S[group] = val;
-  el.parentElement.querySelectorAll(".sbtn").forEach(function(b){ b.classList.remove("on"); });
-  el.classList.add("on");
-}
+function onSearch(v){S.query=v.toLowerCase().trim();document.getElementById("search-clear").className="search-clear"+(v?" show":"");buildDrugs();}
+function clearSearch(){document.getElementById("drug-search").value="";S.query="";document.getElementById("search-clear").className="search-clear";buildDrugs();}
+function pick(g,v,el){S[g]=v;el.parentElement.querySelectorAll(".sbtn").forEach(function(bx){bx.classList.remove("on");});el.classList.add("on");}
 
-function crcl(a,w,c,s){ return Math.max(((140-a)*w)/(c*0.814)*(s==="F"?0.85:1), 5); }
-function bsa(w,h){ return Math.sqrt((h*w)/3600); }
-function ibw(h,s){ return Math.max((s==="M"?50:45.5)+2.3*Math.max(0,h/2.54-60), 30); }
-function dwt(w,h,s){ var i=ibw(h,s), bmi=w/((h/100)*(h/100)); return bmi>30?i+0.4*(w-i):Math.min(w,i+0.4*Math.max(0,w-i)); }
-function band(dose, bands){ return bands.find(function(b){ return dose>=b.lo && dose<b.hi; }) || bands[bands.length-1]; }
-
+// ── CALCULATE ─────────────────────────────────────────────────────────────────
 function calculate(){
-  if(!S.drug){ alert("Please select a drug first."); return; }
+  if(!S.drug){alert("Please select a drug first.");return;}
   var wt=parseFloat(document.getElementById("wt").value);
   var ht=parseFloat(document.getElementById("ht").value);
   var ag=parseFloat(document.getElementById("age").value);
   var cr=parseFloat(document.getElementById("cr").value);
   var pop=document.getElementById("pop").value;
   var hep=document.getElementById("hep").value;
-  if(!wt||!ht||!ag||!cr){ alert("Please fill in all patient parameters."); return; }
-  if(wt<10||wt>300){ alert("Weight must be 10-300 kg."); return; }
-  if(ht<50||ht>250){ alert("Height must be 50-250 cm."); return; }
-  if(cr<20||cr>2000){ alert("Creatinine must be 20-2000 umol/L."); return; }
+  if(!wt||!ht||!ag||!cr){alert("Please fill in all patient parameters.");return;}
+  if(wt<10||wt>300){alert("Weight must be 10-300 kg.");return;}
+  if(ht<50||ht>250){alert("Height must be 50-250 cm.");return;}
+  if(cr<20||cr>2000){alert("Creatinine must be 20-2000 umol/L.");return;}
 
-  var drug=DRUGS[S.drug], sex=S.sex;
-  var DW=dwt(wt,ht,sex), CrCl=crcl(ag,DW,cr,sex), BSA=bsa(wt,ht), IBW=ibw(ht,sex), BMI=wt/((ht/100)*(ht/100));
-
+  var drug=DRUGS[S.drug],sex=S.sex;
+  var DW=dwt(wt,ht,sex),CrCl=crcl(ag,DW,cr,sex),BSA=bsa(wt,ht),IBW=ibw(ht,sex),BMI=wt/((ht/100)*(ht/100));
   var dose;
-  if(drug.method==="calvert") dose=drug.base*(CrCl+25);
-  else if(drug.method==="bsa") dose=drug.base*BSA;
-  else if(drug.method==="wt") dose=drug.base*DW;
+  if(drug.method==="calvert")dose=drug.base*(CrCl+25);
+  else if(drug.method==="bsa")dose=drug.base*BSA;
+  else if(drug.method==="wt")dose=drug.base*DW;
   else dose=drug.base;
 
-  // Hard caps
-  if(S.drug==="vincristine") dose=Math.min(dose,2);
-  if(S.drug==="isoniazid") dose=Math.min(dose,300);
-  if(S.drug==="pyrazinamide") dose=Math.min(dose,2000);
-  if(S.drug==="ethambutol") dose=Math.min(dose,1600);
-  if(S.drug==="streptomycin") dose=Math.min(dose,1000);
+  if(S.drug==="vincristine")dose=Math.min(dose,2);
+  if(S.drug==="isoniazid")dose=Math.min(dose,300);
+  if(S.drug==="pyrazinamide")dose=Math.min(dose,2000);
+  if(S.drug==="ethambutol")dose=Math.min(dose,1600);
+  if(S.drug==="streptomycin")dose=Math.min(dose,1000);
 
   var regMap={standard:1,highDose:1.25,palliative:0.75,paediatric:0.8};
-  var regR = drug.fdc ? 1 : (regMap[S.reg]||1);
-  dose *= regR;
+  var regR=drug.fdc?1:(regMap[S.reg]||1);
+  dose*=regR;
 
-  var popR=1, popFlag=null;
-  var padj = drug.popAdj && drug.popAdj[pop];
-  if(padj){ popR=padj.r; popFlag={t:padj.t,m:padj.m}; }
-  dose *= popR;
+  var popR=1,popFlag=null;
+  var padj=drug.popAdj&&drug.popAdj[pop];
+  if(padj){popR=padj.r;popFlag={t:padj.t,m:padj.m};}
+  dose*=popR;
 
-  var renR=1, renFlag=null;
-  if(drug.renal && !drug.fdc){
-    if(CrCl<15){ renR=0.35; renFlag={t:"danger",m:"ESRD (CrCl "+CrCl.toFixed(0)+" mL/min) - dose reduced 65%. Nephrology review required."}; }
-    else if(CrCl<30){ renR=0.55; renFlag={t:"danger",m:"Severe renal impairment (CrCl "+CrCl.toFixed(0)+" mL/min) - dose reduced 45%."}; }
-    else if(CrCl<60){ renR=0.8; renFlag={t:"warning",m:"Moderate renal impairment (CrCl "+CrCl.toFixed(0)+" mL/min) - dose reduced 20%."}; }
+  var renR=1,renFlag=null;
+  if(drug.renal&&!drug.fdc){
+    if(CrCl<15){renR=0.35;renFlag={t:"danger",m:"ESRD (CrCl "+CrCl.toFixed(0)+" mL/min) - dose reduced 65%. Nephrology review required."};}
+    else if(CrCl<30){renR=0.55;renFlag={t:"danger",m:"Severe renal impairment (CrCl "+CrCl.toFixed(0)+" mL/min) - dose reduced 45%."};}
+    else if(CrCl<60){renR=0.8;renFlag={t:"warning",m:"Moderate renal impairment (CrCl "+CrCl.toFixed(0)+" mL/min) - dose reduced 20%."};}
   }
   if((S.drug==="tenofovir"||S.drug==="tdf_3tc_dtg"||S.drug==="tdf_3tc_efv"||S.drug==="tdf_3tc_nvp")&&CrCl<50){
     renFlag={t:"danger",m:"Renal impairment (CrCl "+CrCl.toFixed(0)+" mL/min): TDF requires dose adjustment or switch to ABC-based regimen if CrCl <30."};
   }
-  dose *= renR;
+  dose*=renR;
 
-  var hepR=1, hepFlag=null;
-  if(drug.hepatic && !drug.fdc){
-    if(hep==="childPughC"){ hepR=0.5; hepFlag={t:"danger",m:"Child-Pugh C - dose reduced 50%. Consider alternative agent."}; }
-    else if(hep==="childPughB"){ hepR=0.75; hepFlag={t:"warning",m:"Child-Pugh B - dose reduced 25%. Monitor LFTs."}; }
+  var hepR=1,hepFlag=null;
+  if(drug.hepatic&&!drug.fdc){
+    if(hep==="childPughC"){hepR=0.5;hepFlag={t:"danger",m:"Child-Pugh C - dose reduced 50%. Consider alternative agent."};}
+    else if(hep==="childPughB"){hepR=0.75;hepFlag={t:"warning",m:"Child-Pugh B - dose reduced 25%. Monitor LFTs."};}
   }
-  dose *= hepR;
+  dose*=hepR;
 
-  var b = band(dose, drug.bands);
-  var flags = [];
-  if(popFlag) flags.push(popFlag);
-  if(renFlag) flags.push(renFlag);
-  if(hepFlag) flags.push(hepFlag);
+  var bnd=band(dose,drug.bands);
+  var flags=[];
+  if(popFlag)flags.push(popFlag);
+  if(renFlag)flags.push(renFlag);
+  if(hepFlag)flags.push(hepFlag);
+  if(drug.thresh){var dpk=dose/DW;if(dpk<drug.thresh)flags.push({t:"danger",m:"RESISTANCE RISK: "+dpk.toFixed(1)+" mg/kg below threshold of "+drug.thresh+" mg/kg."});else if(dpk<drug.thresh*1.15)flags.push({t:"warning",m:"Low-normal exposure: "+dpk.toFixed(1)+" mg/kg near resistance threshold."});}
+  if(S.neph==="yes"&&drug.renal)flags.push({t:"warning",m:"Concurrent nephrotoxin + "+drug.name+": increased AKI risk. Monitor CrCl daily."});
+  if(drug.mon)flags.push({t:"info",m:drug.mon});
+  if(!flags.length)flags.push({t:"info",m:"No major clinical flags. Verify with supervising pharmacist before administration."});
 
-  if(drug.thresh){
-    var dpk=dose/DW;
-    if(dpk<drug.thresh) flags.push({t:"danger",m:"RESISTANCE RISK: "+dpk.toFixed(1)+" mg/kg below resistance threshold of "+drug.thresh+" mg/kg. Review urgently."});
-    else if(dpk<drug.thresh*1.15) flags.push({t:"warning",m:"Low-normal exposure: "+dpk.toFixed(1)+" mg/kg near resistance threshold. Confirm with TDM."});
-  }
-  if(S.neph==="yes"&&drug.renal) flags.push({t:"warning",m:"Concurrent nephrotoxin + "+drug.name+": increased AKI risk. Monitor CrCl daily."});
-  if(drug.mon) flags.push({t:"info",m:drug.mon});
-  if(!flags.length) flags.push({t:"info",m:"No major clinical flags. Verify with supervising pharmacist before administration."});
-
-  document.getElementById("r-band").textContent = "Band "+b.l;
-  document.getElementById("r-dose").textContent = dose.toFixed(0)+" mg calculated";
-  document.getElementById("r-drug").textContent = drug.name;
-  document.getElementById("r-range").textContent = b.lo+"..."+(b.hi===Infinity?"inf":b.hi)+" mg";
-  document.getElementById("r-crcl").textContent = CrCl.toFixed(1);
-  document.getElementById("r-bsa").textContent = BSA.toFixed(2);
-  document.getElementById("r-ibw").textContent = IBW.toFixed(1);
-  document.getElementById("r-bmi").textContent = BMI.toFixed(1);
+  document.getElementById("r-band").textContent="Band "+bnd.l;
+  document.getElementById("r-dose").textContent=dose.toFixed(0)+" mg calculated";
+  document.getElementById("r-drug").textContent=drug.name;
+  document.getElementById("r-range").textContent=bnd.lo+"..."+(bnd.hi===Infinity?"inf":bnd.hi)+" mg";
+  document.getElementById("r-crcl").textContent=CrCl.toFixed(1);
+  document.getElementById("r-bsa").textContent=BSA.toFixed(2);
+  document.getElementById("r-ibw").textContent=IBW.toFixed(1);
+  document.getElementById("r-bmi").textContent=BMI.toFixed(1);
 
   var adjs=[];
-  if(!drug.fdc&&regR!==1) adjs.push({c:regR>1?"ai":"ar",t:"Regimen x"+regR});
-  if(popR!==1) adjs.push({c:popR>1?"ai":"ar",t:"Population x"+popR});
-  if(!drug.fdc&&renR!==1) adjs.push({c:"ar",t:"Renal x"+renR});
-  if(!drug.fdc&&hepR!==1) adjs.push({c:"ar",t:"Hepatic x"+hepR});
-  if(!adjs.length) adjs.push({c:"an",t:"No adjustments applied"});
-  document.getElementById("r-adjs").innerHTML = adjs.map(function(a){ return '<span class="apill '+a.c+'">'+a.t+'</span>'; }).join("");
+  if(!drug.fdc&&regR!==1)adjs.push({c:regR>1?"ai":"ar",t:"Regimen x"+regR});
+  if(popR!==1)adjs.push({c:popR>1?"ai":"ar",t:"Population x"+popR});
+  if(!drug.fdc&&renR!==1)adjs.push({c:"ar",t:"Renal x"+renR});
+  if(!drug.fdc&&hepR!==1)adjs.push({c:"ar",t:"Hepatic x"+hepR});
+  if(!adjs.length)adjs.push({c:"an",t:"No adjustments applied"});
+  document.getElementById("r-adjs").innerHTML=adjs.map(function(a){return'<span class="apill '+a.c+'">'+a.t+'</span>';}).join("");
 
-  var imap={info:"i",warning:"!",danger:"X"};
-  document.getElementById("r-flags").innerHTML = flags.map(function(f){
-    return '<div class="flag flag-'+f.t+'"><span class="fi">'+imap[f.t]+'</span><span>'+f.m+'</span></div>';
-  }).join("");
+  var imap={info:"i",warning:"!",danger:"X",green:"ok"};
+  document.getElementById("r-flags").innerHTML=flags.map(function(f){return'<div class="flag flag-'+f.t+'"><span class="fi">'+imap[f.t]+'</span><span>'+f.m+'</span></div>';}).join("");
+
+  // Store result for export and audit
+  lastResult = {
+    ts: new Date().toISOString(),
+    drug: S.drug, drugName: drug.name, band: "Band "+bnd.l,
+    bandRange: bnd.lo+"..."+(bnd.hi===Infinity?"inf":bnd.hi)+" mg",
+    calculatedDose: dose.toFixed(0),
+    wt:wt, ht:ht, age:ag, cr:cr, sex:S.sex, pop:pop, hep:hep,
+    CrCl:CrCl.toFixed(1), BSA:BSA.toFixed(2), IBW:IBW.toFixed(1), BMI:BMI.toFixed(1),
+    regimen:S.reg, renalAdj:renR!==1, hepaticAdj:hepR!==1, popAdj:popR!==1,
+    flags:flags.map(function(f){return f.t.toUpperCase()+": "+f.m;}),
+    patientId: document.getElementById("patient-id").value||"Not specified",
+    prescriber: document.getElementById("prescriber").value||"Not specified",
+    pharmApproved: false, pharmName:"", pharmNote:"", pharmTs:""
+  };
 
   var el=document.getElementById("result");
-  el.classList.remove("show"); void el.offsetWidth; el.classList.add("show");
-  setTimeout(function(){ el.scrollIntoView({behavior:"smooth",block:"nearest"}); }, 60);
+  el.classList.remove("show");void el.offsetWidth;el.classList.add("show");
+
+  // Show action buttons and reset pharmacist workflow
+  document.getElementById("action-row").style.display="flex";
+  document.getElementById("pharm-section").className="pharm-section show";
+  document.getElementById("pharm-body").style.display="block";
+  document.getElementById("pharm-status-badge").textContent="Pending review";
+  document.getElementById("pharm-status-badge").className="pharm-status ps-pending";
+  document.getElementById("pharm-name").value="";
+  document.getElementById("pharm-id").value="";
+  document.getElementById("pharm-notes").value="";
+
+  setTimeout(function(){el.scrollIntoView({behavior:"smooth",block:"nearest"});},60);
 }
 
-function onSearch(val){
-  S.query = val.toLowerCase().trim();
-  var clearBtn = document.getElementById("search-clear");
-  if(clearBtn) clearBtn.className = "search-clear" + (val ? " show" : "");
-  buildDrugs();
+// ── PHARMACIST WORKFLOW ───────────────────────────────────────────────────────
+function pharmApprove(){
+  var name=document.getElementById("pharm-name").value.trim();
+  var id=document.getElementById("pharm-id").value.trim();
+  var notes=document.getElementById("pharm-notes").value.trim();
+  if(!name){alert("Please enter pharmacist name before approving.");return;}
+  if(!notes){alert("Please add a sign-off comment or clinical note before approving.");return;}
+
+  var ts=new Date();
+  var tsStr=ts.toLocaleString();
+
+  if(lastResult){
+    lastResult.pharmApproved=true;
+    lastResult.pharmName=name+(id?" ("+id+")":"");
+    lastResult.pharmNote=notes;
+    lastResult.pharmTs=tsStr;
+    addAudit(lastResult);
+  }
+
+  document.getElementById("pharm-status-badge").textContent="Approved";
+  document.getElementById("pharm-status-badge").className="pharm-status ps-approved";
+  document.getElementById("pharm-body").innerHTML='<div class="approved-banner"><span class="approved-icon">&#x2713;</span><div class="approved-detail"><strong>Pharmacist approved</strong><br>'+
+    name+(id?" ("+id+")")+"<br>"+tsStr+"<br><br>Note: "+notes+"<br><br>This calculation has been added to the audit trail.</div></div>";
 }
 
-function clearSearch(){
-  var inp = document.getElementById("drug-search");
-  if(inp) inp.value = "";
-  S.query = "";
-  var clearBtn = document.getElementById("search-clear");
-  if(clearBtn) clearBtn.className = "search-clear";
-  buildDrugs();
+function pharmQuery(){
+  var name=document.getElementById("pharm-name").value.trim();
+  var notes=document.getElementById("pharm-notes").value.trim();
+  if(!name){alert("Please enter pharmacist name.");return;}
+  document.getElementById("pharm-status-badge").textContent="Flagged for query";
+  document.getElementById("pharm-status-badge").className="pharm-status ps-pending";
+  if(lastResult){
+    lastResult.pharmApproved=false;
+    lastResult.pharmName=name;
+    lastResult.pharmNote="QUERY: "+notes;
+    lastResult.pharmTs=new Date().toLocaleString();
+    addAudit(lastResult);
+  }
+  alert("Query flagged. This calculation has been added to the audit trail with query status.");
 }
 
+// ── EXPORT PDF ────────────────────────────────────────────────────────────────
+function exportPDF(){
+  if(!lastResult){return;}
+  document.getElementById("pdf-timestamp").textContent="Generated: "+new Date().toLocaleString()+" | Version: DoseBand v1.3";
+  document.getElementById("pdf-patientid").textContent="Patient ID: "+lastResult.patientId+" | Prescriber: "+lastResult.prescriber;
+  window.print();
+}
 
+// ── EXPORT FHIR ───────────────────────────────────────────────────────────────
+function exportFHIR(){
+  if(!lastResult){return;}
+  var fhir={
+    resourceType:"MedicationRequest",
+    id:"doseband-"+Date.now(),
+    meta:{profile:["http://hl7.org/fhir/StructureDefinition/MedicationRequest"],source:"DoseBand v1.3 | https://doseband-production.up.railway.app"},
+    status:"active",
+    intent:"order",
+    authoredOn:lastResult.ts,
+    subject:{identifier:{value:lastResult.patientId},display:lastResult.patientId},
+    requester:{display:lastResult.prescriber},
+    medication:{concept:{text:lastResult.drugName}},
+    dosageInstruction:[{
+      text:"Dose band: "+lastResult.band+" ("+lastResult.bandRange+"). Calculated dose: "+lastResult.calculatedDose+" mg.",
+      doseAndRate:[{doseQuantity:{value:parseFloat(lastResult.calculatedDose),unit:"mg",system:"http://unitsofmeasure.org",code:"mg"}}]
+    }],
+    extension:[
+      {url:"https://doseband.app/fhir/ext/dose-band",valueString:lastResult.band},
+      {url:"https://doseband.app/fhir/ext/calculated-dose-mg",valueDecimal:parseFloat(lastResult.calculatedDose)},
+      {url:"https://doseband.app/fhir/ext/crcl-ml-min",valueDecimal:parseFloat(lastResult.CrCl)},
+      {url:"https://doseband.app/fhir/ext/bsa-m2",valueDecimal:parseFloat(lastResult.BSA)},
+      {url:"https://doseband.app/fhir/ext/population-context",valueString:lastResult.pop},
+      {url:"https://doseband.app/fhir/ext/renal-adjusted",valueBoolean:lastResult.renalAdj},
+      {url:"https://doseband.app/fhir/ext/hepatic-adjusted",valueBoolean:lastResult.hepaticAdj},
+      {url:"https://doseband.app/fhir/ext/pharmacist-approved",valueBoolean:lastResult.pharmApproved},
+      {url:"https://doseband.app/fhir/ext/pharmacist-name",valueString:lastResult.pharmName||"Pending"},
+      {url:"https://doseband.app/fhir/ext/pharmacist-note",valueString:lastResult.pharmNote||"Pending"},
+      {url:"https://doseband.app/fhir/ext/clinical-flags",valueString:lastResult.flags.join(" | ")},
+      {url:"https://doseband.app/fhir/ext/pre-clinical-validation",valueString:"133224 synthetic cases 100% pass rate | 108 unit tests | 22 monotonicity checks"}
+    ]
+  };
+  document.getElementById("fhir-output").value=JSON.stringify(fhir,null,2);
+  document.getElementById("fhir-modal").className="modal-overlay show";
+}
+
+function copyFHIR(){
+  var t=document.getElementById("fhir-output");
+  t.select();
+  document.execCommand("copy");
+  alert("Copied to clipboard.");
+}
+
+// ── AUDIT TRAIL ───────────────────────────────────────────────────────────────
+function getAudit(){
+  try{return JSON.parse(localStorage.getItem("doseband_audit")||"[]");}catch(e){return [];}
+}
+
+function addAudit(r){
+  var log=getAudit();
+  log.unshift(r);
+  if(log.length>200)log=log.slice(0,200);
+  try{localStorage.setItem("doseband_audit",JSON.stringify(log));}catch(e){}
+}
+
+function showAudit(){
+  var log=getAudit();
+  var body=document.getElementById("audit-body");
+  if(!log.length){body.innerHTML='<div class="audit-empty">No calculations recorded yet.<br>Calculations appear here after pharmacist review.</div>';document.getElementById("audit-modal").className="modal-overlay show";return;}
+  var html="";
+  log.forEach(function(r){
+    var bandColor=r.pharmApproved?"var(--green)":"var(--amber)";
+    html+='<div class="audit-entry">';
+    html+='<div class="audit-ts">'+r.ts.replace("T"," ").split(".")[0]+'  |  Patient: '+r.patientId+'  |  Prescriber: '+r.prescriber+'</div>';
+    html+='<div class="audit-drug">'+r.drugName+'</div>';
+    html+='<span class="audit-band" style="background:'+(r.pharmApproved?"var(--green-bg)":"var(--amber-bg)")+';color:'+bandColor+';border:1px solid '+(r.pharmApproved?"var(--green-bd)":"var(--amber-bd)")+'">'+r.band+' — '+r.calculatedDose+' mg</span>';
+    html+='<div class="audit-params">Wt '+r.wt+'kg | Ht '+r.ht+'cm | Age '+r.age+'y | Cr '+r.cr+' umol/L | '+r.sex+' | CrCl '+r.CrCl+' | BSA '+r.BSA+' | Pop: '+r.pop+' | Regimen: '+r.regimen+'</div>';
+    if(r.flags&&r.flags.length)html+='<div class="audit-params" style="color:var(--amber);margin-top:3px">Flags: '+r.flags.join(" | ")+'</div>';
+    if(r.pharmApproved)html+='<div class="audit-approved">Approved by '+r.pharmName+' at '+r.pharmTs+' — '+r.pharmNote+'</div>';
+    else if(r.pharmNote)html+='<div class="audit-params" style="color:var(--amber);margin-top:2px">'+r.pharmNote+'</div>';
+    html+='</div>';
+  });
+  body.innerHTML=html;
+  document.getElementById("audit-modal").className="modal-overlay show";
+}
+
+function clearAudit(){
+  if(confirm("Clear all audit records? This cannot be undone.")){try{localStorage.removeItem("doseband_audit");}catch(e){}document.getElementById("audit-body").innerHTML='<div class="audit-empty">Audit log cleared.</div>';}
+}
+
+function exportAuditCSV(){
+  var log=getAudit();
+  if(!log.length){alert("No audit records to export.");return;}
+  var cols=["timestamp","patientId","prescriber","drug","drugName","band","calculatedDose","wt","ht","age","cr","sex","CrCl","BSA","IBW","BMI","pop","hep","regimen","renalAdj","hepaticAdj","popAdj","pharmApproved","pharmName","pharmNote","pharmTs","flags"];
+  var csv=cols.join(",")+"\n";
+  log.forEach(function(r){
+    var row=cols.map(function(c){
+      var v=r[c];
+      if(Array.isArray(v))v=v.join("; ");
+      if(v===undefined||v===null)v="";
+      v=String(v).replace(/"/g,'""');
+      if(v.indexOf(",")>=0||v.indexOf('"')>=0||v.indexOf("\n")>=0)v='"'+v+'"';
+      return v;
+    });
+    csv+=row.join(",")+"\n";
+  });
+  var a=document.createElement("a");
+  a.href="data:text/csv;charset=utf-8,"+encodeURIComponent(csv);
+  a.download="DoseBand_AuditTrail_"+new Date().toISOString().split("T")[0]+".csv";
+  a.click();
+}
+
+function showPharmWorkflow(){
+  document.getElementById("pharm-section").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+function closeModal(id){document.getElementById(id).className="modal-overlay";}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+document.getElementById("action-row").style.display="none";
 buildUI();
 </script>
 </body>
