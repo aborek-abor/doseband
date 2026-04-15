@@ -357,7 +357,7 @@ input:focus,select:focus{border-color:var(--ink);background:#fff}
   </div>
 
   <div class="footer">
-    <strong>DoseBand v1.3</strong> — Pre-clinical validation only<br>
+    <strong>DoseBand v1.4</strong> — Pre-clinical validation only<br>
     53 drugs · Audit trail · Pharmacist workflow · PDF &amp; FHIR export<br>
     doseband-production.up.railway.app
   </div>
@@ -619,8 +619,7 @@ function pharmApprove(){
 
   document.getElementById("pharm-status-badge").textContent="Approved";
   document.getElementById("pharm-status-badge").className="pharm-status ps-approved";
-  document.getElementById("pharm-body").innerHTML='<div class="approved-banner"><span class="approved-icon">&#x2713;</span><div class="approved-detail"><strong>Pharmacist approved</strong><br>'+
-    name+(id?" ("+id+")")+"<br>"+tsStr+"<br><br>Note: "+notes+"<br><br>This calculation has been added to the audit trail.</div></div>";
+  document.getElementById("pharm-body").innerHTML='<div class="approved-banner"><span class="approved-icon">&#x2713;</span><div class="approved-detail"><strong>Pharmacist approved</strong><br>'+ name+(id?' ('+id+')':'')+"<br>"+tsStr+"<br><br>Note: "+notes+"<br><br>This calculation has been added to the audit trail.</div></div>";
 }
 
 function pharmQuery(){
@@ -642,7 +641,7 @@ function pharmQuery(){
 // ── EXPORT PDF ────────────────────────────────────────────────────────────────
 function exportPDF(){
   if(!lastResult){return;}
-  document.getElementById("pdf-timestamp").textContent="Generated: "+new Date().toLocaleString()+" | Version: DoseBand v1.3";
+  document.getElementById("pdf-timestamp").textContent="Generated: "+new Date().toLocaleString()+" | Version: DoseBand v1.4";
   document.getElementById("pdf-patientid").textContent="Patient ID: "+lastResult.patientId+" | Prescriber: "+lastResult.prescriber;
   window.print();
 }
@@ -653,7 +652,7 @@ function exportFHIR(){
   var fhir={
     resourceType:"MedicationRequest",
     id:"doseband-"+Date.now(),
-    meta:{profile:["http://hl7.org/fhir/StructureDefinition/MedicationRequest"],source:"DoseBand v1.3 | https://doseband-production.up.railway.app"},
+    meta:{profile:["http://hl7.org/fhir/StructureDefinition/MedicationRequest"],source:"DoseBand v1.4 | https://doseband-production.up.railway.app"},
     status:"active",
     intent:"order",
     authoredOn:lastResult.ts,
