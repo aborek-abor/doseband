@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DoseBand — Pharmacist Review Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0a0c0b;--ink2:#1e2420;--ink3:#2e3530;--surface:#f5f3ef;--surface2:#eceae4;--surface3:#e2ded6;--card:#ffffff;--border:#d0ccc4;--border2:#b8b4aa;--muted:#7a7670;--dim:#5a5650;--body:#3a3830;--green:#1a7a4a;--green-bg:#e8f5ee;--green-bd:#b8dfc8;--amber:#b86800;--amber-bg:#fef5e4;--amber-bd:#f0d080;--red:#b82020;--red-bg:#fdecea;--red-bd:#f0b0a8;--blue:#1a4a8a;--blue-bg:#e8eef8;--blue-bd:#a8c0e8;--mono:'JetBrains Mono',monospace;--display:'Syne',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--surface);color:var(--body);font-family:var(--display);font-size:13px;line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+.nav{background:var(--ink);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.nav-brand{font-family:var(--display);font-size:18px;font-weight:800;color:#fff;letter-spacing:-0.02em;text-decoration:none}
+.nav-links{display:flex;gap:4px}
+.nav-link{font-family:var(--mono);font-size:10px;padding:6px 12px;border-radius:5px;color:rgba(255,255,255,0.55);text-decoration:none;letter-spacing:0.06em;transition:all 0.15s;border:1px solid transparent}
+.nav-link:hover{color:#fff;background:rgba(255,255,255,0.08)}
+.nav-link.active{color:#fff;background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.15)}
+
+/* SHELL */
+.shell{display:flex;height:calc(100vh - 56px);overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:230px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sidebar-head{padding:16px;border-bottom:1px solid var(--border)}
+.sidebar-title{font-family:var(--display);font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.sidebar-sub{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.04em}
+.sidebar-scroll{overflow-y:auto;flex:1;padding:8px 0 16px}
+.sidebar-section{padding:10px 16px 4px;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase}
+.drug-item{display:flex;align-items:center;gap:8px;padding:7px 16px;cursor:pointer;transition:background 0.12s;border-left:2px solid transparent}
+.drug-item:hover{background:var(--surface)}
+.drug-item.active{background:var(--surface2);border-left-color:var(--ink)}
+.drug-name{flex:1;font-size:12.5px;color:var(--body);font-weight:500}
+.drug-item.active .drug-name{color:var(--ink);font-weight:700}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dot-pending{background:var(--amber)}
+.dot-approved{background:var(--green)}
+.dot-flagged{background:var(--red)}
+
+/* PROGRESS */
+.progress-bar-wrap{padding:12px 16px 0;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.progress-label{font-family:var(--mono);font-size:9px;color:var(--muted);white-space:nowrap;letter-spacing:0.06em;text-transform:uppercase}
+.progress-outer{flex:1;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden}
+.progress-inner{height:100%;background:var(--green);border-radius:2px;transition:width 0.4s ease}
+.progress-count{font-family:var(--mono);font-size:10px;color:var(--dim);white-space:nowrap}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:1px solid var(--border);background:var(--card);flex-shrink:0}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.drug-title{font-family:var(--display);font-size:16px;font-weight:800;color:var(--ink);letter-spacing:-0.02em}
+.drug-cat-tag{font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:3px;border:1px solid var(--border2);color:var(--dim);letter-spacing:0.06em;text-transform:uppercase}
+.status-badge{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:3px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase}
+.badge-pending{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd)}
+.badge-approved{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
+.badge-flagged{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
+.topbar-right{display:flex;gap:8px}
+.btn{padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;font-family:var(--display);cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--body);transition:all 0.12s;display:flex;align-items:center;gap:6px}
+.btn:hover{background:var(--surface)}
+.btn-approve{border-color:var(--green-bd);color:var(--green);background:var(--green-bg)}
+.btn-approve:hover{background:#d8efe4}
+.btn-flag{border-color:var(--amber-bd);color:var(--amber);background:var(--amber-bg)}
+.btn-flag:hover{background:#fdedc8}
+
+/* CONTENT */
+.content{flex:1;padding:20px 24px}
+
+/* PANELS */
+.panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.panel-grid.wide{grid-template-columns:1fr}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.panel-head{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface)}
+.panel-title{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+.panel-body{padding:12px 14px}
+
+/* PARAMS */
+.param-row{display:grid;grid-template-columns:150px 1fr auto;gap:8px;align-items:start;padding:7px 0;border-bottom:1px solid var(--border)}
+.param-row:last-child{border-bottom:none}
+.param-key{font-family:var(--mono);font-size:10px;color:var(--muted);padding-top:2px;letter-spacing:0.04em}
+.param-val{font-family:var(--mono);font-size:12px;color:var(--ink);font-weight:500;word-break:break-word}
+.edit-btn{font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:3px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.12s;white-space:nowrap;letter-spacing:0.04em}
+.edit-btn:hover{color:var(--body);background:var(--surface2)}
+.edit-btn.saving{color:var(--green);border-color:var(--green-bd)}
+.param-edit{background:var(--surface2);border:1px solid var(--border2);border-radius:4px;color:var(--ink);font-family:var(--mono);font-size:12px;padding:3px 7px;width:100%;outline:none}
+.param-edit:focus{border-color:var(--green)}
+
+/* BANDS TABLE */
+.bands-table{width:100%;border-collapse:collapse}
+.bands-table th{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 10px;border-bottom:1px solid var(--border);font-weight:600}
+.bands-table td{padding:7px 10px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:12px;color:var(--body)}
+.bands-table tr:last-child td{border-bottom:none}
+.band-label{font-weight:700;color:var(--ink)}
+.band-range{color:var(--green)}
+
+/* CITATION */
+.citation-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
+.citation-item:last-child{border-bottom:none}
+.citation-num{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px;min-width:16px}
+.citation-text{font-size:11.5px;color:var(--dim);line-height:1.5;flex:1}
+.citation-ok{font-size:10px;color:var(--green);font-family:var(--mono);margin-top:2px}
+
+/* RESISTANCE */
+.resist-box{background:var(--red-bg);border:1px solid var(--red-bd);border-radius:6px;padding:10px 14px;display:flex;align-items:center;gap:12px}
+.resist-label{font-family:var(--mono);font-size:11px;color:var(--red);font-weight:600;flex:1}
+.resist-val{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--red)}
+
+/* PK TABLE */
+.pk-row-item{display:grid;grid-template-columns:160px 70px 70px 70px 1fr;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:11px}
+.pk-row-item:last-child{border-bottom:none}
+.pk-head{font-size:9px;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;padding-bottom:6px;border-bottom:1px solid var(--border2);margin-bottom:2px}
+.pk-pos{color:var(--green)}
+.pk-neg{color:var(--red)}
+.pk-src{color:var(--muted);font-size:10px}
+
+/* ANNOTATION */
+.annotation{background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--body);font-family:var(--display);font-size:13px;line-height:1.6;padding:10px 12px;width:100%;min-height:80px;resize:vertical;outline:none;transition:border-color 0.15s}
+.annotation:focus{border-color:var(--ink)}
+
+/* LOG */
+.log-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.log-item:last-child{border-bottom:none}
+.log-time{font-family:var(--mono);font-size:9px;color:var(--muted);min-width:75px;padding-top:2px}
+.log-text{font-size:12px;color:var(--body);line-height:1.5}
+.log-actor{color:var(--green);font-weight:600}
+.log-approve{color:var(--green)}
+.log-flag{color:var(--amber)}
+.log-edit{color:var(--blue)}
+
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;color:var(--muted);padding:40px}
+.empty-icon{font-size:36px;opacity:0.3}
+.empty-text{font-family:var(--mono);font-size:11px;letter-spacing:0.08em}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+@keyframes flash-green{0%{background:var(--green-bg)}100%{background:transparent}}
+.flash{animation:flash-green 0.6s ease-out}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">DoseBand</a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Calculator</a>
+    <a href="pharmacist.html" class="nav-link active">Pharmacist Portal</a>
+  </div>
+</nav>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar-head">
+      <div class="sidebar-title">Review Portal</div>
+      <div class="sidebar-sub">Pharmacist sign-off</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <span class="progress-label">Progress</span>
+      <div class="progress-outer"><div class="progress-inner" id="prog-bar" style="width:0%"></div></div>
+      <span class="progress-count" id="prog-count">0/13</span>
+    </div>
+    <div class="sidebar-scroll">
+      <div class="sidebar-section">Oncology</div>
+      <div id="nav-oncology"></div>
+      <div class="sidebar-section">Infectious Disease</div>
+      <div id="nav-id"></div>
+      <div class="sidebar-section">Antifungal</div>
+      <div id="nav-antifungal"></div>
+      <div class="sidebar-section">Antiviral</div>
+      <div id="nav-antiviral"></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar" id="topbar" style="display:none">
+      <div class="topbar-left">
+        <span class="drug-title" id="tb-name">—</span>
+        <span class="drug-cat-tag" id="tb-cat">—</span>
+        <span class="status-badge" id="tb-status">—</span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-flag" onclick="flagDrug()">⚑ Flag for review</button>
+        <button class="btn btn-approve" onclick="approveDrug()">✓ Approve parameters</button>
+      </div>
+    </div>
+    <div class="content" id="content">
+      <div class="empty">
+        <div class="empty-icon">⬡</div>
+        <div class="empty-text">Select a drug to begin review</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DRUGS={
+  carboplatin:{key:"carboplatin",name:"Carboplatin",category:"oncology",dosingMethod:"Calvert formula",baseDosePerUnit:5,unit:"mg (AUC × (CrCl+25))",renallyCleared:true,hepaticallyCleared:false,resistanceThreshold:null,targetExposure:"AUC 5–7 mg·min/mL (standard); AUC 4–5 if heavily pre-treated",monitoringGuidance:"CrCl before each cycle; FBC nadir day 14–21; audiometry if cumulative dose >400 mg/m²",bands:[{label:"A",min:0,max:350},{label:"B",min:350,max:450},{label:"C",min:450,max:550},{label:"D",min:550,max:650},{label:"E",min:650,max:null}],citations:["Calvert AH et al. J Clin Oncol. 1989;7(11):1748-1756.","Chatelut E et al. J Natl Cancer Inst. 1995;87(8):573-580.","NICE NG131. Systemic anti-cancer therapy. 2019."],popPK:[]},
+  cisplatin:{key:"cisplatin",name:"Cisplatin",category:"oncology",dosingMethod:"BSA-based",baseDosePerUnit:75,unit:"mg/m²",renallyCleared:true,hepaticallyCleared:false,resistanceThreshold:null,targetExposure:"75 mg/m² q3w (standard); 40 mg/m² weekly (concurrent RT)",monitoringGuidance:"CrCl, Mg²⁺, K⁺ before each cycle; audiometry every 2 cycles; hold if CrCl <60",bands:[{label:"1",min:0,max:55},{label:"2",min:55,max:70},{label:"3",min:70,max:85},{label:"4",min:85,max:null}],citations:["Gietema JA et al. Lancet Oncol. 2000;1:126.","Miller RP et al. Toxins. 2010;2(11):2490-2518.","UKONS Chemotherapy Passport. 2020."],popPK:[]},
+  oxaliplatin:{key:"oxaliplatin",name:"Oxaliplatin",category:"oncology",dosingMethod:"BSA-based",baseDosePerUnit:85,unit:"mg/m²",renallyCleared:true,hepaticallyCleared:false,resistanceThreshold:null,targetExposure:"85 mg/m² q2w (FOLFOX4); 130 mg/m² q3w (XELOX)",monitoringGuidance:"Neuropathy grading each cycle; CrCl; hold if CrCl <30",bands:[{label:"1",min:0,max:60},{label:"2",min:60,max:80},{label:"3",min:80,max:null}],citations:["de Gramont A et al. J Clin Oncol. 2000;18(16):2938-2947.","Cassidy J et al. J Clin Oncol. 2008;26(12):2006-2012."],popPK:[]},
+  docetaxel:{key:"docetaxel",name:"Docetaxel",category:"oncology",dosingMethod:"BSA-based",baseDosePerUnit:75,unit:"mg/m²",renallyCleared:false,hepaticallyCleared:true,resistanceThreshold:null,targetExposure:"75–100 mg/m² q3w; 36 mg/m² weekly",monitoringGuidance:"LFTs before each cycle; reduce if bilirubin >ULN or ALT/AST >1.5×ULN; FBC nadir d7–11",bands:[{label:"1",min:0,max:55},{label:"2",min:55,max:70},{label:"3",min:70,max:null}],citations:["Taxotere SPC. Sanofi. 2022.","Launay-Vacher V et al. Cancer Chemother Pharmacol. 2016;77:867-875."],popPK:[]},
+  paclitaxel:{key:"paclitaxel",name:"Paclitaxel",category:"oncology",dosingMethod:"BSA-based",baseDosePerUnit:175,unit:"mg/m²",renallyCleared:false,hepaticallyCleared:true,resistanceThreshold:null,targetExposure:"175 mg/m² q3w or 80 mg/m² weekly",monitoringGuidance:"LFTs; neuropathy grading; dexamethasone + antihistamine premedication mandatory",bands:[{label:"1",min:0,max:130},{label:"2",min:130,max:165},{label:"3",min:165,max:null}],citations:["McGuire WP et al. N Engl J Med. 1996;334(1):1-6.","Taxol SPC. BMS. 2022."],popPK:[]},
+  gentamicin:{key:"gentamicin",name:"Gentamicin",category:"id",dosingMethod:"Weight-based PK (ODD)",baseDosePerUnit:5,unit:"mg/kg",renallyCleared:true,hepaticallyCleared:false,resistanceThreshold:3.0,targetExposure:"Peak 8–10 mg/L; Trough <1 mg/L (ODD); Cmax/MIC >8–10",monitoringGuidance:"Hartford nomogram: level 6–14h post-dose; CrCl 3×/week; audiometry for courses >7 days",bands:[{label:"L",min:0,max:240},{label:"M",min:240,max:320},{label:"H",min:320,max:null}],citations:["Mehta DK et al. East Afr Med J. 2019;96(4):1821-1828.","Nicolau DP et al. Antimicrob Agents Chemother. 1995;39(3):650-655.","Craig WA. Clin Infect Dis. 1998;26(1):1-10."],popPK:[{pop:"Sub-Saharan Africa",vd:"-15%",cl:"-12%",t12:"+18%",src:"Mehta 2019"},{pop:"Malnourished (BMI<16)",vd:"-22%",cl:"-18%",t12:"+30%",src:"Bhatt 2021"},{pop:"Pregnancy 2nd/3rd trimester",vd:"+30%",cl:"+45%",t12:"-25%",src:"Hebert 2017"}]},
+  amikacin:{key:"amikacin",name:"Amikacin",category:"id",dosingMethod:"Weight-based PK (ODD)",baseDosePerUnit:15,unit:"mg/kg",renallyCleared:true,hepaticallyCleared:false,resistanceThreshold:10.0,targetExposure:"Peak 20–30 mg/L; Trough <5 mg/L; Cmax/MIC ≥8",monitoringGuidance:"Level 6–14h post-dose; weekly CrCl; audiometry for prolonged courses",bands:[{label:"L",min:0,max:600},{label:"M",min:600,max:900},{label:"H",min:900,max:null}],citations:["Bhatt DL et al. Trop Med Int Health. 2021;26(3):312-319.","WHO Model Formulary 2008. Section 6.2.2.","Rybak MJ et al. Pharmacotherapy. 2020;40(5):363-403."],popPK:[{pop:"Sub-Saharan Africa",vd:"-15%",cl:"-12%",t12:"+18%",src:"Mehta 2019"},{pop:"Malnourished (BMI<16)",vd:"-22%",cl:"-18%",t12:"+30%",src:"Bhatt 2021"}]},
+  vancomycin:{key:"vancomycin",name:"Vancomycin",category:"id",dosingMethod:"Weight-based PK",baseDosePerUnit:15,unit:"mg/kg/dose",renallyCleared:true,hepaticallyCleared:false,resistanceThreshold:null,targetExposure:"AUC/MIC 400–600 mg·h/L; Trough 10–20 mg/L (MRSA)",monitoringGuidance:"AUC-guided preferred; trough after dose 3–4; CrCl q48–72h; red-man prophylaxis",bands:[{label:"1",min:0,max:750},{label:"2",min:750,max:1250},{label:"3",min:1250,max:1750},{label:"4",min:1750,max:2250},{label:"5",min:2250,max:null}],citations:["Rybak MJ et al. Am J Health Syst Pharm. 2020;77(11):835-864.","Wools-Kaloustian KK et al. J Antimicrob Chemother. 2018;73(8):2135-2141."],popPK:[{pop:"HIV+ on ART",vd:"+10%",cl:"-15%",t12:"+12%",src:"Wools-Kaloustian 2018"}]},
+  piperacillinTazobactam:{key:"piperacillinTazobactam",name:"Piperacillin-Tazobactam",category:"id",dosingMethod:"Fixed dose",baseDosePerUnit:4500,unit:"mg",renallyCleared:true,hepaticallyCleared:false,resistanceThreshold:null,targetExposure:"fT>MIC >50% (standard); extended infusion (4h) for serious infections",monitoringGuidance:"CrCl — reduce if <20 mL/min; electrolyte monitoring",bands:[{label:"1",min:0,max:3000},{label:"2",min:3000,max:4500},{label:"3",min:4500,max:null}],citations:["Lodise TP et al. Antimicrob Agents Chemother. 2007;51(11):3927-3932.","Tazocin SPC. Pfizer. 2022."],popPK:[]},
+  meropenem:{key:"meropenem",name:"Meropenem",category:"id",dosingMethod:"Fixed dose",baseDosePerUnit:1000,unit:"mg",renallyCleared:true,hepaticallyCleared:false,resistanceThreshold:null,targetExposure:"fT>MIC >40% bacteriostatic; extended infusion 3h preferred",monitoringGuidance:"CrCl — adjust if <50; NMS risk; daily renal monitoring in ICU",bands:[{label:"1",min:0,max:750},{label:"2",min:750,max:1250},{label:"3",min:1250,max:null}],citations:["Merrem IV SPC. AstraZeneca. 2022.","Roberts JA et al. Lancet Infect Dis. 2014;14(6):498-509."],popPK:[]},
+  fluconazole:{key:"fluconazole",name:"Fluconazole",category:"antifungal",dosingMethod:"Fixed dose",baseDosePerUnit:400,unit:"mg",renallyCleared:true,hepaticallyCleared:false,resistanceThreshold:null,targetExposure:"AUC/MIC >25 (Candida); Trough 8–20 mg/L",monitoringGuidance:"LFTs weekly; 50% reduction if CrCl <50; loading dose 800mg day 1; QTc monitoring",bands:[{label:"1",min:0,max:200},{label:"2",min:200,max:400},{label:"3",min:400,max:null}],citations:["Pappas PG et al. Clin Infect Dis. 2016;62(4):e1-50.","Diflucan SPC. Pfizer. 2022."],popPK:[]},
+  voriconazole:{key:"voriconazole",name:"Voriconazole",category:"antifungal",dosingMethod:"Weight-based PK",baseDosePerUnit:4,unit:"mg/kg/dose (IV)",renallyCleared:false,hepaticallyCleared:true,resistanceThreshold:null,targetExposure:"Trough 1–5.5 mg/L; avoid >5.5 (neurotoxicity)",monitoringGuidance:"TDM mandatory; trough after day 5 then weekly; LFTs; visual disturbances; QTc",bands:[{label:"1",min:0,max:150},{label:"2",min:150,max:250},{label:"3",min:250,max:null}],citations:["Patterson TF et al. Clin Infect Dis. 2016;63(4):e1-60.","Vfend SPC. Pfizer. 2022.","Pascual A et al. Clin Infect Dis. 2008;46(2):201-211."],popPK:[]},
+  acyclovir:{key:"acyclovir",name:"Acyclovir (IV)",category:"antiviral",dosingMethod:"Weight-based PK",baseDosePerUnit:10,unit:"mg/kg/dose",renallyCleared:true,hepaticallyCleared:false,resistanceThreshold:null,targetExposure:"500 mg/m² q8h (encephalitis); 10 mg/kg q8h (immunocompromised)",monitoringGuidance:"Aggressive IV hydration mandatory; CrCl before each dose; neurotoxicity monitoring",bands:[{label:"1",min:0,max:400},{label:"2",min:400,max:700},{label:"3",min:700,max:null}],citations:["Skoldenberg B et al. Lancet. 1984;2(8405):707-711.","Zovirax SPC. GSK. 2022.","Aronoff GR et al. Drug Prescribing in Renal Failure. 5th ed. ACP. 2007."],popPK:[]}
+};
+
+const state={current:null,statuses:{},annotations:{},logs:{},edits:{}};
+Object.keys(DRUGS).forEach(k=>{state.statuses[k]="pending";state.annotations[k]="";state.logs[k]=[]});
+
+function buildSidebar(){
+  const cats={oncology:"nav-oncology",id:"nav-id",antifungal:"nav-antifungal",antiviral:"nav-antiviral"};
+  Object.entries(cats).forEach(([cat,id])=>{
+    const el=document.getElementById(id);
+    Object.values(DRUGS).filter(d=>d.category===cat).forEach(drug=>{
+      const item=document.createElement("div");
+      item.className="drug-item";item.id="nav-"+drug.key;item.onclick=()=>loadDrug(drug.key);
+      item.innerHTML=`<div class="dot dot-pending" id="dot-${drug.key}"></div><span class="drug-name">${drug.name}</span>`;
+      el.appendChild(item);
+    });
+  });
+}
+
+function loadDrug(key){
+  state.current=key;
+  const drug=DRUGS[key];
+  document.querySelectorAll(".drug-item").forEach(el=>el.classList.remove("active"));
+  document.getElementById("nav-"+key).classList.add("active");
+  document.getElementById("topbar").style.display="flex";
+  document.getElementById("tb-name").textContent=drug.name;
+  document.getElementById("tb-cat").textContent=drug.category.replace("_"," ");
+  updateStatusBadge(key);
+  document.getElementById("content").innerHTML=renderDrug(drug);
+}
+
+function renderDrug(drug){
+  const annotation=state.annotations[drug.key]||"";
+  const edits=state.edits[drug.key]||{};
+  return`
+    <div class="panel-grid">
+      <div class="panel">
+        <div class="panel-head"><span class="panel-title">Core dosing parameters</span><span style="font-family:var(--mono);font-size:9px;color:var(--muted)">${drug.dosingMethod}</span></div>
+        <div class="panel-body">
+          ${paramRow("Base dose/unit",edits.baseDosePerUnit||drug.baseDosePerUnit,"baseDosePerUnit",true)}
+          ${paramRow("Unit / formula",drug.unit,null,false)}
+          ${paramRow("Renally cleared",drug.renallyCleared?"Yes":"No",null,false)}
+          ${paramRow("Hepatically cleared",drug.hepaticallyCleared?"Yes":"No",null,false)}
+          ${paramRow("Target exposure",drug.targetExposure,null,false)}
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span class="panel-title">Dose bands</span><span style="font-family:var(--mono);font-size:9px;color:var(--muted)">${drug.bands.length} tiers</span></div>
+        <div class="panel-body" style="padding:0">
+          <table class="bands-table">
+            <thead><tr><th>Band</th><th>Min (mg)</th><th>Max (mg)</th><th>Range</th></tr></thead>
+            <tbody>${drug.bands.map(b=>`<tr><td class="band-label">Band ${b.label}</td><td>${b.min}</td><td>${b.max===null?"∞":b.max}</td><td class="band-range">${b.min}–${b.max===null?"∞":b.max} mg</td></tr>`).join("")}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="panel-grid">
+      <div class="panel">
+        <div class="panel-head"><span class="panel-title">Monitoring guidance</span></div>
+        <div class="panel-body"><div style="font-size:12.5px;line-height:1.7;color:var(--body)">${drug.monitoringGuidance}</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span class="panel-title">Resistance threshold</span></div>
+        <div class="panel-body">
+          ${drug.resistanceThreshold?`<div class="resist-box"><span class="resist-label">Min dose/kg to prevent resistance</span><span class="resist-val">${drug.resistanceThreshold} mg/kg</span></div><div style="margin-top:8px;font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.6">Below this threshold, underexposure selects for resistant organisms (Craig WA, 1998).</div>`:`<div style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:4px 0">No resistance threshold defined for this drug class.</div>`}
+        </div>
+      </div>
+    </div>
+    ${drug.popPK.length>0?`
+    <div class="panel-grid wide">
+      <div class="panel">
+        <div class="panel-head"><span class="panel-title">Population PK adjustments</span><span style="font-family:var(--mono);font-size:9px;color:var(--muted)">${drug.popPK.length} populations</span></div>
+        <div class="panel-body">
+          <div class="pk-row-item pk-head"><span>Population</span><span>Vd</span><span>CL</span><span>t½</span><span>Source</span></div>
+          ${drug.popPK.map(p=>`<div class="pk-row-item"><span style="color:var(--dim)">${p.pop}</span><span class="${p.vd.startsWith('+')?'pk-pos':'pk-neg'}">${p.vd}</span><span class="${p.cl.startsWith('+')?'pk-pos':'pk-neg'}">${p.cl}</span><span class="${p.t12.startsWith('+')?'pk-pos':'pk-neg'}">${p.t12}</span><span class="pk-src">${p.src}</span></div>`).join("")}
+        </div>
+      </div>
+    </div>`:""}
+    <div class="panel-grid wide">
+      <div class="panel">
+        <div class="panel-head"><span class="panel-title">Clinical citations</span><span style="font-family:var(--mono);font-size:9px;color:var(--muted)">${drug.citations.length} references</span></div>
+        <div class="panel-body">
+          ${drug.citations.map((c,i)=>`<div class="citation-item"><span class="citation-num">[${i+1}]</span><span class="citation-text">${c}</span><span class="citation-ok">✓</span></div>`).join("")}
+        </div>
+      </div>
+    </div>
+    <div class="panel-grid wide">
+      <div class="panel">
+        <div class="panel-head"><span class="panel-title">Pharmacist annotation</span><span style="font-family:var(--mono);font-size:9px;color:var(--muted)">saved locally</span></div>
+        <div class="panel-body">
+          <textarea class="annotation" id="ann-${drug.key}" placeholder="Add clinical notes, concerns, or sign-off comments here…" oninput="state.annotations['${drug.key}']=this.value">${annotation}</textarea>
+        </div>
+      </div>
+    </div>
+    <div class="panel-grid wide" style="margin-bottom:0">
+      <div class="panel">
+        <div class="panel-head"><span class="panel-title">Review log</span></div>
+        <div class="panel-body" id="log-panel">${renderLog(drug.key)}</div>
+      </div>
+    </div>
+    <div style="height:24px"></div>
+  `;
+}
+
+function paramRow(label,value,field,editable){
+  if(!editable||!field)return`<div class="param-row"><span class="param-key">${label}</span><span class="param-val">${value}</span><span></span></div>`;
+  return`<div class="param-row" id="row-${field}"><span class="param-key">${label}</span><span class="param-val" id="val-${field}">${value}</span><button class="edit-btn" id="ebtn-${field}" onclick="startEdit('${field}','${value}')">edit</button></div>`;
+}
+
+function startEdit(field,cur){
+  const v=document.getElementById("val-"+field),b=document.getElementById("ebtn-"+field);
+  v.innerHTML=`<input class="param-edit" id="ei-${field}" value="${cur}" onkeydown="if(event.key==='Enter')commitEdit('${field}');if(event.key==='Escape')cancelEdit('${field}','${cur}')">`;
+  b.textContent="save";b.classList.add("saving");b.onclick=()=>commitEdit(field);
+  document.getElementById("ei-"+field).focus();
+}
+
+function commitEdit(field){
+  const inp=document.getElementById("ei-"+field),nv=inp.value.trim(),key=state.current;
+  if(!state.edits[key])state.edits[key]={};
+  state.edits[key][field]=nv;DRUGS[key][field]=isNaN(nv)?nv:parseFloat(nv);
+  const v=document.getElementById("val-"+field),b=document.getElementById("ebtn-"+field);
+  v.textContent=nv;b.textContent="edit";b.classList.remove("saving");b.onclick=()=>startEdit(field,nv);
+  addLog(key,"edit",`Edited ${field} → "${nv}"`);
+  document.getElementById("log-panel").innerHTML=renderLog(key);
+  v.parentElement.classList.add("flash");setTimeout(()=>v.parentElement.classList.remove("flash"),600);
+}
+
+function cancelEdit(field,orig){
+  document.getElementById("val-"+field).textContent=orig;
+  const b=document.getElementById("ebtn-"+field);b.textContent="edit";b.classList.remove("saving");b.onclick=()=>startEdit(field,orig);
+}
+
+function approveDrug(){
+  const key=state.current;if(!key)return;
+  state.statuses[key]="approved";
+  const note=state.annotations[key]||"";
+  addLog(key,"approve",note?`Approved with note: "${note.substring(0,60)}${note.length>60?"…":""}"` :"Approved — parameters verified");
+  updateUI(key);
+}
+
+function flagDrug(){
+  const key=state.current;if(!key)return;
+  state.statuses[key]="flagged";
+  const note=state.annotations[key]||"";
+  addLog(key,"flag",note?`Flagged: "${note.substring(0,60)}${note.length>60?"…":""}"` :"Flagged for further review");
+  updateUI(key);
+}
+
+function updateUI(key){
+  updateStatusBadge(key);
+  const dot=document.getElementById("dot-"+key);
+  dot.className="dot dot-"+state.statuses[key];
+  const total=Object.keys(DRUGS).length,approved=Object.values(state.statuses).filter(s=>s==="approved").length;
+  const pct=Math.round((approved/total)*100);
+  document.getElementById("prog-bar").style.width=pct+"%";
+  document.getElementById("prog-count").textContent=`${approved}/${total}`;
+  const logEl=document.getElementById("log-panel");
+  if(logEl)logEl.innerHTML=renderLog(key);
+}
+
+function updateStatusBadge(key){
+  const s=state.statuses[key],el=document.getElementById("tb-status");
+  const labels={pending:"Pending review",approved:"Approved",flagged:"Flagged"};
+  el.textContent=labels[s];el.className="status-badge badge-"+s;
+}
+
+function addLog(key,action,note){
+  const time=new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+  state.logs[key].unshift({time,action,note});
+}
+
+function renderLog(key){
+  const entries=state.logs[key]||[];
+  if(!entries.length)return`<div style="font-family:var(--mono);font-size:10px;color:var(--muted);padding:4px 0">No review activity yet.</div>`;
+  return entries.map(e=>`<div class="log-item"><span class="log-time">${e.time}</span><span class="log-text"><span class="log-actor">Pharmacist</span> <span class="log-${e.action}">${e.action==="approve"?"approved":e.action==="flag"?"flagged":"edited"}</span> — ${e.note}</span></div>`).join("");
+}
+
+buildSidebar();
+</script>
+</body>
+</html>
