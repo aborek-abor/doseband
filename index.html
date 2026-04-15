@@ -157,6 +157,20 @@ input:focus,select:focus{border-color:var(--ink);background:#fff}
 .pdf-header h2{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:4px}
 .pdf-header p{font-family:var(--mono);font-size:10px;color:var(--muted)}
 
+
+/* ── FORMULARY BADGES ── */
+.formulary-wrap{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.formulary-title{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.formulary-row{display:flex;flex-wrap:wrap;gap:5px}
+.fbadge{font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:3px;border:1px solid;font-weight:600;letter-spacing:0.04em;display:flex;align-items:center;gap:4px}
+.fbadge-yes{background:var(--green-bg);color:var(--green);border-color:var(--green-bd)}
+.fbadge-no{background:var(--surface2);color:var(--muted);border-color:var(--border);font-weight:400;opacity:0.7}
+.fbadge-who{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd)}
+.fbadge-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.fbadge-yes .fbadge-dot{background:var(--green)}
+.fbadge-no .fbadge-dot{background:var(--border2)}
+.fbadge-who .fbadge-dot{background:var(--blue)}
+
 .footer{text-align:center;font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:28px;line-height:2}
 .footer strong{color:var(--dim)}
 </style>
@@ -292,6 +306,11 @@ input:focus,select:focus{border-color:var(--ink);background:#fff}
       </div>
       <div class="adjrow" id="r-adjs"></div>
       <div id="r-flags"></div>
+      <div class="formulary-wrap" id="r-formulary" style="display:none">
+        <div class="formulary-title">National formulary status</div>
+        <div class="formulary-row" id="r-formulary-badges"></div>
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap" id="r-links"></div>
+      </div>
     </div>
   </div>
 
@@ -357,8 +376,8 @@ input:focus,select:focus{border-color:var(--ink);background:#fff}
   </div>
 
   <div class="footer">
-    <strong>DoseBand v1.4</strong> — Pre-clinical validation only<br>
-    53 drugs · Audit trail · Pharmacist workflow · PDF &amp; FHIR export<br>
+    <strong>DoseBand v1.6</strong> — Pre-clinical validation only<br>
+    66 drugs · Audit trail · Pharmacist workflow · PDF &amp; FHIR export<br>
     doseband-production.up.railway.app
   </div>
 </div>
@@ -366,7 +385,7 @@ input:focus,select:focus{border-color:var(--ink);background:#fff}
 <script>
 // ── DRUG DATABASE ─────────────────────────────────────────────────────────────
 var DRUGS = {};
-var CATS = {all:"All",oncology:"Oncology",id:"Antibiotics",antifungal:"Antifungal",antiviral:"Antiviral",tb:"TB",hiv:"HIV ARVs",hiv_fdc:"HIV FDCs",oi_px:"OI Prophylaxis",mab:"Monoclonal Abs"};
+var CATS = {all:"All",oncology:"Oncology",id:"Antibiotics",antifungal:"Antifungal",antiviral:"Antiviral",tb:"TB",hiv:"HIV ARVs",hiv_fdc:"HIV FDCs",oi_px:"OI Prophylaxis",mab:"Monoclonal Abs",pain:"Pain/Anaesthesia",cardiac:"Cardiac",anticoag:"Anticoagulation",neuro:"Neurology",steroid:"Steroids"};
 var S = {drug:null,reg:"standard",sex:"M",neph:"no",cat:"all",query:""};
 var lastResult = null;
 
@@ -433,12 +452,179 @@ addDrug("cetuximab","Cetuximab","mab","bsa",400,[b("1",0,500),b("2",500,700),b("
 addDrug("ibalizumab","Ibalizumab","mab","fixed",2000,[b("Loading",0,2001),b("Maintenance",2001,Infinity)],false,false,null,false,"Loading 2000mg IV then 800mg IV q2 weeks. MULTIDRUG-RESISTANT HIV ONLY.",{hivPositive:{r:1.0,t:"warning",m:"HIV (MDR): treatment-experienced patients only. Resistance genotype required."}});
 addDrug("lenacapavir","Lenacapavir (6-monthly)","mab","fixed",927,[b("Induction",0,928),b("Maintenance",928,Infinity)],false,true,null,false,"SC 927mg at weeks 0 and 26. PURPOSE trials >99% PrEP efficacy in SSA.",{hivNaive:{r:1.0,t:"info",m:"HIV prevention (PrEP): PURPOSE trials >99% efficacy in SSA women. WHO recommended 2024."},subSaharanAfrica:{r:1.0,t:"info",m:"SSA: Gilead access programme expanding. Game-changing for HIV prevention."}});
 
+
+// ── ANAESTHESIA & PAIN ────────────────────────────────────────────────────────
+addDrug("morphine","Morphine IV/IM","pain","wt",0.1,[b("L",0,4),b("M",4,8),b("H",8,15),b("High",15,Infinity)],true,true,null,false,"Titrate to pain response. Naloxone must be available. Respiratory depression monitoring. Reduce dose 50% if CrCl <30. Avoid in severe hepatic impairment. Constipation prophylaxis for prolonged use.",{elderly:{r:0.5,t:"warning",m:"Elderly: morphine dose reduced 50% — increased CNS and respiratory sensitivity. Titrate slowly."},malnourished:{r:0.75,t:"warning",m:"Malnutrition: reduced protein binding and hepatic clearance. Reduce starting dose."}});
+
+addDrug("ketamine","Ketamine IV","anaesthesia","wt",1.5,[b("Induction",0,80),b("Maintenance",80,150),b("Dissociative",150,Infinity)],false,true,null,false,"1-2mg/kg IV for induction; 0.5-1mg/kg for analgesia. Atropine pre-medication reduces secretions. Emergence reactions — benzodiazepine cover if needed. Contraindicated in uncontrolled hypertension. Preferred agent in haemodynamically unstable patients.",{elderly:{r:0.7,t:"warning",m:"Elderly: ketamine dose reduced 30%. Increased cardiovascular effects."},subSaharanAfrica:{r:1.0,t:"info",m:"SSA: ketamine is the most widely used anaesthetic agent in district hospitals due to availability and safety profile in low-resource settings."}});
+
+addDrug("fentanyl","Fentanyl IV","pain","wt",1.5,[b("L",0,50),b("M",50,100),b("H",100,200),b("High",200,Infinity)],false,true,null,false,"1-2 mcg/kg IV for analgesia; 2-5 mcg/kg for induction. Doses in MICROGRAMS — confirm units before administration. Rapid onset, short duration. Respiratory depression monitoring. Reversal with naloxone.",{elderly:{r:0.5,t:"warning",m:"Elderly: fentanyl dose reduced 50% — increased sensitivity and prolonged effect."}});
+
+// ── CARDIAC ───────────────────────────────────────────────────────────────────
+addDrug("digoxin","Digoxin IV","cardiac","wt",0.01,[b("1",0,0.5),b("2",0.5,0.75),b("3",0.75,1.0),b("4",1.0,Infinity)],true,false,null,false,"Loading dose 0.5-1mg in divided doses over 24h; maintenance 0.0625-0.25mg OD. TDM mandatory — target 0.5-2 ng/mL (heart failure) or 0.5-0.9 ng/mL preferred. Narrow therapeutic index. Toxicity: bradycardia, AV block, nausea, visual disturbances. CrCl before each dose. Reduce maintenance dose in renal impairment.",{elderly:{r:0.5,t:"danger",m:"Elderly: digoxin dose reduced 50% — reduced renal clearance greatly increases toxicity risk. TDM mandatory."},subSaharanAfrica:{r:0.87,t:"info",m:"SSA: lean body mass differences affect Vd. Use IBW for dose calculation."}});
+
+addDrug("aminophylline","Aminophylline IV","cardiac","wt",5,[b("1",0,200),b("2",200,350),b("3",350,500),b("4",500,Infinity)],false,true,null,false,"Loading 5mg/kg IV over 30 min (if not on theophylline); maintenance 0.5mg/kg/h. TDM mandatory — target 10-20 mg/L. QTc monitoring. Arrhythmia risk. Reduce maintenance dose in hepatic impairment and heart failure. Numerous drug interactions — CYP1A2 substrate.",{elderly:{r:0.6,t:"warning",m:"Elderly: aminophylline clearance reduced. Maintenance dose reduced 40%."},hivPositive:{r:1.0,t:"warning",m:"HIV on ART: ritonavir and some PIs inhibit CYP3A4 — aminophylline levels may increase. Monitor closely."}});
+
+// ── ANTICOAGULATION ───────────────────────────────────────────────────────────
+addDrug("heparin","Heparin IV (UFH)","anticoag","wt",80,[b("1",0,4000),b("2",4000,6000),b("3",6000,8000),b("4",8000,Infinity)],false,false,null,false,"Bolus 80 units/kg then infusion 18 units/kg/h. APTT-guided dosing mandatory — target APTT 60-100 seconds. Check APTT 6h after any dose change. Platelet count every 2 days (HIT monitoring). Protamine reversal available.",{pregnant:{r:1.0,t:"info",m:"Pregnancy: heparin does not cross placenta — preferred anticoagulant in pregnancy. Higher doses often required due to increased Vd and clearance."}});
+
+addDrug("enoxaparin","Enoxaparin SC","anticoag","wt",1,[b("1",0,60),b("2",60,80),b("3",80,100),b("4",100,Infinity)],true,false,null,false,"1mg/kg SC BD (treatment) or 1.5mg/kg OD (treatment). 40mg OD for prophylaxis. Reduce to 1mg/kg OD if CrCl <30. Anti-Xa monitoring if CrCl <30, extremes of weight, or pregnancy. Max 180mg/dose.",{pregnant:{r:1.0,t:"warning",m:"Pregnancy: increased renal clearance may require dose increase. Anti-Xa monitoring mandatory."},elderly:{r:0.75,t:"warning",m:"Elderly: reduced renal clearance. Monitor CrCl and consider dose reduction."},malnourished:{r:0.85,t:"warning",m:"Malnutrition: use actual body weight if BMI <18.5. Anti-Xa monitoring recommended."}});
+
+// ── ADDITIONAL ANTIBIOTICS ───────────────────────────────────────────────────
+addDrug("benzylpenicillin","Benzylpenicillin IV","id","wt",50,[b("1",0,1000),b("2",1000,2000),b("3",2000,3000),b("4",3000,Infinity)],true,false,null,false,"50,000 units/kg q4-6h for meningitis (max 4 million units/dose). 1.2-2.4g q4-6h for severe infection. Reduce dose and/or frequency if CrCl <10. High sodium load at high doses. Penicillin allergy cross-reactivity with cephalosporins.",{subSaharanAfrica:{r:1.0,t:"info",m:"SSA: benzylpenicillin remains first-line for pneumococcal meningitis and severe streptococcal infections at district hospital level where ceftriaxone may be unavailable."}});
+
+addDrug("clindamycin","Clindamycin IV","id","wt",8,[b("1",0,400),b("2",400,600),b("3",600,900),b("4",900,Infinity)],false,true,null,false,"600-900mg IV q8h. No renal dose adjustment required. Reduce dose in severe hepatic impairment. C. difficile risk with prolonged use. Excellent bone and soft tissue penetration.",{hivPositive:{r:1.0,t:"info",m:"HIV+: clindamycin + primaquine is an alternative regimen for mild-moderate PCP where cotrimoxazole is not tolerated."}});
+
+addDrug("chloramphenicol","Chloramphenicol IV","id","wt",25,[b("1",0,1000),b("2",1000,1500),b("3",1500,2000),b("4",2000,Infinity)],false,true,null,false,"25mg/kg q6h (max 4g/day). FBC weekly — aplastic anaemia risk (rare but fatal). Grey baby syndrome in neonates — avoid. TDM recommended for serious infections: target peak 15-25 mg/L, trough 5-10 mg/L. Reserve for meningitis when ceftriaxone unavailable.",{subSaharanAfrica:{r:1.0,t:"warning",m:"SSA: chloramphenicol remains on most national EMLs as alternative for meningitis and enteric fever where preferred agents are unavailable. Reserve use strongly recommended."},elderly:{r:0.75,t:"warning",m:"Elderly: hepatic clearance reduced. Monitor for toxicity and reduce dose if needed."}});
+
+// ── ANTIEPILEPTICS ────────────────────────────────────────────────────────────
+addDrug("phenytoin","Phenytoin IV","neuro","wt",18,[b("1",0,750),b("2",750,1000),b("3",1000,1250),b("4",1250,Infinity)],false,true,null,false,"Loading 18mg/kg IV at max 50mg/min. ECG and BP monitoring mandatory during infusion — cardiac arrhythmia and hypotension risk. Maintenance 5-7mg/kg/day in divided doses. TDM mandatory: target total phenytoin 10-20 mg/L (free 1-2 mg/L). Non-linear PK — small dose changes produce large level changes. Numerous drug interactions.",{elderly:{r:0.75,t:"warning",m:"Elderly: phenytoin clearance reduced. Lower maintenance dose. TDM mandatory."},hivPositive:{r:1.0,t:"danger",m:"HIV on ART: phenytoin is a potent CYP inducer — major interactions with most ARVs including DTG, EFV, and PIs. Specialist review mandatory."},malnourished:{r:1.0,t:"warning",m:"Malnutrition: reduced albumin alters protein binding — measure free phenytoin level rather than total."}});
+
+// ── ANTIFUNGAL ────────────────────────────────────────────────────────────────
+addDrug("amphotericinB","Amphotericin B IV","antifungal","wt",1,[b("1",0,40),b("2",40,60),b("3",60,80),b("4",80,Infinity)],true,false,null,false,"Conventional: 1mg/kg OD (max 1.5mg/kg). Test dose 1mg over 20 min mandatory. Lipid formulation preferred if available (3-5mg/kg OD, less nephrotoxic). IV hydration with 500mL NS before each dose mandatory. K and Mg replacement. CrCl before each dose. Withhold if creatinine doubles.",{hivPositive:{r:1.0,t:"info",m:"HIV+: amphotericin B deoxycholate is first-line induction therapy for cryptococcal meningitis in SSA per WHO 2022 guidelines. Liposomal preferred if available."},subSaharanAfrica:{r:1.0,t:"warning",m:"SSA: cryptococcal meningitis is the most common cause of adult meningitis in HIV+ patients in SSA. Amphotericin B induction is life-saving but nephrotoxicity is the major dose-limiting toxicity."}});
+
+// ── STEROIDS ─────────────────────────────────────────────────────────────────
+addDrug("dexamethasone","Dexamethasone IV","steroid","wt",0.15,[b("1",0,4),b("2",4,8),b("3",8,12),b("4",12,Infinity)],false,true,null,false,"0.15mg/kg q6h for 4 days (bacterial meningitis — give with or before first antibiotic dose). 8-16mg OD (oncology antiemesis/cerebral oedema). 6mg OD (COVID-19 severe). Glucose monitoring. Infection risk with prolonged use. Adrenal suppression with courses >7 days.",{hivPositive:{r:1.0,t:"warning",m:"HIV+: dexamethasone for bacterial meningitis — do NOT use in cryptococcal meningitis (increases mortality). Confirm organism before prescribing."},tbHivCoinfection:{r:1.0,t:"info",m:"TB-HIV: dexamethasone is indicated as adjunctive therapy for TB meningitis (WHO recommendation). Use standard dosing."}});
+
+// ── UPDATE CATS ───────────────────────────────────────────────────────────────
+// Add new categories to CATS object
+
 // ── PK ────────────────────────────────────────────────────────────────────────
 function crcl(a,w,c,s){return Math.max(((140-a)*w)/(c*0.814)*(s==="F"?0.85:1),5);}
 function bsa(w,h){return Math.sqrt((h*w)/3600);}
 function ibw(h,s){return Math.max((s==="M"?50:45.5)+2.3*Math.max(0,h/2.54-60),30);}
 function dwt(w,h,s){var i=ibw(h,s),bmi=w/((h/100)*(h/100));return bmi>30?i+0.4*(w-i):Math.min(w,i+0.4*Math.max(0,w-i));}
 function band(dose,bands){return bands.find(function(bx){return dose>=bx.lo&&dose<bx.hi;})||bands[bands.length-1];}
+
+
+var FORMULARY = {
+  carboplatin:            {who:true, ke:true,  ng:true,  za:true,  gh:false},
+  cisplatin:              {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  oxaliplatin:            {who:false,ke:false, ng:false, za:true,  gh:false},
+  docetaxel:              {who:false,ke:true,  ng:false, za:true,  gh:false},
+  paclitaxel:             {who:true, ke:true,  ng:true,  za:true,  gh:false},
+  cyclophosphamide:       {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  doxorubicin:            {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  fluorouracil:           {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  vincristine:            {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  gentamicin:             {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  amikacin:               {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  vancomycin:             {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  piperacillinTazobactam: {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  meropenem:              {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  ceftriaxone:            {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  ampicillin:             {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  metronidazole:          {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  azithromycin:           {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  cotrimoxazole:          {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  fluconazole:            {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  voriconazole:           {who:true, ke:true,  ng:false, za:true,  gh:false},
+  acyclovir:              {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  rifampicin:             {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  isoniazid:              {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  pyrazinamide:           {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  ethambutol:             {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  streptomycin:           {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  tenofovir:              {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  lamivudine:             {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  zidovudine:             {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  efavirenz:              {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  dolutegravir:           {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  nevirapine:             {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  lopinavirRitonavir:     {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  tdf_3tc_dtg:            {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  tdf_3tc_efv:            {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  azt_3tc_nvp:            {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  tdf_3tc_nvp:            {who:false,ke:true,  ng:true,  za:false, gh:true},
+  azt_3tc:                {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  cotrimoxazole_px:       {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  fluconazole_px:         {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  dapsone_px:             {who:true, ke:true,  ng:true,  za:true,  gh:false},
+  rituximab:              {who:true, ke:false, ng:false, za:true,  gh:false},
+  trastuzumab:            {who:true, ke:false, ng:false, za:true,  gh:false},
+  bevacizumab:            {who:false,ke:false, ng:false, za:true,  gh:false},
+  cetuximab:              {who:false,ke:false, ng:false, za:false, gh:false},
+  ibalizumab:             {who:false,ke:false, ng:false, za:false, gh:false},
+  lenacapavir:            {who:true, ke:false, ng:false, za:false, gh:false},
+  morphine:               {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  ketamine:               {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  fentanyl:               {who:true, ke:true,  ng:true,  za:true,  gh:false},
+  digoxin:                {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  aminophylline:          {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  heparin:                {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  enoxaparin:             {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  benzylpenicillin:       {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  clindamycin:            {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  chloramphenicol:        {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  phenytoin:              {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  amphotericinB:          {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  dexamethasone:          {who:true, ke:true,  ng:true,  za:true,  gh:true}
+};
+
+
+var DRUG_LINKS = {
+  carboplatin:            {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2010/020452s013lbl.pdf", who:"https://list.essentialmedicines.org"},
+  cisplatin:              {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2011/018057s083lbl.pdf", who:"https://list.essentialmedicines.org"},
+  oxaliplatin:            {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2009/021759s010lbl.pdf", who:"https://list.essentialmedicines.org"},
+  docetaxel:              {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2015/020449s072lbl.pdf", who:"https://list.essentialmedicines.org"},
+  paclitaxel:             {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2011/020262s049lbl.pdf", who:"https://list.essentialmedicines.org"},
+  cyclophosphamide:       {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2013/012141s090,012142s112lbl.pdf", who:"https://list.essentialmedicines.org"},
+  doxorubicin:            {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2020/050467s036lbl.pdf", who:"https://list.essentialmedicines.org"},
+  fluorouracil:           {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2016/011740s017lbl.pdf", who:"https://list.essentialmedicines.org"},
+  vincristine:            {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2019/018313s036lbl.pdf", who:"https://list.essentialmedicines.org"},
+  gentamicin:             {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/062013s038lbl.pdf", who:"https://list.essentialmedicines.org"},
+  amikacin:               {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/062366s017lbl.pdf", who:"https://list.essentialmedicines.org"},
+  vancomycin:             {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/062975s043lbl.pdf", who:"https://list.essentialmedicines.org"},
+  piperacillinTazobactam: {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2017/050684s053lbl.pdf", who:"https://list.essentialmedicines.org"},
+  meropenem:              {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2016/050706s031lbl.pdf", who:"https://list.essentialmedicines.org"},
+  ceftriaxone:            {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2014/050796s019lbl.pdf", who:"https://list.essentialmedicines.org"},
+  ampicillin:             {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2011/050045s033lbl.pdf", who:"https://list.essentialmedicines.org"},
+  metronidazole:          {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/017485s010lbl.pdf", who:"https://list.essentialmedicines.org"},
+  azithromycin:           {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2013/050693s025lbl.pdf", who:"https://list.essentialmedicines.org"},
+  cotrimoxazole:          {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2013/017377s026lbl.pdf", who:"https://list.essentialmedicines.org"},
+  fluconazole:            {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2011/019949s051lbl.pdf", who:"https://list.essentialmedicines.org"},
+  voriconazole:           {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2015/021266s042lbl.pdf", who:"https://list.essentialmedicines.org"},
+  acyclovir:              {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2008/018828s030lbl.pdf", who:"https://list.essentialmedicines.org"},
+  rifampicin:             {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2021/050420s076lbl.pdf", who:"https://list.essentialmedicines.org"},
+  isoniazid:              {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2004/006180s025lbl.pdf", who:"https://list.essentialmedicines.org"},
+  pyrazinamide:           {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2008/011720s011lbl.pdf", who:"https://list.essentialmedicines.org"},
+  ethambutol:             {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2015/016320s025lbl.pdf", who:"https://list.essentialmedicines.org"},
+  streptomycin:           {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/062073s017lbl.pdf", who:"https://list.essentialmedicines.org"},
+  tenofovir:              {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2021/021356s062lbl.pdf", who:"https://list.essentialmedicines.org"},
+  lamivudine:             {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2017/020564s036lbl.pdf", who:"https://list.essentialmedicines.org"},
+  zidovudine:             {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2017/019655s040lbl.pdf", who:"https://list.essentialmedicines.org"},
+  efavirenz:              {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2017/020972s053lbl.pdf", who:"https://list.essentialmedicines.org"},
+  dolutegravir:           {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2023/204790s024lbl.pdf", who:"https://list.essentialmedicines.org"},
+  nevirapine:             {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2017/020636s047lbl.pdf", who:"https://list.essentialmedicines.org"},
+  lopinavirRitonavir:     {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2020/021251s058lbl.pdf", who:"https://list.essentialmedicines.org"},
+  tdf_3tc_dtg:            {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2023/210251s005lbl.pdf", who:"https://list.essentialmedicines.org"},
+  tdf_3tc_efv:            {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2018/021937s030lbl.pdf", who:"https://list.essentialmedicines.org"},
+  azt_3tc_nvp:            {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2020/021537s022lbl.pdf", who:"https://list.essentialmedicines.org"},
+  tdf_3tc_nvp:            {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2016/022387s007lbl.pdf", who:"https://list.essentialmedicines.org"},
+  azt_3tc:                {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2017/020906s028lbl.pdf", who:"https://list.essentialmedicines.org"},
+  cotrimoxazole_px:       {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2013/017377s026lbl.pdf", who:"https://list.essentialmedicines.org"},
+  fluconazole_px:         {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2011/019949s051lbl.pdf", who:"https://list.essentialmedicines.org"},
+  dapsone_px:             {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2010/009761s011lbl.pdf", who:"https://list.essentialmedicines.org"},
+  rituximab:              {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2021/103705s5476lbl.pdf", who:"https://list.essentialmedicines.org"},
+  trastuzumab:            {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2021/103792s5345lbl.pdf", who:"https://list.essentialmedicines.org"},
+  bevacizumab:            {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2021/125085s331lbl.pdf", who:"https://list.essentialmedicines.org"},
+  cetuximab:              {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2021/125084s273lbl.pdf", who:"https://list.essentialmedicines.org"},
+  ibalizumab:             {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2018/761065s000lbl.pdf", who:"https://list.essentialmedicines.org"},
+  lenacapavir:            {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2022/215973s000lbl.pdf", who:"https://list.essentialmedicines.org"},
+  morphine:               {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2014/040548s013lbl.pdf", who:"https://list.essentialmedicines.org"},
+  ketamine:               {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2020/016812s044lbl.pdf", who:"https://list.essentialmedicines.org"},
+  fentanyl:               {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2014/016619s043lbl.pdf", who:"https://list.essentialmedicines.org"},
+  digoxin:                {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2011/020405s004lbl.pdf", who:"https://list.essentialmedicines.org"},
+  aminophylline:          {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/008944s040lbl.pdf", who:"https://list.essentialmedicines.org"},
+  heparin:                {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/017029s049lbl.pdf", who:"https://list.essentialmedicines.org"},
+  enoxaparin:             {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2013/020164s100lbl.pdf", who:"https://list.essentialmedicines.org"},
+  benzylpenicillin:       {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/050104s048lbl.pdf", who:"https://list.essentialmedicines.org"},
+  clindamycin:            {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2013/050162s077lbl.pdf", who:"https://list.essentialmedicines.org"},
+  chloramphenicol:        {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/009653s062lbl.pdf", who:"https://list.essentialmedicines.org"},
+  phenytoin:              {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/084528s043lbl.pdf", who:"https://list.essentialmedicines.org"},
+  amphotericinB:          {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/050473s017lbl.pdf", who:"https://list.essentialmedicines.org"},
+  dexamethasone:          {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2008/011664s039lbl.pdf", who:"https://list.essentialmedicines.org"}
+};
 
 // ── UI ────────────────────────────────────────────────────────────────────────
 function buildUI(){
@@ -595,6 +781,35 @@ function calculate(){
   document.getElementById("pharm-id").value="";
   document.getElementById("pharm-notes").value="";
 
+  // Render formulary badges
+  var fdata = FORMULARY[S.drug];
+  var fwrap = document.getElementById("r-formulary");
+  if(fdata){
+    fwrap.style.display = "block";
+    var entries = [
+      {key:"who", label:"WHO EML", cls:"fbadge-who"},
+      {key:"ke",  label:"Kenya KEML", cls:"fbadge-yes"},
+      {key:"ng",  label:"Nigeria NEML", cls:"fbadge-yes"},
+      {key:"za",  label:"S. Africa EDL", cls:"fbadge-yes"},
+      {key:"gh",  label:"Ghana GEML", cls:"fbadge-yes"}
+    ];
+    document.getElementById("r-formulary-badges").innerHTML = entries.map(function(e){
+      var on = fdata[e.key];
+      var cls = on ? e.cls : "fbadge-no";
+      return '<span class="fbadge '+cls+'"><span class="fbadge-dot"></span>'+(on?"":"Not ")+e.label+'</span>';
+    }).join("");
+    // Links
+    var ldata = DRUG_LINKS[S.drug];
+    if(ldata){
+      document.getElementById("r-links").innerHTML =
+        '<a href="'+ldata.fda+'" target="_blank" style="font-family:var(--mono);font-size:10px;color:var(--blue);text-decoration:none;padding:3px 9px;border:1px solid var(--blue-bd);border-radius:4px;background:var(--blue-bg)">FDA label</a>'+
+        '<a href="'+ldata.who+'" target="_blank" style="font-family:var(--mono);font-size:10px;color:var(--blue);text-decoration:none;padding:3px 9px;border:1px solid var(--blue-bd);border-radius:4px;background:var(--blue-bg)">WHO EML</a>'+
+        '<a href="https://clinicaltrials.gov/search?term='+encodeURIComponent(drug.name)+'&cond=&country=KE,NG,ZA,GH" target="_blank" style="font-family:var(--mono);font-size:10px;color:var(--green);text-decoration:none;padding:3px 9px;border:1px solid var(--green-bd);border-radius:4px;background:var(--green-bg)">Clinical trials (SSA)</a>';
+    }
+  } else {
+    fwrap.style.display = "none";
+  }
+
   setTimeout(function(){el.scrollIntoView({behavior:"smooth",block:"nearest"});},60);
 }
 
@@ -641,7 +856,7 @@ function pharmQuery(){
 // ── EXPORT PDF ────────────────────────────────────────────────────────────────
 function exportPDF(){
   if(!lastResult){return;}
-  document.getElementById("pdf-timestamp").textContent="Generated: "+new Date().toLocaleString()+" | Version: DoseBand v1.4";
+  document.getElementById("pdf-timestamp").textContent="Generated: "+new Date().toLocaleString()+" | Version: DoseBand v1.6";
   document.getElementById("pdf-patientid").textContent="Patient ID: "+lastResult.patientId+" | Prescriber: "+lastResult.prescriber;
   window.print();
 }
@@ -652,7 +867,7 @@ function exportFHIR(){
   var fhir={
     resourceType:"MedicationRequest",
     id:"doseband-"+Date.now(),
-    meta:{profile:["http://hl7.org/fhir/StructureDefinition/MedicationRequest"],source:"DoseBand v1.4 | https://doseband-production.up.railway.app"},
+    meta:{profile:["http://hl7.org/fhir/StructureDefinition/MedicationRequest"],source:"DoseBand v1.6 | https://doseband-production.up.railway.app"},
     status:"active",
     intent:"order",
     authoredOn:lastResult.ts,
