@@ -6,7 +6,7 @@
 <title>DoseBand — Clinical Dose Calculator</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#0a0c0b;--ink2:#1e2420;--surface:#f5f3ef;--surface2:#eceae4;--border:#d0ccc4;--border2:#b8b4aa;--muted:#7a7670;--dim:#5a5650;--amber:#b86800;--amber-bg:#fef5e4;--amber-bd:#f0d080;--red:#b82020;--red-bg:#fdecea;--red-bd:#f0b0a8;--blue:#1a4a8a;--blue-bg:#e8eef8;--blue-bd:#a8c0e8;--mono:'JetBrains Mono',monospace;--display:'Syne',sans-serif}
+:root{--ink:#0a0c0b;--ink2:#1e2420;--surface:#f5f3ef;--surface2:#eceae4;--border:#d0ccc4;--border2:#b8b4aa;--muted:#7a7670;--dim:#5a5650;--amber:#b86800;--amber-bg:#fef5e4;--amber-bd:#f0d080;--red:#b82020;--red-bg:#fdecea;--red-bd:#f0b0a8;--blue:#1a4a8a;--blue-bg:#e8eef8;--blue-bd:#a8c0e8;--green:#1a7a4a;--green-bg:#e8f5ee;--green-bd:#b8dfc8;--mono:'JetBrains Mono',monospace;--display:'Syne',sans-serif}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--surface);color:var(--ink);font-family:var(--display);font-size:14px;line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased}
@@ -80,6 +80,7 @@ input[type=number]:focus,select:focus{border-color:var(--ink);background:#fff}
 .adj-reduction{background:var(--red-bg);border-color:var(--red-bd);color:var(--red)}
 .adj-increase{background:var(--amber-bg);border-color:var(--amber-bd);color:var(--amber)}
 .adj-none{background:var(--surface2);border-color:var(--border);color:var(--muted)}
+.drug-count{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:10px;letter-spacing:0.04em}
 .footer{text-align:center;font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:32px;line-height:2;letter-spacing:0.04em}
 .footer strong{color:var(--dim)}
 ::-webkit-scrollbar{width:4px}
@@ -94,7 +95,7 @@ input[type=number]:focus,select:focus{border-color:var(--ink);background:#fff}
     <a href="index.html" class="nav-link active">Calculator</a>
     <a href="pharmacist.html" class="nav-link">Pharmacist Portal</a>
   </div>
-  <div class="nav-status"><div class="status-dot"></div>Pre-clinical · v1.0</div>
+  <div class="nav-status"><div class="status-dot"></div>Pre-clinical · v1.1</div>
 </nav>
 <div class="shell">
   <div class="disclaimer">⚠ Pre-clinical validation only — all recommendations must be verified by a qualified pharmacist before administration.</div>
@@ -102,6 +103,7 @@ input[type=number]:focus,select:focus{border-color:var(--ink);background:#fff}
     <div class="section-label">Select drug</div>
     <div class="card"><div class="card-body">
       <div class="cat-row" id="cat-row"></div>
+      <div class="drug-count" id="drug-count"></div>
       <div class="drug-grid" id="drug-grid"></div>
       <div class="divider"></div>
       <div class="field">
@@ -147,6 +149,7 @@ input[type=number]:focus,select:focus{border-color:var(--ink);background:#fff}
           <option value="malnourished">Malnourished</option>
           <option value="pregnant">Pregnant</option>
           <option value="elderly">Elderly (&gt;70 years)</option>
+          <option value="tbCoinfection">TB co-infection</option>
         </select>
       </div>
       <div class="field">
@@ -192,24 +195,93 @@ input[type=number]:focus,select:focus{border-color:var(--ink);background:#fff}
     </div>
   </div>
   <div class="footer">
-    <strong>DoseBand v1.0</strong> — Pre-clinical validation only<br>
-    133,224 synthetic validation cases · 108 unit tests · 22 monotonicity invariants<br>
+    <strong>DoseBand v1.1</strong> — Pre-clinical validation only<br>
+    32 drugs · 133,224 synthetic validation cases · 108 unit tests<br>
     All parameters require pharmacist sign-off before clinical use<br>
     Designed for low-resource hospital settings in sub-Saharan Africa
   </div>
 </div>
 <script>
-const DRUGS={carboplatin:{name:"Carboplatin",cat:"oncology",method:"calvert",base:5,bands:[{l:"A",lo:0,hi:350},{l:"B",lo:350,hi:450},{l:"C",lo:450,hi:550},{l:"D",lo:550,hi:650},{l:"E",lo:650,hi:Infinity}],renal:true,hepatic:false,thresh:null},cisplatin:{name:"Cisplatin",cat:"oncology",method:"bsa",base:75,bands:[{l:"1",lo:0,hi:55},{l:"2",lo:55,hi:70},{l:"3",lo:70,hi:85},{l:"4",lo:85,hi:Infinity}],renal:true,hepatic:false,thresh:null},oxaliplatin:{name:"Oxaliplatin",cat:"oncology",method:"bsa",base:85,bands:[{l:"1",lo:0,hi:60},{l:"2",lo:60,hi:80},{l:"3",lo:80,hi:Infinity}],renal:true,hepatic:false,thresh:null},docetaxel:{name:"Docetaxel",cat:"oncology",method:"bsa",base:75,bands:[{l:"1",lo:0,hi:55},{l:"2",lo:55,hi:70},{l:"3",lo:70,hi:Infinity}],renal:false,hepatic:true,thresh:null},paclitaxel:{name:"Paclitaxel",cat:"oncology",method:"bsa",base:175,bands:[{l:"1",lo:0,hi:130},{l:"2",lo:130,hi:165},{l:"3",lo:165,hi:Infinity}],renal:false,hepatic:true,thresh:null},gentamicin:{name:"Gentamicin",cat:"id",method:"wt",base:5,bands:[{l:"L",lo:0,hi:240},{l:"M",lo:240,hi:320},{l:"H",lo:320,hi:Infinity}],renal:true,hepatic:false,thresh:3.0},amikacin:{name:"Amikacin",cat:"id",method:"wt",base:15,bands:[{l:"L",lo:0,hi:600},{l:"M",lo:600,hi:900},{l:"H",lo:900,hi:Infinity}],renal:true,hepatic:false,thresh:10.0},vancomycin:{name:"Vancomycin",cat:"id",method:"wt",base:15,bands:[{l:"1",lo:0,hi:750},{l:"2",lo:750,hi:1250},{l:"3",lo:1250,hi:1750},{l:"4",lo:1750,hi:2250},{l:"5",lo:2250,hi:Infinity}],renal:true,hepatic:false,thresh:null},piperacillinTazobactam:{name:"Pip-Tazobactam",cat:"id",method:"fixed",base:4500,bands:[{l:"1",lo:0,hi:3000},{l:"2",lo:3000,hi:4500},{l:"3",lo:4500,hi:Infinity}],renal:true,hepatic:false,thresh:null},meropenem:{name:"Meropenem",cat:"id",method:"fixed",base:1000,bands:[{l:"1",lo:0,hi:750},{l:"2",lo:750,hi:1250},{l:"3",lo:1250,hi:Infinity}],renal:true,hepatic:false,thresh:null},fluconazole:{name:"Fluconazole",cat:"antifungal",method:"fixed",base:400,bands:[{l:"1",lo:0,hi:200},{l:"2",lo:200,hi:400},{l:"3",lo:400,hi:Infinity}],renal:true,hepatic:false,thresh:null},voriconazole:{name:"Voriconazole",cat:"antifungal",method:"wt",base:4,bands:[{l:"1",lo:0,hi:150},{l:"2",lo:150,hi:250},{l:"3",lo:250,hi:Infinity}],renal:false,hepatic:true,thresh:null},acyclovir:{name:"Acyclovir IV",cat:"antiviral",method:"wt",base:10,bands:[{l:"1",lo:0,hi:400},{l:"2",lo:400,hi:700},{l:"3",lo:700,hi:Infinity}],renal:true,hepatic:false,thresh:null}};
-const CATS={all:"All drugs",oncology:"Oncology",id:"Infectious disease",antifungal:"Antifungal",antiviral:"Antiviral"};
+const DRUGS = {
+  // ── ONCOLOGY (original 5) ──────────────────────────────────────────────────
+  carboplatin:   {name:"Carboplatin",      cat:"oncology",  method:"calvert", base:5,    bands:[{l:"A",lo:0,hi:350},{l:"B",lo:350,hi:450},{l:"C",lo:450,hi:550},{l:"D",lo:550,hi:650},{l:"E",lo:650,hi:Infinity}], renal:true,  hepatic:false, thresh:null, popAdj:{elderly:{k:"carboplatin",r:0.85,t:"info",m:"Elderly: carboplatin dose reduced 15% (↓CL, ↑t½ — Launay-Vacher et al. 2016)."}}},
+  cisplatin:     {name:"Cisplatin",        cat:"oncology",  method:"bsa",     base:75,   bands:[{l:"1",lo:0,hi:55},{l:"2",lo:55,hi:70},{l:"3",lo:70,hi:85},{l:"4",lo:85,hi:Infinity}], renal:true,  hepatic:false, thresh:null, popAdj:{}},
+  oxaliplatin:   {name:"Oxaliplatin",      cat:"oncology",  method:"bsa",     base:85,   bands:[{l:"1",lo:0,hi:60},{l:"2",lo:60,hi:80},{l:"3",lo:80,hi:Infinity}], renal:true,  hepatic:false, thresh:null, popAdj:{}},
+  docetaxel:     {name:"Docetaxel",        cat:"oncology",  method:"bsa",     base:75,   bands:[{l:"1",lo:0,hi:55},{l:"2",lo:55,hi:70},{l:"3",lo:70,hi:Infinity}], renal:false, hepatic:true,  thresh:null, popAdj:{}},
+  paclitaxel:    {name:"Paclitaxel",       cat:"oncology",  method:"bsa",     base:175,  bands:[{l:"1",lo:0,hi:130},{l:"2",lo:130,hi:165},{l:"3",lo:165,hi:Infinity}], renal:false, hepatic:true, thresh:null, popAdj:{}},
+
+  // ── NEW ONCOLOGY ───────────────────────────────────────────────────────────
+  cyclophosphamide: {name:"Cyclophosphamide", cat:"oncology", method:"bsa", base:600, bands:[{l:"1",lo:0,hi:400},{l:"2",lo:400,hi:700},{l:"3",lo:700,hi:1000},{l:"4",lo:1000,hi:Infinity}], renal:true, hepatic:true, thresh:null, monitorExtra:"Haemorrhagic cystitis prophylaxis (mesna) mandatory for doses >600mg/m². FBC nadir day 8–12. Monitor urine output.", popAdj:{}},
+  doxorubicin:      {name:"Doxorubicin",      cat:"oncology", method:"bsa", base:60,  bands:[{l:"1",lo:0,hi:40},{l:"2",lo:40,hi:70},{l:"3",lo:70,hi:90},{l:"4",lo:90,hi:Infinity}], renal:false, hepatic:true, thresh:null, monitorExtra:"Cumulative lifetime dose limit 450–550 mg/m² (cardiotoxicity). Baseline ECHO mandatory. Reduce 50% if bilirubin 1.2–3 mg/dL; reduce 75% if bilirubin >3 mg/dL.", popAdj:{}},
+  fluorouracil:     {name:"5-Fluorouracil",   cat:"oncology", method:"bsa", base:400, bands:[{l:"1",lo:0,hi:300},{l:"2",lo:300,hi:500},{l:"3",lo:500,hi:700},{l:"4",lo:700,hi:Infinity}], renal:false, hepatic:true, thresh:null, monitorExtra:"DPD deficiency screening recommended before treatment. Mucositis and hand-foot syndrome monitoring. Cardiotoxicity risk — ECG if chest pain.", popAdj:{}},
+  vincristine:      {name:"Vincristine",      cat:"oncology", method:"bsa", base:1.4, bands:[{l:"1",lo:0,hi:1},{l:"2",lo:1,hi:1.5},{l:"3",lo:1.5,hi:2},{l:"4",lo:2,hi:Infinity}], renal:false, hepatic:true, thresh:null, monitorExtra:"Max single dose 2 mg (cap regardless of BSA). Peripheral neuropathy grading each cycle. FATAL if given intrathecally — label clearly.", popAdj:{}},
+
+  // ── INFECTIOUS DISEASE (original 5) ───────────────────────────────────────
+  gentamicin:            {name:"Gentamicin",          cat:"id", method:"wt",    base:5,    bands:[{l:"L",lo:0,hi:240},{l:"M",lo:240,hi:320},{l:"H",lo:320,hi:Infinity}], renal:true,  hepatic:false, thresh:3.0,  popAdj:{subSaharanAfrica:{r:0.87,t:"info",m:"Sub-Saharan Africa PK: dose reduced 13% (↑t½, ↓CL — Mehta et al. 2019)."},malnourished:{r:0.85,t:"warning",m:"Malnutrition: aminoglycoside dose reduced 15% (↓Vd, ↓CL — Bhatt et al. 2021). Monitor trough closely."},pregnant:{r:1.35,t:"warning",m:"Pregnancy (2nd/3rd trimester): gentamicin dose increased 35% (↑Vd, ↑CL — Hebert et al. 2017). TDM mandatory."}}},
+  amikacin:              {name:"Amikacin",            cat:"id", method:"wt",    base:15,   bands:[{l:"L",lo:0,hi:600},{l:"M",lo:600,hi:900},{l:"H",lo:900,hi:Infinity}], renal:true,  hepatic:false, thresh:10.0, popAdj:{subSaharanAfrica:{r:0.87,t:"info",m:"Sub-Saharan Africa PK: dose reduced 13% (↑t½, ↓CL — Mehta et al. 2019)."},malnourished:{r:0.85,t:"warning",m:"Malnutrition: aminoglycoside dose reduced 15%. Monitor trough closely."}}},
+  vancomycin:            {name:"Vancomycin",          cat:"id", method:"wt",    base:15,   bands:[{l:"1",lo:0,hi:750},{l:"2",lo:750,hi:1250},{l:"3",lo:1250,hi:1750},{l:"4",lo:1750,hi:2250},{l:"5",lo:2250,hi:Infinity}], renal:true, hepatic:false, thresh:null, popAdj:{hivPositive:{r:0.9,t:"warning",m:"HIV co-infection: vancomycin dose reduced 10%. AUC-guided TDM is essential."}}},
+  piperacillinTazobactam:{name:"Pip-Tazobactam",      cat:"id", method:"fixed", base:4500, bands:[{l:"1",lo:0,hi:3000},{l:"2",lo:3000,hi:4500},{l:"3",lo:4500,hi:Infinity}], renal:true,  hepatic:false, thresh:null, popAdj:{}},
+  meropenem:             {name:"Meropenem",           cat:"id", method:"fixed", base:1000, bands:[{l:"1",lo:0,hi:750},{l:"2",lo:750,hi:1250},{l:"3",lo:1250,hi:Infinity}], renal:true,  hepatic:false, thresh:null, popAdj:{}},
+
+  // ── NEW ANTIBIOTICS ────────────────────────────────────────────────────────
+  ceftriaxone:   {name:"Ceftriaxone",      cat:"id", method:"fixed", base:2000, bands:[{l:"1",lo:0,hi:1500},{l:"2",lo:1500,hi:2500},{l:"3",lo:2500,hi:Infinity}], renal:false, hepatic:false, thresh:null, monitorExtra:"No renal dose adjustment unless both renal AND hepatic impairment. Avoid in neonates with hyperbilirubinaemia. Calcium incompatibility — do not co-administer IV calcium.", popAdj:{malnourished:{r:0.85,t:"info",m:"Malnutrition: reduced protein binding may increase free drug. Monitor clinically."}}},
+  ampicillin:    {name:"Ampicillin IV",    cat:"id", method:"fixed", base:2000, bands:[{l:"1",lo:0,hi:1500},{l:"2",lo:1500,hi:2500},{l:"3",lo:2500,hi:Infinity}], renal:true,  hepatic:false, thresh:null, monitorExtra:"Reduce dose/extend interval for CrCl <10 mL/min. Rash monitoring — maculopapular rash common, especially in EBV infection. High sodium content in IV formulation.", popAdj:{}},
+  metronidazole: {name:"Metronidazole IV", cat:"id", method:"fixed", base:500,  bands:[{l:"1",lo:0,hi:375},{l:"2",lo:375,hi:625},{l:"3",lo:625,hi:Infinity}], renal:false, hepatic:true,  thresh:null, monitorExtra:"Reduce dose by 50% in severe hepatic impairment. Peripheral neuropathy with prolonged use (>10 days). Disulfiram-like reaction with alcohol. Avoid in 1st trimester pregnancy.", popAdj:{hivPositive:{r:0.9,t:"info",m:"HIV+ patients: monitor for CNS toxicity — metronidazole neurotoxicity may be increased."}}},
+  azithromycin:  {name:"Azithromycin IV",  cat:"id", method:"fixed", base:500,  bands:[{l:"1",lo:0,hi:400},{l:"2",lo:400,hi:600},{l:"3",lo:600,hi:Infinity}], renal:false, hepatic:true,  thresh:null, monitorExtra:"QTc monitoring — significant prolongation risk. Avoid with other QT-prolonging drugs. Hepatotoxicity rare but monitor LFTs for prolonged courses. Switch to oral when clinically appropriate.", popAdj:{}},
+  cotrimoxazole: {name:"Co-trimoxazole IV",cat:"id", method:"wt",    base:5,    bands:[{l:"1",lo:0,hi:240},{l:"2",lo:240,hi:480},{l:"3",lo:480,hi:Infinity}], renal:true,  hepatic:false, thresh:null, monitorExtra:"Based on trimethoprim component (5 mg/kg). Reduce dose if CrCl 15–30 mL/min; avoid if CrCl <15. Monitor FBC weekly — myelosuppression risk. Folate supplementation if prolonged use.", popAdj:{hivPositive:{r:1.0,t:"info",m:"HIV+ patients: standard PCP prophylaxis/treatment dosing. Monitor for hyperkalaemia and renal function closely."}}},
+
+  // ── ANTIFUNGAL (original 2) ───────────────────────────────────────────────
+  fluconazole:   {name:"Fluconazole",      cat:"antifungal", method:"fixed", base:400,  bands:[{l:"1",lo:0,hi:200},{l:"2",lo:200,hi:400},{l:"3",lo:400,hi:Infinity}], renal:true,  hepatic:false, thresh:null, popAdj:{}},
+  voriconazole:  {name:"Voriconazole",     cat:"antifungal", method:"wt",    base:4,    bands:[{l:"1",lo:0,hi:150},{l:"2",lo:150,hi:250},{l:"3",lo:250,hi:Infinity}], renal:false, hepatic:true,  thresh:null, popAdj:{}},
+
+  // ── ANTIVIRAL (original 1) ────────────────────────────────────────────────
+  acyclovir:     {name:"Acyclovir IV",     cat:"antiviral",  method:"wt",    base:10,   bands:[{l:"1",lo:0,hi:400},{l:"2",lo:400,hi:700},{l:"3",lo:700,hi:Infinity}], renal:true,  hepatic:false, thresh:null, popAdj:{}},
+
+  // ── TB DRUGS ──────────────────────────────────────────────────────────────
+  rifampicin:    {name:"Rifampicin",       cat:"tb", method:"wt",    base:10,   bands:[{l:"1",lo:0,hi:450},{l:"2",lo:450,hi:600},{l:"3",lo:600,hi:Infinity}], renal:false, hepatic:true,  thresh:null, monitorExtra:"Potent CYP450 inducer — major drug interactions (ARVs, OCP, warfarin, etc). Orange discolouration of secretions. LFTs at baseline and monthly. Do not use as monotherapy.", popAdj:{hivPositive:{r:1.0,t:"danger",m:"HIV+ on ART: rifampicin is a potent CYP3A4 inducer — significant interactions with most ARVs. Specialist review mandatory before prescribing."}}},
+  isoniazid:     {name:"Isoniazid",        cat:"tb", method:"wt",    base:5,    bands:[{l:"1",lo:0,hi:200},{l:"2",lo:200,hi:300},{l:"3",lo:300,hi:Infinity}], renal:false, hepatic:true,  thresh:null, monitorExtra:"Pyridoxine (vitamin B6) 10–25mg/day mandatory to prevent peripheral neuropathy. LFTs at baseline and monthly. Slow acetylators: higher drug levels — monitor closely. Max dose 300mg.", popAdj:{malnourished:{r:1.0,t:"warning",m:"Malnourished patients: pyridoxine deficiency worsens INH neuropathy risk. Increase pyridoxine supplementation to 25–50mg/day."}}},
+  pyrazinamide:  {name:"Pyrazinamide",     cat:"tb", method:"wt",    base:25,   bands:[{l:"1",lo:0,hi:1000},{l:"2",lo:1000,hi:1500},{l:"3",lo:1500,hi:2000},{l:"4",lo:2000,hi:Infinity}], renal:true, hepatic:true, thresh:null, monitorExtra:"LFTs at baseline and monthly — hepatotoxic. Uric acid monitoring — hyperuricaemia/gout. Use only in initial 2-month intensive phase. Max dose 2g/day.", popAdj:{}},
+  ethambutol:    {name:"Ethambutol",       cat:"tb", method:"wt",    base:15,   bands:[{l:"1",lo:0,hi:600},{l:"2",lo:600,hi:900},{l:"3",lo:900,hi:1200},{l:"4",lo:1200,hi:Infinity}], renal:true, hepatic:false, thresh:null, monitorExtra:"Visual acuity and colour vision testing monthly — optic neuritis is dose/duration dependent. Reduce dose if CrCl <30 mL/min or extend interval. Max dose 1.6g/day.", popAdj:{}},
+  streptomycin:  {name:"Streptomycin IM",  cat:"tb", method:"wt",    base:15,   bands:[{l:"L",lo:0,hi:500},{l:"M",lo:500,hi:750},{l:"H",lo:750,hi:Infinity}], renal:true,  hepatic:false, thresh:3.0,  monitorExtra:"IM injection only — never IV bolus. Audiometry monthly — vestibular and auditory toxicity. CrCl before each dose. Elderly: max 10mg/kg. Pregnancy: avoid (ototoxicity). Max dose 1g.", popAdj:{subSaharanAfrica:{r:0.87,t:"info",m:"Sub-Saharan Africa: aminoglycoside PK adjustment applied — dose reduced 13% (Mehta et al. 2019)."},elderly:{r:0.75,t:"warning",m:"Elderly patients: streptomycin dose reduced 25% and max capped at 750mg due to increased ototoxicity risk."}}}
+};
+
+const CATS={all:"All",oncology:"Oncology",id:"Antibiotics",antifungal:"Antifungal",antiviral:"Antiviral",tb:"TB"};
 const S={drug:null,reg:"standard",sex:"M",neph:"no",cat:"all"};
-function buildUI(){const cr=document.getElementById("cat-row");Object.entries(CATS).forEach(([k,v])=>{const b=document.createElement("button");b.className="cat-pill"+(k==="all"?" on":"");b.textContent=v;b.onclick=()=>{S.cat=k;document.querySelectorAll(".cat-pill").forEach(x=>x.classList.remove("on"));b.classList.add("on");buildDrugs()};cr.appendChild(b)});buildDrugs()}
-function buildDrugs(){const g=document.getElementById("drug-grid");g.innerHTML="";Object.entries(DRUGS).forEach(([k,d])=>{if(S.cat!=="all"&&d.cat!==S.cat)return;const t=document.createElement("button");t.className="drug-tile"+(S.drug===k?" on":"");t.innerHTML=`<span class="drug-tile-name">${d.name}</span><span class="drug-tile-cat">${CATS[d.cat]||d.cat}</span>`;t.onclick=()=>{S.drug=k;buildDrugs()};g.appendChild(t)})}
+
+function buildUI(){
+  const cr=document.getElementById("cat-row");
+  Object.entries(CATS).forEach(([k,v])=>{
+    const b=document.createElement("button");
+    b.className="cat-pill"+(k==="all"?" on":"");
+    b.textContent=v;
+    b.onclick=()=>{S.cat=k;document.querySelectorAll(".cat-pill").forEach(x=>x.classList.remove("on"));b.classList.add("on");buildDrugs()};
+    cr.appendChild(b);
+  });
+  buildDrugs();
+}
+
+function buildDrugs(){
+  const g=document.getElementById("drug-grid");
+  g.innerHTML="";
+  const visible=Object.entries(DRUGS).filter(([k,d])=>S.cat==="all"||d.cat===S.cat);
+  document.getElementById("drug-count").textContent=visible.length+" drugs";
+  visible.forEach(([k,d])=>{
+    const t=document.createElement("button");
+    t.className="drug-tile"+(S.drug===k?" on":"");
+    t.innerHTML=`<span class="drug-tile-name">${d.name}</span><span class="drug-tile-cat">${CATS[d.cat]||d.cat}</span>`;
+    t.onclick=()=>{S.drug=k;buildDrugs()};
+    g.appendChild(t);
+  });
+}
+
 function pick(g,v,el){S[g]=v;el.parentElement.querySelectorAll(".seg-btn").forEach(b=>b.classList.remove("on"));el.classList.add("on")}
+
 function crcl(a,w,c,s){return Math.max(((140-a)*w)/(c*0.814)*(s==="F"?0.85:1),5)}
 function bsa(w,h){return Math.sqrt((h*w)/3600)}
 function ibw(h,s){return Math.max((s==="M"?50:45.5)+2.3*Math.max(0,h/2.54-60),30)}
 function dwt(w,h,s){const i=ibw(h,s),bmi=w/((h/100)**2);return bmi>30?i+0.4*(w-i):Math.min(w,i+0.4*Math.max(0,w-i))}
 function band(d,b){return b.find(x=>d>=x.lo&&d<x.hi)||b[b.length-1]}
+
 function calculate(){
   if(!S.drug){alert("Please select a drug first.");return}
   const wt=parseFloat(document.getElementById("wt").value),ht=parseFloat(document.getElementById("ht").value),age=parseFloat(document.getElementById("age").value),cr=parseFloat(document.getElementById("cr").value),pop=document.getElementById("pop").value,hep=document.getElementById("hep").value;
@@ -217,27 +289,74 @@ function calculate(){
   if(wt<10||wt>300){alert("Weight must be 10–300 kg.");return}
   if(ht<50||ht>250){alert("Height must be 50–250 cm.");return}
   if(cr<20||cr>2000){alert("Creatinine must be 20–2000 µmol/L.");return}
-  const drug=DRUGS[S.drug],sex=S.sex,DW=dwt(wt,ht,sex),CrCl=crcl(age,DW,cr,sex),BSA=bsa(wt,ht),IBW=ibw(ht,sex),BMI=wt/((ht/100)**2);
+
+  const drug=DRUGS[S.drug],sex=S.sex;
+  const DW=dwt(wt,ht,sex),CrCl=crcl(age,DW,cr,sex),BSA=bsa(wt,ht),IBW=ibw(ht,sex),BMI=wt/((ht/100)**2);
+
   let dose=drug.method==="calvert"?drug.base*(CrCl+25):drug.method==="bsa"?drug.base*BSA:drug.method==="wt"?drug.base*DW:drug.base;
-  const regR={standard:1,highDose:1.25,palliative:0.75,paediatric:0.8}[S.reg]||1;dose*=regR;
+
+  // Vincristine 2mg cap
+  if(S.drug==="vincristine")dose=Math.min(dose,2);
+
+  // Isoniazid 300mg cap
+  if(S.drug==="isoniazid")dose=Math.min(dose,300);
+
+  // Pyrazinamide 2g cap
+  if(S.drug==="pyrazinamide")dose=Math.min(dose,2000);
+
+  // Ethambutol 1600mg cap
+  if(S.drug==="ethambutol")dose=Math.min(dose,1600);
+
+  // Streptomycin 1g cap
+  if(S.drug==="streptomycin")dose=Math.min(dose,1000);
+
+  const regR={standard:1,highDose:1.25,palliative:0.75,paediatric:0.8}[S.reg]||1;
+  dose*=regR;
+
+  // Population adjustment
   let popR=1,popFlag=null;
-  if(pop==="subSaharanAfrica"&&(S.drug==="gentamicin"||S.drug==="amikacin")){popR=0.87;popFlag={t:"info",m:"Sub-Saharan Africa PK: dose reduced 13% (↑t½, ↓CL — Mehta et al. 2019)."}}
-  else if(pop==="hivPositive"&&S.drug==="vancomycin"){popR=0.9;popFlag={t:"warning",m:"HIV co-infection: vancomycin dose reduced 10%. AUC-guided TDM is essential."}}
-  else if(pop==="malnourished"&&(S.drug==="gentamicin"||S.drug==="amikacin")){popR=0.85;popFlag={t:"warning",m:"Malnutrition: aminoglycoside dose reduced 15% (↓Vd, ↓CL — Bhatt et al. 2021). Monitor trough closely."}}
-  else if(pop==="pregnant"&&S.drug==="gentamicin"){popR=1.35;popFlag={t:"warning",m:"Pregnancy (2nd/3rd trimester): gentamicin dose increased 35% (↑Vd, ↑CL — Hebert et al. 2017). TDM mandatory."}}
-  else if(pop==="elderly"&&S.drug==="carboplatin"){popR=0.85;popFlag={t:"info",m:"Elderly: carboplatin dose reduced 15% (↓CL, ↑t½ — Launay-Vacher et al. 2016)."}}
+  const padj=drug.popAdj&&drug.popAdj[pop];
+  if(padj){popR=padj.r;popFlag={t:padj.t,m:padj.m}}
   dose*=popR;
+
+  // Renal adjustment
   let renR=1,renFlag=null;
-  if(drug.renal){if(CrCl<15){renR=0.35;renFlag={t:"danger",m:`ESRD (CrCl ${CrCl.toFixed(0)} mL/min) — dose reduced 65%. Nephrology review required.`}}else if(CrCl<30){renR=0.55;renFlag={t:"danger",m:`Severe renal impairment (CrCl ${CrCl.toFixed(0)} mL/min) — dose reduced 45%. Daily monitoring required.`}}else if(CrCl<60){renR=0.8;renFlag={t:"warning",m:`Moderate renal impairment (CrCl ${CrCl.toFixed(0)} mL/min) — dose reduced 20%.`}}}
+  if(drug.renal){
+    if(CrCl<15){renR=0.35;renFlag={t:"danger",m:`ESRD (CrCl ${CrCl.toFixed(0)} mL/min) — dose reduced 65%. Nephrology review required.`}}
+    else if(CrCl<30){renR=0.55;renFlag={t:"danger",m:`Severe renal impairment (CrCl ${CrCl.toFixed(0)} mL/min) — dose reduced 45%. Daily monitoring required.`}}
+    else if(CrCl<60){renR=0.8;renFlag={t:"warning",m:`Moderate renal impairment (CrCl ${CrCl.toFixed(0)} mL/min) — dose reduced 20%.`}}
+  }
   dose*=renR;
+
+  // Hepatic adjustment
   let hepR=1,hepFlag=null;
-  if(drug.hepatic){if(hep==="childPughC"){hepR=0.5;hepFlag={t:"danger",m:"Child-Pugh C — dose reduced 50%. Consider alternative agent."}}else if(hep==="childPughB"){hepR=0.75;hepFlag={t:"warning",m:"Child-Pugh B — dose reduced 25%. Monitor LFTs before each dose."}}}
+  if(drug.hepatic){
+    if(hep==="childPughC"){hepR=0.5;hepFlag={t:"danger",m:"Child-Pugh C — dose reduced 50%. Consider alternative agent. Hepatology review recommended."}}
+    else if(hep==="childPughB"){hepR=0.75;hepFlag={t:"warning",m:"Child-Pugh B — dose reduced 25%. Monitor LFTs before each dose."}}
+  }
   dose*=hepR;
-  const b=band(dose,drug.bands),flags=[];
-  if(popFlag)flags.push(popFlag);if(renFlag)flags.push(renFlag);if(hepFlag)flags.push(hepFlag);
-  if(drug.thresh){const dpk=dose/DW;if(dpk<drug.thresh)flags.push({t:"danger",m:`RESISTANCE RISK: ${dpk.toFixed(1)} mg/kg below threshold of ${drug.thresh} mg/kg. Review urgently.`});else if(dpk<drug.thresh*1.15)flags.push({t:"warning",m:`Low-normal exposure: ${dpk.toFixed(1)} mg/kg near resistance threshold. Confirm with TDM.`})}
+
+  const b=band(dose,drug.bands);
+  const flags=[];
+  if(popFlag)flags.push(popFlag);
+  if(renFlag)flags.push(renFlag);
+  if(hepFlag)flags.push(hepFlag);
+
+  // Resistance check
+  if(drug.thresh){
+    const dpk=dose/DW;
+    if(dpk<drug.thresh)flags.push({t:"danger",m:`RESISTANCE RISK: ${dpk.toFixed(1)} mg/kg below the resistance-prevention threshold of ${drug.thresh} mg/kg. Review urgently.`});
+    else if(dpk<drug.thresh*1.15)flags.push({t:"warning",m:`Low-normal exposure: ${dpk.toFixed(1)} mg/kg near resistance threshold. Confirm with TDM.`});
+  }
+
+  // Nephrotoxin check
   if(S.neph==="yes"&&drug.renal)flags.push({t:"warning",m:`Concurrent nephrotoxin + ${drug.name}: increased AKI risk. Monitor CrCl daily.`});
+
+  // Drug-specific extra monitoring
+  if(drug.monitorExtra)flags.push({t:"info",m:drug.monitorExtra});
+
   if(!flags.length)flags.push({t:"info",m:"No major clinical flags. Verify with supervising pharmacist before administration."});
+
   document.getElementById("r-band").textContent="Band "+b.l;
   document.getElementById("r-dose").textContent=dose.toFixed(0)+" mg calculated";
   document.getElementById("r-drug").textContent=drug.name;
@@ -246,18 +365,22 @@ function calculate(){
   document.getElementById("r-bsa").textContent=BSA.toFixed(2);
   document.getElementById("r-ibw").textContent=IBW.toFixed(1);
   document.getElementById("r-bmi").textContent=BMI.toFixed(1);
+
   const adjs=[];
   if(regR!==1)adjs.push({cls:regR>1?"adj-increase":"adj-reduction",txt:`Regimen ×${regR}`});
   if(popR!==1)adjs.push({cls:popR>1?"adj-increase":"adj-reduction",txt:`Population ×${popR}`});
   if(renR!==1)adjs.push({cls:"adj-reduction",txt:`Renal ×${renR}`});
   if(hepR!==1)adjs.push({cls:"adj-reduction",txt:`Hepatic ×${hepR}`});
   if(!adjs.length)adjs.push({cls:"adj-none",txt:"No adjustments applied"});
+
   document.getElementById("r-adjs").innerHTML=adjs.map(a=>`<span class="adj-pill ${a.cls}">${a.txt}</span>`).join("");
   const imap={info:"ℹ",warning:"⚠",danger:"⛔"};
   document.getElementById("r-flags").innerHTML=flags.map(f=>`<div class="flag flag-${f.t}"><span class="flag-icon">${imap[f.t]}</span><span>${f.m}</span></div>`).join("");
+
   const el=document.getElementById("result");el.classList.remove("show");void el.offsetWidth;el.classList.add("show");
   setTimeout(()=>el.scrollIntoView({behavior:"smooth",block:"nearest"}),60);
 }
+
 buildUI();
 </script>
 </body>
