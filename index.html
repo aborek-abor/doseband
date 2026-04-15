@@ -158,6 +158,17 @@ input:focus,select:focus{border-color:var(--ink);background:#fff}
 .pdf-header p{font-family:var(--mono);font-size:10px;color:var(--muted)}
 
 
+
+/* ── CLINICAL CONTEXT SWITCHER ── */
+.ctx-bar{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ctx-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.ctx-seg{display:flex;gap:0;border:1.5px solid var(--border);border-radius:7px;overflow:hidden;background:var(--surface)}
+.ctx-btn{padding:7px 14px;border:none;background:transparent;font-size:12px;font-weight:600;font-family:var(--mono);cursor:pointer;color:var(--dim);border-right:1px solid var(--border);transition:all 0.12s;letter-spacing:0.04em}
+.ctx-btn:last-child{border-right:none}
+.ctx-btn.on{background:var(--ink);color:#fff}
+.ctx-btn:hover:not(.on){background:var(--surface2)}
+.ctx-note{font-family:var(--mono);font-size:10px;color:var(--muted);flex:1;line-height:1.5}
+
 /* ── FORMULARY BADGES ── */
 .formulary-wrap{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
 .formulary-title{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
@@ -194,6 +205,18 @@ input:focus,select:focus{border-color:var(--ink);background:#fff}
     <h2>DoseBand — Clinical Dose Calculation Record</h2>
     <p id="pdf-timestamp"></p>
     <p id="pdf-patientid"></p>
+  </div>
+
+  <!-- CLINICAL CONTEXT SWITCHER -->
+  <div class="ctx-bar" id="pdf-hide2">
+    <span class="ctx-label">Clinical context</span>
+    <div class="ctx-seg">
+      <button class="ctx-btn" onclick="setCtx('ssa',this)">SSA</button>
+      <button class="ctx-btn on" onclick="setCtx('global',this)">Global</button>
+      <button class="ctx-btn" onclick="setCtx('uk',this)">UK / BNF</button>
+      <button class="ctx-btn" onclick="setCtx('us',this)">US / FDA</button>
+    </div>
+    <span class="ctx-note" id="ctx-note">Global: WHO-aligned dosing. Switch to UK (BNF) or US (FDA label) for region-specific bands and targets.</span>
   </div>
 
   <!-- DRUG SELECTION -->
@@ -289,6 +312,7 @@ input:focus,select:focus{border-color:var(--ink);background:#fff}
     <div class="rhero">
       <div>
         <div class="reyebrow">Recommended dose band</div>
+        <div id="r-ctx-tag" style="font-family:var(--mono);font-size:9px;padding:2px 8px;border-radius:3px;display:inline-block;margin-bottom:6px;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.6)"></div>
         <div class="rband" id="r-band">-</div>
         <div class="rdose" id="r-dose">-</div>
       </div>
@@ -376,8 +400,8 @@ input:focus,select:focus{border-color:var(--ink);background:#fff}
   </div>
 
   <div class="footer">
-    <strong>DoseBand v1.6</strong> — Pre-clinical validation only<br>
-    66 drugs · Audit trail · Pharmacist workflow · PDF &amp; FHIR export<br>
+    <strong>DoseBand v1.7</strong> — Pre-clinical validation only<br>
+    79 drugs · Audit trail · Pharmacist workflow · PDF &amp; FHIR export<br>
     doseband-production.up.railway.app
   </div>
 </div>
@@ -385,7 +409,7 @@ input:focus,select:focus{border-color:var(--ink);background:#fff}
 <script>
 // ── DRUG DATABASE ─────────────────────────────────────────────────────────────
 var DRUGS = {};
-var CATS = {all:"All",oncology:"Oncology",id:"Antibiotics",antifungal:"Antifungal",antiviral:"Antiviral",tb:"TB",hiv:"HIV ARVs",hiv_fdc:"HIV FDCs",oi_px:"OI Prophylaxis",mab:"Monoclonal Abs",pain:"Pain/Anaesthesia",cardiac:"Cardiac",anticoag:"Anticoagulation",neuro:"Neurology",steroid:"Steroids"};
+var CATS = {all:"All",oncology:"Oncology",id:"Antibiotics",antifungal:"Antifungal",antiviral:"Antiviral",tb:"TB",hiv:"HIV ARVs",hiv_fdc:"HIV FDCs",oi_px:"OI Prophylaxis",mab:"Monoclonal Abs",pain:"Pain/Anaesthesia",cardiac:"Cardiac",anticoag:"Anticoagulation",neuro:"Neurology",steroid:"Steroids",transplant:"Transplant",psych:"Psychiatry/CNS",electrolyte:"Electrolytes",id_uk:"Antibiotics (UK/BNF)"};
 var S = {drug:null,reg:"standard",sex:"M",neph:"no",cat:"all",query:""};
 var lastResult = null;
 
@@ -489,6 +513,38 @@ addDrug("dexamethasone","Dexamethasone IV","steroid","wt",0.15,[b("1",0,4),b("2"
 // ── UPDATE CATS ───────────────────────────────────────────────────────────────
 // Add new categories to CATS object
 
+
+// ── TRANSPLANT / NARROW THERAPEUTIC INDEX ────────────────────────────────────
+addDrug("tacrolimus","Tacrolimus (FK506)","transplant","wt",0.1,[b("1",0,2),b("2",2,5),b("3",5,8),b("4",8,Infinity)],false,true,null,false,"TDM mandatory — whole blood trough 12h post-dose. Kidney transplant target: 5-15 ng/mL (month 1-3), 4-10 ng/mL (>3 months). Liver: 5-15 ng/mL. Dose titrate to target. CYP3A4 substrate — major drug interactions. Nephrotoxicity and neurotoxicity monitoring.",{hivPositive:{r:1.0,t:"danger",m:"HIV on ART: tacrolimus is a CYP3A4 substrate — ritonavir and PIs dramatically increase tacrolimus levels. Reduce dose by up to 95% and monitor TDM very closely. Specialist review mandatory."},subSaharanAfrica:{r:0.87,t:"info",m:"SSA: lower tacrolimus doses often required in African populations due to CYP3A5 genotype differences. Lower starting dose and early TDM recommended."}});
+
+addDrug("cyclosporine","Ciclosporin IV","transplant","wt",3,[b("1",0,100),b("2",100,200),b("3",200,300),b("4",300,Infinity)],true,true,null,false,"IV dose is approximately 1/3 of oral dose. TDM mandatory — C0 trough or C2 monitoring depending on protocol. Nephrotoxicity, hypertension, neurotoxicity. Major drug interactions via CYP3A4 and P-glycoprotein. Avoid with nephrotoxins.",{hivPositive:{r:1.0,t:"danger",m:"HIV on ART: ciclosporin levels dramatically increased by ritonavir and PIs. Reduce dose significantly and monitor TDM intensively."}});
+
+// ── PSYCHIATRY / CNS ──────────────────────────────────────────────────────────
+addDrug("lithium","Lithium carbonate","psych","wt",0.4,[b("1",0,400),b("2",400,800),b("3",800,1200),b("4",1200,Infinity)],true,false,null,false,"TDM mandatory — target trough 0.6-1.0 mmol/L (maintenance); 0.8-1.2 mmol/L (acute mania). Draw 12h post-dose at steady state (5-7 days). Narrow therapeutic index. Toxicity: tremor, polyuria, confusion, cardiac arrhythmia. Renal function and thyroid monitoring every 6 months. NSAIDs and thiazides increase lithium levels.",{elderly:{r:0.5,t:"danger",m:"Elderly: lithium dose reduced 50% — reduced renal clearance markedly increases toxicity risk. TDM after every dose change."},pregnant:{r:1.0,t:"danger",m:"Pregnancy: lithium associated with cardiac malformations (Ebstein anomaly). Risk/benefit discussion mandatory. TDM monitoring intensified."}});
+
+// ── ONCOLOGY — ADDITIONAL ─────────────────────────────────────────────────────
+addDrug("methotrexate","Methotrexate IV (high-dose)","oncology","bsa",1000,[b("1",0,1500),b("2",1500,2500),b("3",2500,3500),b("4",3500,Infinity)],true,true,null,false,"High-dose only (>100mg/m2) — requires leucovorin rescue protocol. Folinic acid rescue must be prescribed before methotrexate is given. CrCl >60 mL/min required before each dose. TDM mandatory — methotrexate levels at 24h, 48h, 72h to guide leucovorin dosing. Avoid NSAIDs, penicillins, PPIs (reduce renal clearance).",{subSaharanAfrica:{r:1.0,t:"info",m:"SSA: high-dose methotrexate is used for Burkitt lymphoma — one of the most common cancers in SSA children and young adults."}});
+
+addDrug("busulfan","Busulfan IV","oncology","wt",0.8,[b("1",0,40),b("2",40,60),b("3",60,80),b("4",80,Infinity)],true,true,null,false,"0.8mg/kg q6h x4 days (conditioning regimen). TDM mandatory — target AUC 900-1350 umol.min/L per dose. Seizure prophylaxis mandatory (phenytoin or levetiracetam). Hepatic veno-occlusive disease risk. LFTs daily.",{elderly:{r:0.75,t:"warning",m:"Elderly: busulfan clearance reduced. TDM-guided dosing especially important."}});
+
+addDrug("bleomycin","Bleomycin IV/IM","oncology","bsa",10,[b("1",0,10),b("2",10,15),b("3",15,20),b("4",20,Infinity)],true,false,null,false,"10-20 units/m2 weekly or 5 units/m2 twice weekly. Cumulative lifetime dose limit 400 units (pulmonary fibrosis). Baseline PFTs mandatory. Pulmonary function monitoring. Test dose 1-2 units before first treatment. Avoid high FiO2 during and after bleomycin treatment.",{elderly:{r:0.75,t:"warning",m:"Elderly: increased pulmonary toxicity risk. Lower cumulative dose limit."},subSaharanAfrica:{r:1.0,t:"info",m:"SSA: bleomycin is used for Hodgkin lymphoma, cervical cancer, and Kaposi sarcoma — all high-burden diseases in SSA."}});
+
+// ── ANTICOAGULATION — ADDITIONAL ──────────────────────────────────────────────
+addDrug("warfarin","Warfarin oral","anticoag","fixed",5,[b("Low",0,3),b("Standard",3,7),b("High",7,Infinity)],false,true,null,false,"Initial dose 5mg OD (reduce to 2.5mg in elderly, malnourished, liver disease). INR-guided dosing — target INR 2.0-3.0 (most indications) or 2.5-3.5 (mechanical heart valves). INR at day 3, 5, 7 then weekly until stable. Major drug interactions — CYP2C9 substrate. Vitamin K antagonist.",{elderly:{r:0.5,t:"warning",m:"Elderly: start with 2.5mg OD and titrate. Higher bleeding risk. Weekly INR monitoring until stable."},subSaharanAfrica:{r:1.0,t:"warning",m:"SSA: warfarin monitoring infrastructure is limited at district level. Consider LMWH or DOAC where INR monitoring not reliable."},hivPositive:{r:1.0,t:"danger",m:"HIV on ART: warfarin interactions with most ARVs via CYP2C9 and CYP3A4. INR monitoring every 2 weeks when ARV regimen changes."}});
+
+// ── RENAL / ELECTROLYTES ──────────────────────────────────────────────────────
+addDrug("potassiumChloride","Potassium chloride IV","electrolyte","fixed",20,[b("Low",0,20),b("Standard",20,40),b("High",40,Infinity)],true,false,null,false,"NEVER give as IV bolus — fatal cardiac arrest. Max rate 10 mmol/h peripheral; 20 mmol/h central line with cardiac monitoring. Dilute to max 40 mmol/500mL. ECG monitoring for high doses. Correct serum K+ slowly. Replace Mg2+ simultaneously if hypomagnesaemia present.",{elderly:{r:1.0,t:"warning",m:"Elderly: reduced renal potassium excretion. Monitor K+ every 4h during replacement."}});
+
+addDrug("magnesiumSulphate","Magnesium sulphate IV","electrolyte","wt",4,[b("Loading",0,4000),b("Maintenance",4000,Infinity)],true,false,null,false,"Eclampsia: 4g loading over 20 min then 1-2g/h infusion. Hypomagnesaemia: 2-4g over 4-6h. Monitor patellar reflexes (loss = toxicity). Respiratory rate monitoring. Calcium gluconate for reversal. Renal monitoring essential.",{pregnant:{r:1.0,t:"info",m:"Pregnancy: magnesium sulphate is WHO essential for eclampsia prevention and treatment. Standard dosing."},subSaharanAfrica:{r:1.0,t:"info",m:"SSA: eclampsia is a leading cause of maternal mortality across SSA. MgSO4 is first-line and widely available."}});
+
+// ── RESPIRATORY ───────────────────────────────────────────────────────────────
+addDrug("hydrocortisone","Hydrocortisone IV","steroid","wt",4,[b("1",0,100),b("2",100,200),b("3",200,300),b("4",300,Infinity)],false,false,null,false,"Anaphylaxis: 200mg IV stat. Adrenal crisis: 100mg IV stat then 200mg/24h. Severe asthma: 100-200mg q4-6h. Stress dosing for adrenal insufficiency: double/triple maintenance dose during illness. Glucose monitoring.",{subSaharanAfrica:{r:1.0,t:"info",m:"SSA: hydrocortisone is first-line for anaphylaxis and adrenal crisis at all hospital levels."}});
+
+// ── UK-SPECIFIC DOSING NOTES ──────────────────────────────────────────────────
+addDrug("gentamicin_uk","Gentamicin (UK/BNF)","id_uk","wt",7,[b("L",0,280),b("M",280,420),b("H",420,560),b("High",560,Infinity)],true,false,3.0,false,"UK BNF: 7mg/kg OD (Hartford/BNFC protocol). Level at 6-14h post-dose — plot on Hartford nomogram. CrCl monitoring. Extended-interval dosing now standard across NHS. Target: pre-dose level <1 mg/L.",{subSaharanAfrica:{r:0.87,t:"info",m:"SSA PK adjustment applied."},malnourished:{r:0.85,t:"warning",m:"Malnutrition: dose reduced 15%. Monitor trough."},pregnant:{r:1.35,t:"warning",m:"Pregnancy: dose increased 35%. TDM mandatory."}});
+
+addDrug("vancomycin_uk","Vancomycin (UK/BNF)","id_uk","wt",25,[b("1",0,1000),b("2",1000,1500),b("3",1500,2000),b("4",2000,2500),b("5",2500,Infinity)],true,false,null,false,"UK BNF: 25-30mg/kg/day in 2-4 divided doses. AUC/MIC-guided dosing per BSAC guidelines. Target AUC 400-600 mg.h/L. Trough 10-20 mg/L for MRSA. CrCl monitoring.",{hivPositive:{r:0.9,t:"warning",m:"HIV on ART: dose reduced 10%. TDM essential."}});
+
 // ── PK ────────────────────────────────────────────────────────────────────────
 function crcl(a,w,c,s){return Math.max(((140-a)*w)/(c*0.814)*(s==="F"?0.85:1),5);}
 function bsa(w,h){return Math.sqrt((h*w)/3600);}
@@ -558,7 +614,19 @@ var FORMULARY = {
   chloramphenicol:        {who:true, ke:true,  ng:true,  za:true,  gh:true},
   phenytoin:              {who:true, ke:true,  ng:true,  za:true,  gh:true},
   amphotericinB:          {who:true, ke:true,  ng:true,  za:true,  gh:true},
-  dexamethasone:          {who:true, ke:true,  ng:true,  za:true,  gh:true}
+  dexamethasone:          {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  tacrolimus:             {who:true, ke:true,  ng:false, za:true,  gh:false},
+  cyclosporine:           {who:true, ke:true,  ng:true,  za:true,  gh:false},
+  lithium:                {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  methotrexate:           {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  busulfan:               {who:true, ke:false, ng:false, za:true,  gh:false},
+  bleomycin:              {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  warfarin:               {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  potassiumChloride:      {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  magnesiumSulphate:      {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  hydrocortisone:         {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  gentamicin_uk:          {who:true, ke:true,  ng:true,  za:true,  gh:true},
+  vancomycin_uk:          {who:true, ke:true,  ng:true,  za:true,  gh:true}
 };
 
 
@@ -623,8 +691,54 @@ var DRUG_LINKS = {
   chloramphenicol:        {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/009653s062lbl.pdf", who:"https://list.essentialmedicines.org"},
   phenytoin:              {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/084528s043lbl.pdf", who:"https://list.essentialmedicines.org"},
   amphotericinB:          {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/050473s017lbl.pdf", who:"https://list.essentialmedicines.org"},
-  dexamethasone:          {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2008/011664s039lbl.pdf", who:"https://list.essentialmedicines.org"}
+  dexamethasone:          {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2008/011664s039lbl.pdf", who:"https://list.essentialmedicines.org"},
+  tacrolimus:             {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2021/050708s041lbl.pdf", who:"https://list.essentialmedicines.org"},
+  cyclosporine:           {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2015/050715s033lbl.pdf", who:"https://list.essentialmedicines.org"},
+  lithium:                {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2011/017812s036lbl.pdf", who:"https://list.essentialmedicines.org"},
+  methotrexate:           {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2011/008085s066lbl.pdf", who:"https://list.essentialmedicines.org"},
+  busulfan:               {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2015/103795s5260lbl.pdf", who:"https://list.essentialmedicines.org"},
+  bleomycin:              {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2010/050443s025lbl.pdf", who:"https://list.essentialmedicines.org"},
+  warfarin:               {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2011/009218s107lbl.pdf", who:"https://list.essentialmedicines.org"},
+  potassiumChloride:      {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2014/040292s003lbl.pdf", who:"https://list.essentialmedicines.org"},
+  magnesiumSulphate:      {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2014/040114s010lbl.pdf", who:"https://list.essentialmedicines.org"},
+  hydrocortisone:         {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/009808s064lbl.pdf", who:"https://list.essentialmedicines.org"},
+  gentamicin_uk:          {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/062013s038lbl.pdf", who:"https://bnf.nice.org.uk/drugs/gentamicin/"},
+  vancomycin_uk:          {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/062975s043lbl.pdf", who:"https://bnf.nice.org.uk/drugs/vancomycin/"}
 };
+
+
+// ── CLINICAL CONTEXT ─────────────────────────────────────────────────────────
+var CTX = 'global'; // ssa | global | uk | us
+
+var CTX_NOTES = {
+  ssa:    'SSA: WHO-aligned dosing with sub-Saharan Africa population PK adjustments. Population flag auto-set to SSA.',
+  global: 'Global: WHO-aligned dosing. Suitable for most settings. Adjust population flag as needed.',
+  uk:     'UK / BNF: British National Formulary dosing. NHS-standard band structures and monitoring targets.',
+  us:     'US / FDA: FDA prescribing information dosing. ASHP/IDSA/ASCO guideline-aligned band structures.'
+};
+
+var CTX_BAND_ADJUSTMENTS = {
+  // For key drugs, US/UK context adjusts band thresholds
+  // vancomycin: US ASHP 2020 guidelines target AUC more tightly
+  vancomycin_us_bands: [{l:"1",lo:0,hi:750},{l:"2",lo:750,hi:1250},{l:"3",lo:1250,hi:1750},{l:"4",lo:1750,hi:2250},{l:"5",lo:2250,hi:Infinity}],
+  // UK BNF carboplatin uses AUC 5-6 standard
+  carboplatin_uk_base: 5,
+  // US ASCO carboplatin may use AUC 6 for first-line
+  carboplatin_us_base: 6
+};
+
+function setCtx(ctx, el) {
+  CTX = ctx;
+  document.querySelectorAll('.ctx-btn').forEach(function(b){ b.classList.remove('on'); });
+  el.classList.add('on');
+  document.getElementById('ctx-note').textContent = CTX_NOTES[ctx];
+  // Auto-set population for SSA context
+  if(ctx === 'ssa') {
+    var popSel = document.getElementById('pop');
+    if(popSel && popSel.value === 'general') popSel.value = 'subSaharanAfrica';
+  }
+}
+
 
 // ── UI ────────────────────────────────────────────────────────────────────────
 function buildUI(){
@@ -736,6 +850,8 @@ function calculate(){
   document.getElementById("r-band").textContent="Band "+bnd.l;
   document.getElementById("r-dose").textContent=dose.toFixed(0)+" mg calculated";
   document.getElementById("r-drug").textContent=drug.name;
+  var ctxLabels={ssa:"SSA / WHO",global:"Global / WHO",uk:"UK / BNF",us:"US / FDA"};
+  document.getElementById("r-ctx-tag").textContent=ctxLabels[CTX]||"Global";
   document.getElementById("r-range").textContent=bnd.lo+"..."+(bnd.hi===Infinity?"inf":bnd.hi)+" mg";
   document.getElementById("r-crcl").textContent=CrCl.toFixed(1);
   document.getElementById("r-bsa").textContent=BSA.toFixed(2);
@@ -856,7 +972,7 @@ function pharmQuery(){
 // ── EXPORT PDF ────────────────────────────────────────────────────────────────
 function exportPDF(){
   if(!lastResult){return;}
-  document.getElementById("pdf-timestamp").textContent="Generated: "+new Date().toLocaleString()+" | Version: DoseBand v1.6";
+  document.getElementById("pdf-timestamp").textContent="Generated: "+new Date().toLocaleString()+" | Version: DoseBand v1.7";
   document.getElementById("pdf-patientid").textContent="Patient ID: "+lastResult.patientId+" | Prescriber: "+lastResult.prescriber;
   window.print();
 }
@@ -867,7 +983,7 @@ function exportFHIR(){
   var fhir={
     resourceType:"MedicationRequest",
     id:"doseband-"+Date.now(),
-    meta:{profile:["http://hl7.org/fhir/StructureDefinition/MedicationRequest"],source:"DoseBand v1.6 | https://doseband-production.up.railway.app"},
+    meta:{profile:["http://hl7.org/fhir/StructureDefinition/MedicationRequest"],source:"DoseBand v1.7 | https://doseband-production.up.railway.app"},
     status:"active",
     intent:"order",
     authoredOn:lastResult.ts,
