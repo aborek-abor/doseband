@@ -29,6 +29,15 @@ body{background:var(--surface);color:var(--ink);font-family:var(--display);font-
 .cpill{font-family:var(--mono);font-size:10px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--dim);cursor:pointer;transition:all 0.15s;letter-spacing:0.04em}
 .cpill:hover{border-color:var(--border2);background:var(--surface2)}
 .cpill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+.search-wrap{position:relative;margin-bottom:10px}
+.search-input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:7px;padding:10px 13px 10px 36px;font-size:14px;font-family:var(--display);font-weight:500;color:var(--ink);outline:none;transition:border-color 0.15s;-webkit-appearance:none}
+.search-input:focus{border-color:var(--ink);background:#fff}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--muted);pointer-events:none}
+.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;padding:2px 6px;display:none;font-family:var(--mono)}
+.search-clear.show{display:block}
+.no-results{font-family:var(--mono);font-size:11px;color:var(--muted);padding:12px 0;text-align:center;letter-spacing:0.04em}
+
 .dcount{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:10px}
 .dgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
 @media(min-width:480px){.dgrid{grid-template-columns:repeat(3,1fr)}}
@@ -104,6 +113,11 @@ input[type=number]:focus,select:focus{border-color:var(--ink);background:#fff}
     <div class="slabel">Select drug</div>
     <div class="card"><div class="card-body">
       <div class="cat-row" id="cats"></div>
+      <div class="search-wrap">
+        <span class="search-icon">&#x2315;</span>
+        <input type="text" class="search-input" id="drug-search" placeholder="Search drugs... (e.g. vancomycin, rifampicin, TDF)" oninput="onSearch(this.value)" autocomplete="off">
+        <button class="search-clear" id="search-clear" onclick="clearSearch()">x</button>
+      </div>
       <div class="dcount" id="dcount"></div>
       <div class="fdcbanner" id="fdcbanner">Fixed-dose combination — confirm regimen with prescriber before dispensing.</div>
       <div class="dgrid" id="dgrid"></div>
@@ -207,7 +221,7 @@ input[type=number]:focus,select:focus{border-color:var(--ink);background:#fff}
 <script>
 var DRUGS = {};
 var CATS = {all:"All",oncology:"Oncology",id:"Antibiotics",antifungal:"Antifungal",antiviral:"Antiviral",tb:"TB",hiv:"HIV ARVs",hiv_fdc:"HIV FDCs",oi_px:"OI Prophylaxis",mab:"Monoclonal Abs"};
-var S = {drug:null,reg:"standard",sex:"M",neph:"no",cat:"all"};
+var S = {drug:null,reg:"standard",sex:"M",neph:"no",cat:"all",query:""};
 
 function addDrug(key,name,cat,method,base,bands,renal,hepatic,thresh,fdc,mon,popAdj){
   DRUGS[key]={name:name,cat:cat,method:method,base:base,bands:bands,renal:renal,hepatic:hepatic,thresh:thresh,fdc:fdc||false,mon:mon||"",popAdj:popAdj||{}};
@@ -300,10 +314,25 @@ function buildUI(){
   buildDrugs();
 }
 
-function buildDrugs(){
+function buildDrugs(query){
+  query = (query||S.query||"").toLowerCase().trim();
+  S.query = query;
   var g = document.getElementById("dgrid");
   g.innerHTML = "";
-  var visible = Object.keys(DRUGS).filter(function(k){ return S.cat==="all" || DRUGS[k].cat===S.cat; });
+  var visible = Object.keys(DRUGS).filter(function(k){
+    var d = DRUGS[k];
+    if(S.cat!=="all" && d.cat!==S.cat) return false;
+    if(query){
+      var searchable = (d.name+" "+d.cat+" "+(CATS[d.cat]||"")).toLowerCase();
+      return searchable.indexOf(query) >= 0;
+    }
+    return true;
+  });
+  if(visible.length===0){
+    document.getElementById("dcount").textContent = "No drugs found";
+    g.innerHTML = '<div class="no-results">No drugs match your search.</div>';
+    return;
+  }
   document.getElementById("dcount").textContent = visible.length + " drugs";
   visible.forEach(function(k){
     var d = DRUGS[k];
@@ -431,6 +460,23 @@ function calculate(){
   el.classList.remove("show"); void el.offsetWidth; el.classList.add("show");
   setTimeout(function(){ el.scrollIntoView({behavior:"smooth",block:"nearest"}); }, 60);
 }
+
+function onSearch(val){
+  S.query = val.toLowerCase().trim();
+  var clearBtn = document.getElementById("search-clear");
+  if(clearBtn) clearBtn.className = "search-clear" + (val ? " show" : "");
+  buildDrugs();
+}
+
+function clearSearch(){
+  var inp = document.getElementById("drug-search");
+  if(inp) inp.value = "";
+  S.query = "";
+  var clearBtn = document.getElementById("search-clear");
+  if(clearBtn) clearBtn.className = "search-clear";
+  buildDrugs();
+}
+
 
 buildUI();
 </script>
