@@ -736,10 +736,23 @@ function calculate() {
     vhigh: 'Consensus 10-year CVD risk exceeds 20%. High-intensity statin therapy is strongly indicated. Dual antihypertensive therapy likely required. Refer to cardiology if not already under specialist care.'
   };
 
-  document.getElementById('consensus-banner').className = 'consensus ' + banners[cat.cat];
-  document.getElementById('cons-icon').textContent = icons[cat.cat];
-  document.getElementById('cons-title').textContent = cat.label + ' cardiovascular risk — ' + (consensusPct*100).toFixed(1) + '% consensus 10-year estimate';
-  document.getElementById('cons-desc').textContent = descs[cat.cat];
+  // RENDER HERO OUTPUT
+  var heroClasses = {low:'hero-low', mod:'hero-mod', high:'hero-high', vhigh:'hero-vhigh'};
+  var allVals = [scores.who, scores.framingham, scores.score2, scores.qrisk3, scores.prevent].map(function(v){return v*100;});
+  var minV = Math.min.apply(null, allVals).toFixed(1);
+  var maxV = Math.max.apply(null, allVals).toFixed(1);
+
+  document.getElementById('consensus-hero').className = 'consensus-hero ' + heroClasses[cat.cat];
+  document.getElementById('hero-pct').textContent = (consensusPct*100).toFixed(1) + '%';
+  document.getElementById('hero-label').textContent = cat.label + ' cardiovascular risk';
+  document.getElementById('hero-desc').textContent = {
+    low:   'Lifestyle modification is the primary intervention. No pharmacotherapy indicated unless LDL is markedly elevated or additional risk factors are present.',
+    mod:   'Consider statin therapy, particularly if LDL is elevated or additional risk factors are present. Blood pressure optimisation recommended.',
+    high:  'Statin therapy is indicated. Blood pressure target <140/90 mmHg. Evaluate for unrecognised comorbidities and secondary causes.',
+    vhigh: 'High-intensity statin therapy strongly indicated. Dual antihypertensive therapy likely required. Cardiology referral recommended.'
+  }[cat.cat];
+  document.getElementById('hero-range').textContent = 'Calculator range: ' + minV + '% – ' + maxV + '%';
+  drawGauge(consensusPct, cat.cat);
 
   // INDIVIDUAL RISK CARDS
   var calculators = [
@@ -750,23 +763,9 @@ function calculate() {
     {key:'prevent',    name:'ACC/AHA PREVENT',region:'US + eGFR',          note:'Khan 2023'}
   ];
 
-  var grid = document.getElementById('risk-grid');
-  grid.innerHTML = '';
-  calculators.forEach(function(c) {
-    var pct = scores[c.key];
-    var rc  = riskCat(pct);
-    var div = document.createElement('div');
-    div.className = 'risk-card';
-    div.innerHTML = '<div class="risk-card-head '+rc.head+'">'+c.name+'</div>' +
-      '<div class="risk-card-body">' +
-      '<div class="risk-pct '+rc.css+'">'+(pct*100).toFixed(1)+'%</div>' +
-      '<div class="risk-label '+rc.css+'">'+rc.label+'</div>' +
-      '<div class="risk-sub">'+c.note+'</div>' +
-      '</div>';
-    grid.appendChild(div);
-  });
+  // Individual scores rendered as bars below
 
-  // RISK BARS
+    // RISK BARS
   var barColors = {low:'#1a7a4a', mod:'#b86800', high:'#c84800', vhigh:'#b82020'};
   var barsHtml = '';
   calculators.forEach(function(c) {
