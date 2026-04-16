@@ -16,41 +16,42 @@ body{background:var(--surface);color:var(--body);font-family:var(--display);font
 .nav-link:hover{color:#fff;background:rgba(255,255,255,0.08)}
 .nav-link.active{color:#fff;background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.15)}
 .shell{display:flex;height:calc(100vh - 56px);overflow:hidden}
-.sidebar{width:230px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
-.sidebar-head{padding:14px 16px;border-bottom:1px solid var(--border)}
-.sidebar-title{font-family:var(--display);font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px}
-.sidebar-sub{font-family:var(--mono);font-size:10px;color:var(--muted)}
-.prog-wrap{padding:10px 16px 0;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.sidebar{width:220px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sb-head{padding:14px 16px;border-bottom:1px solid var(--border)}
+.sb-title{font-family:var(--display);font-size:13px;font-weight:700;color:var(--ink)}
+.sb-sub{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:2px}
+.prog-wrap{padding:10px 14px 0;display:flex;align-items:center;gap:8px;flex-shrink:0}
 .prog-label{font-family:var(--mono);font-size:9px;color:var(--muted);white-space:nowrap;letter-spacing:0.06em;text-transform:uppercase}
 .prog-outer{flex:1;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden}
 .prog-inner{height:100%;background:var(--green);border-radius:2px;transition:width 0.4s ease}
 .prog-count{font-family:var(--mono);font-size:10px;color:var(--dim);white-space:nowrap}
-.sidebar-scroll{overflow-y:auto;flex:1;padding:6px 0 16px}
-.sb-section{padding:10px 16px 4px;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase}
-.drug-item{display:flex;align-items:center;gap:8px;padding:6px 16px;cursor:pointer;transition:background 0.12s;border-left:2px solid transparent}
-.drug-item:hover{background:var(--surface)}
-.drug-item.active{background:var(--surface2);border-left-color:var(--ink)}
+.sb-scroll{overflow-y:auto;flex:1;padding-bottom:12px}
+.sb-sec{padding:10px 14px 4px;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase}
+.ditem{display:flex;align-items:center;gap:7px;padding:6px 14px;cursor:pointer;transition:background 0.12s;border-left:2px solid transparent}
+.ditem:hover{background:var(--surface)}
+.ditem.active{background:var(--surface2);border-left-color:var(--ink)}
 .dname{flex:1;font-size:12px;color:var(--body);font-weight:500;line-height:1.3}
-.drug-item.active .dname{color:var(--ink);font-weight:700}
+.ditem.active .dname{color:var(--ink);font-weight:700}
 .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .dot-pending{background:var(--amber)}
 .dot-approved{background:var(--green)}
 .dot-flagged{background:var(--red)}
 .main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 22px;border-bottom:1px solid var(--border);background:var(--card);flex-shrink:0}
-.topbar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.drug-title{font-family:var(--display);font-size:16px;font-weight:800;color:var(--ink);letter-spacing:-0.02em}
-.drug-cat-tag{font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:3px;border:1px solid var(--border2);color:var(--dim);letter-spacing:0.06em;text-transform:uppercase}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 22px;border-bottom:1px solid var(--border);background:var(--card);flex-shrink:0;gap:12px}
+.tb-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dtitle{font-family:var(--display);font-size:16px;font-weight:800;color:var(--ink);letter-spacing:-0.02em}
+.dcat-tag{font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:3px;border:1px solid var(--border2);color:var(--dim);letter-spacing:0.06em;text-transform:uppercase}
 .sbadge{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:3px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase}
 .badge-pending{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd)}
 .badge-approved{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
 .badge-flagged{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
-.topbar-right{display:flex;gap:8px;flex-shrink:0}
-.btn{padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;font-family:var(--display);cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--body);transition:all 0.12s;display:flex;align-items:center;gap:6px}
+.tb-right{display:flex;gap:8px;flex-shrink:0}
+.btn{padding:7px 12px;border-radius:6px;font-size:12px;font-weight:600;font-family:var(--display);cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--body);transition:all 0.12s;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.btn:hover{background:var(--surface)}
 .btn-approve{border-color:var(--green-bd);color:var(--green);background:var(--green-bg)}
-.btn-approve:hover{background:#d0ede0}
+.btn-approve:hover{background:#d8efe4}
 .btn-flag{border-color:var(--amber-bd);color:var(--amber);background:var(--amber-bg)}
-.btn-flag:hover{background:#fdecc0}
+.btn-flag:hover{background:#fdedc8}
 .content{flex:1;padding:18px 22px}
 .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .pgrid.wide{grid-template-columns:1fr}
@@ -58,41 +59,44 @@ body{background:var(--surface);color:var(--body);font-family:var(--display);font
 .phead{padding:9px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface)}
 .ptitle{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
 .pbody{padding:12px 14px}
-.prow{display:grid;grid-template-columns:140px 1fr auto;gap:8px;align-items:start;padding:6px 0;border-bottom:1px solid var(--border)}
+.prow{display:grid;grid-template-columns:140px 1fr;gap:8px;align-items:start;padding:6px 0;border-bottom:1px solid var(--border)}
 .prow:last-child{border-bottom:none}
-.pkey{font-family:var(--mono);font-size:10px;color:var(--muted);padding-top:2px}
-.pval{font-family:var(--mono);font-size:11px;color:var(--ink);font-weight:500;word-break:break-word;line-height:1.5}
-.bands-table{width:100%;border-collapse:collapse}
-.bands-table th{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:5px 10px;border-bottom:1px solid var(--border);font-weight:600}
-.bands-table td{padding:6px 10px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:11px;color:var(--body)}
-.bands-table tr:last-child td{border-bottom:none}
+.pk{font-family:var(--mono);font-size:10px;color:var(--muted);padding-top:2px}
+.pv{font-family:var(--mono);font-size:12px;color:var(--ink);font-weight:500;word-break:break-word}
+.btable{width:100%;border-collapse:collapse}
+.btable th{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 10px;border-bottom:1px solid var(--border);font-weight:600}
+.btable td{padding:7px 10px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:12px;color:var(--body)}
+.btable tr:last-child td{border-bottom:none}
 .bl{font-weight:700;color:var(--ink)}
 .br{color:var(--green)}
-.cite-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)}
-.cite-item:last-child{border-bottom:none}
-.cnum{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px;min-width:16px}
-.ctext{font-size:11px;color:var(--dim);line-height:1.5;flex:1}
+.cititem{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)}
+.cititem:last-child{border-bottom:none}
+.citnum{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px;min-width:16px}
+.ctext{font-size:11.5px;color:var(--dim);line-height:1.5;flex:1}
 .cok{font-size:10px;color:var(--green);font-family:var(--mono);margin-top:2px}
-.resist-box{background:var(--red-bg);border:1px solid var(--red-bd);border-radius:6px;padding:10px 14px;display:flex;align-items:center;gap:12px}
+.rbox{background:var(--red-bg);border:1px solid var(--red-bd);border-radius:6px;padding:10px 14px;display:flex;align-items:center;gap:12px}
 .rlabel{font-family:var(--mono);font-size:11px;color:var(--red);font-weight:600;flex:1}
 .rval{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--red)}
-.flag{display:flex;gap:8px;align-items:flex-start;padding:9px 12px;border-radius:6px;margin-bottom:8px;font-size:11.5px;line-height:1.6;font-family:var(--mono)}
-.flag:last-child{margin-bottom:0}
-.fi{font-size:12px;flex-shrink:0;margin-top:2px}
-.flag-info{background:var(--blue-bg);border:1px solid var(--blue-bd);color:var(--blue)}
-.flag-warning{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber)}
-.flag-danger{background:var(--red-bg);border:1px solid var(--red-bd);color:var(--red)}
-.annotation{background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--body);font-family:var(--display);font-size:13px;line-height:1.6;padding:10px 12px;width:100%;min-height:75px;resize:vertical;outline:none;transition:border-color 0.15s}
-.annotation:focus{border-color:var(--ink)}
-.log-item{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)}
-.log-item:last-child{border-bottom:none}
-.ltime{font-family:var(--mono);font-size:9px;color:var(--muted);min-width:70px;padding-top:2px}
-.ltext{font-size:11.5px;color:var(--body);line-height:1.5}
-.lactor{color:var(--green);font-weight:600}
-.lempty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;color:var(--muted);padding:40px}
-.lempty-icon{font-size:36px;opacity:0.3}
-.lempty-text{font-family:var(--mono);font-size:11px;letter-spacing:0.08em}
-.fdc-badge{font-family:var(--mono);font-size:9px;color:var(--green);background:var(--green-bg);border:1px solid var(--green-bd);padding:2px 7px;border-radius:3px}
+.pkrow{display:grid;grid-template-columns:150px 60px 60px 60px 1fr;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:11px}
+.pkrow:last-child{border-bottom:none}
+.pkhead{font-size:9px;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;padding-bottom:6px;border-bottom:1px solid var(--border2);margin-bottom:2px}
+.pkpos{color:var(--green)}
+.pkneg{color:var(--red)}
+.pksrc{color:var(--muted);font-size:10px}
+.ann{background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--body);font-family:var(--display);font-size:13px;line-height:1.6;padding:10px 12px;width:100%;min-height:80px;resize:vertical;outline:none;transition:border-color 0.15s}
+.ann:focus{border-color:var(--ink)}
+.logitem{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)}
+.logitem:last-child{border-bottom:none}
+.logtime{font-family:var(--mono);font-size:9px;color:var(--muted);min-width:70px;padding-top:2px}
+.logtext{font-size:12px;color:var(--body);line-height:1.5}
+.logactor{color:var(--green);font-weight:600}
+.logapprove{color:var(--green)}
+.logflag{color:var(--amber)}
+.logedit{color:var(--blue)}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;color:var(--muted);padding:40px}
+.empty-icon{font-size:36px;opacity:0.3}
+.empty-text{font-family:var(--mono);font-size:11px;letter-spacing:0.08em}
+.fdctag{display:inline-block;font-family:var(--mono);font-size:9px;color:var(--green);background:var(--green-bg);border:1px solid var(--green-bd);padding:2px 7px;border-radius:3px;margin-left:6px}
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
@@ -109,172 +113,244 @@ body{background:var(--surface);color:var(--body);font-family:var(--display);font
 </nav>
 <div class="shell">
   <aside class="sidebar">
-    <div class="sidebar-head">
-      <div class="sidebar-title">Review Portal</div>
-      <div class="sidebar-sub">Pharmacist sign-off — 53 drugs</div>
+    <div class="sb-head">
+      <div class="sb-title">Review Portal</div>
+      <div class="sb-sub">Pharmacist sign-off · 53 drugs</div>
     </div>
     <div class="prog-wrap">
       <span class="prog-label">Progress</span>
       <div class="prog-outer"><div class="prog-inner" id="prog-bar" style="width:0%"></div></div>
       <span class="prog-count" id="prog-count">0/53</span>
     </div>
-    <div class="sidebar-scroll" id="sidebar-scroll"></div>
+    <div class="sb-scroll" id="sb-scroll"></div>
   </aside>
   <div class="main">
     <div class="topbar" id="topbar" style="display:none">
-      <div class="topbar-left">
-        <span class="drug-title" id="tb-name">-</span>
-        <span class="drug-cat-tag" id="tb-cat">-</span>
-        <span class="sbadge" id="tb-status">-</span>
+      <div class="tb-left">
+        <span class="dtitle" id="tb-name"></span>
+        <span class="dcat-tag" id="tb-cat"></span>
+        <span class="sbadge" id="tb-status"></span>
       </div>
-      <div class="topbar-right">
+      <div class="tb-right">
         <button class="btn btn-flag" onclick="flagDrug()">Flag for review</button>
         <button class="btn btn-approve" onclick="approveDrug()">Approve parameters</button>
       </div>
     </div>
     <div class="content" id="content">
-      <div class="lempty">
-        <div class="lempty-icon">RX</div>
-        <div class="lempty-text">Select a drug to begin review</div>
+      <div class="empty">
+        <div class="empty-icon">Rx</div>
+        <div class="empty-text">Select a drug to begin review</div>
       </div>
     </div>
   </div>
 </div>
 <script>
-var DRUGS = [];
+var DRUGS = {};
 var state = {current:null, statuses:{}, annotations:{}, logs:{}};
 
-var CATS = {oncology:"Oncology",id:"Antibiotics",antifungal:"Antifungal",antiviral:"Antiviral",tb:"TB",hiv:"HIV ARVs",hiv_fdc:"HIV FDCs",oi_px:"OI Prophylaxis",mab:"Monoclonal Abs"};
-
-function D(key,name,cat,method,base,unit,bands,renal,hepatic,thresh,fdc,monitor,citations,popPK){
-  DRUGS.push({key:key,name:name,cat:cat,method:method,base:base,unit:unit,bands:bands,renal:renal,hepatic:hepatic,thresh:thresh,fdc:fdc||false,monitor:monitor,citations:citations,popPK:popPK||[]});
-  state.statuses[key]="pending";state.annotations[key]="";state.logs[key]=[];
+function addDrug(key,name,cat,method,base,unit,bands,renal,hepatic,thresh,fdc,monitoring,targetExp,citations,popPK){
+  DRUGS[key]={key:key,name:name,cat:cat,method:method,base:base,unit:unit,bands:bands,renal:renal,hepatic:hepatic,thresh:thresh,fdc:fdc||false,monitoring:monitoring||"",targetExp:targetExp||"",citations:citations||[],popPK:popPK||[]};
+  state.statuses[key]="pending";
+  state.annotations[key]="";
+  state.logs[key]=[];
 }
-function B(l,lo,hi){return {l:l,lo:lo,hi:hi};}
-function P(pop,vd,cl,t12,src){return {pop:pop,vd:vd,cl:cl,t12:t12,src:src};}
+function b(l,lo,hi){return{l:l,lo:lo,hi:hi};}
 
 // ONCOLOGY
-D("carboplatin","Carboplatin","oncology","Calvert formula",5,"mg (AUC x (CrCl+25))",[B("A",0,350),B("B",350,450),B("C",450,550),B("D",550,650),B("E",650,"inf")],true,false,null,false,"CrCl before each cycle. FBC nadir day 14-21. Audiometry if cumulative dose >400 mg/m2.",["Calvert AH et al. J Clin Oncol. 1989;7(11):1748-1756.","Chatelut E et al. J Natl Cancer Inst. 1995;87(8):573-580.","NICE NG131. 2019."],[P("Elderly","-20%","-15%","+28%","Launay-Vacher 2016")]);
-D("cisplatin","Cisplatin","oncology","BSA-based",75,"mg/m2",[B("1",0,55),B("2",55,70),B("3",70,85),B("4",85,"inf")],true,false,null,false,"CrCl, Mg, K before each cycle. Audiometry every 2 cycles. Hold if CrCl <60.",["Gietema JA et al. Lancet Oncol. 2000;1:126.","Miller RP et al. Toxins. 2010;2(11):2490-2518."],[]);
-D("oxaliplatin","Oxaliplatin","oncology","BSA-based",85,"mg/m2",[B("1",0,60),B("2",60,80),B("3",80,"inf")],true,false,null,false,"Neuropathy grading each cycle. CrCl. Hold if CrCl <30.",["de Gramont A et al. J Clin Oncol. 2000;18(16):2938-2947.","Cassidy J et al. J Clin Oncol. 2008;26(12):2006-2012."],[]);
-D("docetaxel","Docetaxel","oncology","BSA-based",75,"mg/m2",[B("1",0,55),B("2",55,70),B("3",70,"inf")],false,true,null,false,"LFTs before each cycle. Reduce if bilirubin >ULN or ALT/AST >1.5xULN. FBC nadir d7-11.",["Taxotere SPC. Sanofi. 2022.","Launay-Vacher V et al. Cancer Chemother Pharmacol. 2016;77:867-875."],[]);
-D("paclitaxel","Paclitaxel","oncology","BSA-based",175,"mg/m2",[B("1",0,130),B("2",130,165),B("3",165,"inf")],false,true,null,false,"LFTs. Neuropathy grading. Dexamethasone + antihistamine premedication mandatory.",["McGuire WP et al. N Engl J Med. 1996;334(1):1-6.","Taxol SPC. BMS. 2022."],[]);
-D("cyclophosphamide","Cyclophosphamide","oncology","BSA-based",600,"mg/m2",[B("1",0,400),B("2",400,700),B("3",700,1000),B("4",1000,"inf")],true,true,null,false,"Mesna mandatory for doses >600 mg/m2. FBC nadir d8-12. Haemorrhagic cystitis monitoring.",["Cyclophosphamide SPC. 2022.","Hensley ML et al. J Clin Oncol. 2009;27(8):1338-1344."],[]);
-D("doxorubicin","Doxorubicin","oncology","BSA-based",60,"mg/m2",[B("1",0,40),B("2",40,70),B("3",70,90),B("4",90,"inf")],false,true,null,false,"Lifetime cumulative dose limit 450-550 mg/m2. Baseline ECHO mandatory. Do NOT give with anthracyclines concurrently.",["Doxorubicin SPC. 2022.","Swain SM et al. N Engl J Med. 2003;348(26):2543-2550."],[]);
-D("fluorouracil","5-Fluorouracil","oncology","BSA-based",400,"mg/m2",[B("1",0,300),B("2",300,500),B("3",500,700),B("4",700,"inf")],false,true,null,false,"DPD deficiency screening recommended. Mucositis and hand-foot syndrome monitoring. QTc.",["de Gramont A et al. J Clin Oncol. 2000;18(16):2938-2947.","Diasio RB et al. J Clin Oncol. 2001;19(19):4032-4037."],[]);
-D("vincristine","Vincristine","oncology","BSA-based",1.4,"mg/m2 (MAX 2mg)",[B("1",0,1),B("2",1,1.5),B("3",1.5,2),B("4",2,"inf")],false,true,null,false,"MAX DOSE 2mg - cap regardless of BSA. FATAL if given intrathecally. Peripheral neuropathy grading each cycle.",["Vincristine SPC. 2022.","Rowinsky EK et al. J Clin Oncol. 1992;10(4):648-661."],[]);
+addDrug("carboplatin","Carboplatin","oncology","Calvert formula",5,"mg (AUC x (CrCl+25))",[b("A",0,350),b("B",350,450),b("C",450,550),b("D",550,650),b("E",650,9999)],true,false,null,false,"CrCl before each cycle. FBC nadir d14-21. Audiometry if cumulative >400mg/m2.","AUC 5-7 mg.min/mL (standard); AUC 4-5 if heavily pre-treated.",["Calvert AH et al. J Clin Oncol. 1989;7(11):1748-1756.","Chatelut E et al. J Natl Cancer Inst. 1995;87(8):573-580.","NICE NG131. 2019."],[{pop:"Elderly",vd:"-",cl:"-20%",t12:"+28%",src:"Launay-Vacher 2016",adj:"x0.85"}]);
+addDrug("cisplatin","Cisplatin","oncology","BSA-based",75,"mg/m2",[b("1",0,55),b("2",55,70),b("3",70,85),b("4",85,9999)],true,false,null,false,"CrCl, Mg, K each cycle. Audiometry q2 cycles. Hold if CrCl <60.","75 mg/m2 q3w; 40 mg/m2 weekly (concurrent RT).",["Gietema JA et al. Lancet Oncol. 2000.","UKONS Chemotherapy Passport. 2020."],[]);
+addDrug("oxaliplatin","Oxaliplatin","oncology","BSA-based",85,"mg/m2",[b("1",0,60),b("2",60,80),b("3",80,9999)],true,false,null,false,"Neuropathy grading (NCI CTCAE) each cycle. Hold if CrCl <30.","85 mg/m2 q2w (FOLFOX4); 130 mg/m2 q3w (XELOX).",["de Gramont A et al. J Clin Oncol. 2000.","Cassidy J et al. J Clin Oncol. 2008."],[]);
+addDrug("docetaxel","Docetaxel","oncology","BSA-based",75,"mg/m2",[b("1",0,55),b("2",55,70),b("3",70,9999)],false,true,null,false,"LFTs before each cycle. Reduce if bilirubin >ULN. FBC nadir d7-11.","75-100 mg/m2 q3w; 36 mg/m2 weekly.",["Taxotere SPC. Sanofi. 2022.","Launay-Vacher V et al. Cancer Chemother Pharmacol. 2016."],[]);
+addDrug("paclitaxel","Paclitaxel","oncology","BSA-based",175,"mg/m2",[b("1",0,130),b("2",130,165),b("3",165,9999)],false,true,null,false,"LFTs. Neuropathy grading. Dexamethasone + antihistamine premedication mandatory.","175 mg/m2 q3w or 80 mg/m2 weekly.",["McGuire WP et al. N Engl J Med. 1996.","Taxol SPC. BMS. 2022."],[]);
+addDrug("cyclophosphamide","Cyclophosphamide","oncology","BSA-based",600,"mg/m2",[b("1",0,400),b("2",400,700),b("3",700,1000),b("4",1000,9999)],true,true,null,false,"Mesna mandatory >600mg/m2. FBC nadir d8-12. Haemorrhagic cystitis monitoring.","600 mg/m2 q21d (standard); high-dose varies by protocol.",["Cyclophosphamide SPC. 2022."],[]);
+addDrug("doxorubicin","Doxorubicin","oncology","BSA-based",60,"mg/m2",[b("1",0,40),b("2",40,70),b("3",70,90),b("4",90,9999)],false,true,null,false,"Lifetime cumulative limit 450-550 mg/m2. Baseline ECHO mandatory. ECHO every 3 cycles.","60 mg/m2 q3w.",["Doxorubicin SPC. 2022."],[]);
+addDrug("fluorouracil","5-Fluorouracil","oncology","BSA-based",400,"mg/m2",[b("1",0,300),b("2",300,500),b("3",500,700),b("4",700,9999)],false,true,null,false,"DPD deficiency screening recommended. Mucositis monitoring. QTc.","400 mg/m2 bolus (FOLFOX); 2400 mg/m2 CI 46h.",["Longley DB et al. Nature Rev Cancer. 2003."],[]);
+addDrug("vincristine","Vincristine","oncology","BSA-based",1.4,"mg/m2 (MAX 2mg)",[b("1",0,1),b("2",1,1.5),b("3",1.5,2),b("4",2,9999)],false,true,null,false,"MAX DOSE 2mg - hard cap regardless of BSA. FATAL if given intrathecally. Neuropathy grading.","1.4 mg/m2 (max 2mg) weekly.",["Vincristine SPC. 2022."],[]);
 
 // ANTIBIOTICS
-D("gentamicin","Gentamicin","id","Weight-based PK (ODD)",5,"mg/kg",[B("L",0,240),B("M",240,320),B("H",320,"inf")],true,false,3.0,false,"Hartford nomogram: level 6-14h post-dose. CrCl 3x/week. Audiometry for courses >7 days.",["Mehta DK et al. East Afr Med J. 2019;96(4):1821-1828.","Nicolau DP et al. Antimicrob Agents Chemother. 1995;39(3):650-655.","Craig WA. Clin Infect Dis. 1998;26(1):1-10."],[P("Sub-Saharan Africa","-15%","-12%","+18%","Mehta 2019"),P("Malnourished (BMI<16)","-22%","-18%","+30%","Bhatt 2021"),P("Pregnancy 2nd/3rd trimester","+30%","+45%","-25%","Hebert 2017")]);
-D("amikacin","Amikacin","id","Weight-based PK (ODD)",15,"mg/kg",[B("L",0,600),B("M",600,900),B("H",900,"inf")],true,false,10.0,false,"Level 6-14h post-dose. Trough <5 mg/L. Weekly CrCl. Audiometry for prolonged courses.",["Bhatt DL et al. Trop Med Int Health. 2021;26(3):312-319.","WHO Model Formulary 2008. Section 6.2.2.","Rybak MJ et al. Pharmacotherapy. 2020;40(5):363-403."],[P("Sub-Saharan Africa","-15%","-12%","+18%","Mehta 2019"),P("Malnourished (BMI<16)","-22%","-18%","+30%","Bhatt 2021")]);
-D("vancomycin","Vancomycin","id","Weight-based PK",15,"mg/kg/dose",[B("1",0,750),B("2",750,1250),B("3",1250,1750),B("4",1750,2250),B("5",2250,"inf")],true,false,null,false,"AUC-guided TDM preferred. Trough after dose 3-4. CrCl every 48-72h. Red-man syndrome prophylaxis.",["Rybak MJ et al. Am J Health Syst Pharm. 2020;77(11):835-864.","Wools-Kaloustian KK et al. J Antimicrob Chemother. 2018;73(8):2135-2141."],[P("HIV+ on ART","+10%","-15%","+12%","Wools-Kaloustian 2018")]);
-D("piperacillinTazobactam","Pip-Tazobactam","id","Fixed dose",4500,"mg",[B("1",0,3000),B("2",3000,4500),B("3",4500,"inf")],true,false,null,false,"CrCl - reduce if <20 mL/min. Extended infusion 4h preferred for serious infections.",["Lodise TP et al. Antimicrob Agents Chemother. 2007;51(11):3927-3932.","Tazocin SPC. Pfizer. 2022."],[]);
-D("meropenem","Meropenem","id","Fixed dose",1000,"mg",[B("1",0,750),B("2",750,1250),B("3",1250,"inf")],true,false,null,false,"CrCl - adjust if <50 mL/min. Extended infusion 3h preferred. NMS risk.",["Merrem IV SPC. AstraZeneca. 2022.","Roberts JA et al. Lancet Infect Dis. 2014;14(6):498-509."],[]);
-D("ceftriaxone","Ceftriaxone","id","Fixed dose",2000,"mg",[B("1",0,1500),B("2",1500,2500),B("3",2500,"inf")],false,false,null,false,"No renal adjustment unless combined renal+hepatic failure. Avoid IV calcium in neonates.",["Ceftriaxone SPC. 2022.","Behrens RH et al. Trans R Soc Trop Med Hyg. 2020."],[]);
-D("ampicillin","Ampicillin IV","id","Fixed dose",2000,"mg",[B("1",0,1500),B("2",1500,2500),B("3",2500,"inf")],true,false,null,false,"Maculopapular rash common in EBV infection. Renal monitoring. High sodium content.",["Ampicillin SPC. 2022."],[]);
-D("metronidazole","Metronidazole IV","id","Fixed dose",500,"mg",[B("1",0,375),B("2",375,625),B("3",625,"inf")],false,true,null,false,"Reduce 50% in severe hepatic impairment. Peripheral neuropathy with prolonged use. Avoid 1st trimester.",["Metronidazole SPC. 2022.","WHO Model Formulary 2008."],[]);
-D("azithromycin","Azithromycin IV","id","Fixed dose",500,"mg",[B("1",0,400),B("2",400,600),B("3",600,"inf")],false,true,null,false,"QTc monitoring mandatory. Avoid with other QT-prolonging drugs. Switch to oral when clinically appropriate.",["Zithromax SPC. Pfizer. 2022."],[]);
-D("cotrimoxazole","Co-trimoxazole IV","id","Weight-based (TMP)",5,"mg/kg TMP component",[B("1",0,240),B("2",240,480),B("3",480,"inf")],true,false,null,false,"Based on trimethoprim component 5mg/kg. FBC weekly. Folate supplementation if prolonged use.",["Co-trimoxazole SPC. 2022.","WHO Guidelines 2022."],[]);
+addDrug("gentamicin","Gentamicin","id","Weight-based PK (ODD)",5,"mg/kg",[b("L",0,240),b("M",240,320),b("H",320,9999)],true,false,3.0,false,"Hartford nomogram: level 6-14h post-dose. CrCl 3x/week. Audiometry >7 days.","Peak 8-10 mg/L; Trough <1 mg/L (ODD); Cmax/MIC >8-10.",["Mehta DK et al. East Afr Med J. 2019.","Nicolau DP et al. AAC. 1995.","Craig WA. CID. 1998."],[{pop:"Sub-Saharan Africa",vd:"-15%",cl:"-12%",t12:"+18%",src:"Mehta 2019",adj:"x0.87"},{pop:"Malnourished (BMI<16)",vd:"-22%",cl:"-18%",t12:"+30%",src:"Bhatt 2021",adj:"x0.85"},{pop:"Pregnancy 2nd/3rd trimester",vd:"+30%",cl:"+45%",t12:"-25%",src:"Hebert 2017",adj:"x1.35"}]);
+addDrug("amikacin","Amikacin","id","Weight-based PK (ODD)",15,"mg/kg",[b("L",0,600),b("M",600,900),b("H",900,9999)],true,false,10.0,false,"Level 6-14h post-dose. Trough <5 mg/L. Weekly CrCl.","Peak 20-30 mg/L; Trough <5 mg/L; Cmax/MIC >=8.",["Bhatt DL et al. Trop Med Int Health. 2021.","WHO Model Formulary 2008."],[{pop:"Sub-Saharan Africa",vd:"-15%",cl:"-12%",t12:"+18%",src:"Mehta 2019",adj:"x0.87"},{pop:"Malnourished",vd:"-22%",cl:"-18%",t12:"+30%",src:"Bhatt 2021",adj:"x0.85"}]);
+addDrug("vancomycin","Vancomycin","id","Weight-based PK",15,"mg/kg/dose",[b("1",0,750),b("2",750,1250),b("3",1250,1750),b("4",1750,2250),b("5",2250,9999)],true,false,null,false,"AUC/MIC-guided dosing preferred. Trough after dose 3-4. CrCl q48-72h.","AUC/MIC 400-600 mg.h/L; Trough 10-20 mg/L (MRSA).",["Rybak MJ et al. AJHSP. 2020.","Wools-Kaloustian KK et al. JAC. 2018."],[{pop:"HIV+ on ART",vd:"+10%",cl:"-15%",t12:"+12%",src:"Wools-Kaloustian 2018",adj:"x0.9"}]);
+addDrug("piperacillinTazobactam","Pip-Tazobactam","id","Fixed dose",4500,"mg",[b("1",0,3000),b("2",3000,4500),b("3",4500,9999)],true,false,null,false,"Reduce if CrCl <20. Extended infusion 4h preferred. Electrolyte monitoring.","fT>MIC >50% (standard); >100% (extended infusion for severe sepsis).",["Lodise TP et al. AAC. 2007.","Tazocin SPC. Pfizer. 2022."],[]);
+addDrug("meropenem","Meropenem","id","Fixed dose",1000,"mg",[b("1",0,750),b("2",750,1250),b("3",1250,9999)],true,false,null,false,"Adjust if CrCl <50. Extended infusion 3h preferred. NMS risk.","fT>MIC >40% bacteriostatic; >100% bactericidal.",["Merrem SPC. AstraZeneca. 2022.","Roberts JA et al. Lancet ID. 2014."],[]);
+addDrug("ceftriaxone","Ceftriaxone","id","Fixed dose",2000,"mg",[b("1",0,1500),b("2",1500,2500),b("3",2500,9999)],false,false,null,false,"No renal adjustment unless combined renal+hepatic failure. Avoid IV calcium in neonates.","2g OD (standard); 4g OD (meningitis).",["Ceftriaxone SPC. 2022."],[{pop:"Malnourished",vd:"-",cl:"-",t12:"-",src:"Reduced protein binding",adj:"Monitor clinically"}]);
+addDrug("ampicillin","Ampicillin IV","id","Fixed dose",2000,"mg",[b("1",0,1500),b("2",1500,2500),b("3",2500,9999)],true,false,null,false,"Rash monitoring - maculopapular rash common especially in EBV. High sodium content.","2g q4-6h.",["Ampicillin SPC. 2022."],[]);
+addDrug("metronidazole","Metronidazole IV","id","Fixed dose",500,"mg",[b("1",0,375),b("2",375,625),b("3",625,9999)],false,true,null,false,"Reduce 50% in severe hepatic impairment. Peripheral neuropathy with prolonged use. Avoid 1st trimester.","500mg q8h.",["Metronidazole SPC. 2022."],[{pop:"HIV+",vd:"-",cl:"-",t12:"-",src:"CNS toxicity risk",adj:"Monitor closely"}]);
+addDrug("azithromycin","Azithromycin IV","id","Fixed dose",500,"mg",[b("1",0,400),b("2",400,600),b("3",600,9999)],false,true,null,false,"QTc monitoring mandatory. Significant QT prolongation risk. Avoid with other QT-prolonging drugs.","500mg OD.",["Azithromycin SPC. 2022."],[]);
+addDrug("cotrimoxazole","Co-trimoxazole IV","id","Weight-based (TMP component)",5,"mg/kg (TMP)",[b("1",0,240),b("2",240,480),b("3",480,9999)],true,false,null,false,"FBC weekly - myelosuppression. Folate supplementation if prolonged. Monitor K and renal.","5mg/kg TMP q6-12h (PCP treatment).",["Cotrimoxazole SPC. 2022."],[{pop:"HIV+",vd:"-",cl:"-",t12:"-",src:"Standard PCP dosing",adj:"No change"}]);
 
 // ANTIFUNGAL
-D("fluconazole","Fluconazole","antifungal","Fixed dose",400,"mg",[B("1",0,200),B("2",200,400),B("3",400,"inf")],true,false,null,false,"LFTs weekly. 50% dose reduction if CrCl <50. Loading dose 800mg day 1 for candidaemia. QTc monitoring.",["Pappas PG et al. Clin Infect Dis. 2016;62(4):e1-50.","Diflucan SPC. Pfizer. 2022."],[]);
-D("voriconazole","Voriconazole","antifungal","Weight-based PK",4,"mg/kg/dose IV",[B("1",0,150),B("2",150,250),B("3",250,"inf")],false,true,null,false,"TDM mandatory. Highly variable PK. Trough after day 5 then weekly. LFTs. Visual disturbances. QTc.",["Patterson TF et al. Clin Infect Dis. 2016;63(4):e1-60.","Pascual A et al. Clin Infect Dis. 2008;46(2):201-211."],[]);
+addDrug("fluconazole","Fluconazole","antifungal","Fixed dose",400,"mg",[b("1",0,200),b("2",200,400),b("3",400,9999)],true,false,null,false,"LFTs weekly. 50% reduction if CrCl <50. Loading dose 800mg day 1. QTc monitoring.","AUC/MIC >25 (Candida); Trough 8-20 mg/L.",["Pappas PG et al. CID. 2016.","Diflucan SPC. Pfizer. 2022."],[]);
+addDrug("voriconazole","Voriconazole","antifungal","Weight-based PK",4,"mg/kg/dose (IV)",[b("1",0,150),b("2",150,250),b("3",250,9999)],false,true,null,false,"TDM mandatory - highly variable PK. Trough after day 5 then weekly. LFTs. Visual disturbances. QTc.","Trough 1-5.5 mg/L; avoid >5.5 mg/L (neurotoxicity).",["Patterson TF et al. CID. 2016.","Pascual A et al. CID. 2008."],[]);
 
 // ANTIVIRAL
-D("acyclovir","Acyclovir IV","antiviral","Weight-based PK",10,"mg/kg/dose",[B("1",0,400),B("2",400,700),B("3",700,"inf")],true,false,null,false,"Aggressive IV hydration mandatory. CrCl before each dose. Neurotoxicity monitoring. Crystalluria prevention.",["Skoldenberg B et al. Lancet. 1984;2(8405):707-711.","Zovirax SPC. GSK. 2022."],[]);
+addDrug("acyclovir","Acyclovir IV","antiviral","Weight-based PK",10,"mg/kg/dose",[b("1",0,400),b("2",400,700),b("3",700,9999)],true,false,null,false,"Aggressive IV hydration mandatory. CrCl before each dose. Neurotoxicity monitoring.","500 mg/m2 q8h (encephalitis); 10 mg/kg q8h (immunocompromised).",["Skoldenberg B et al. Lancet. 1984.","Zovirax SPC. GSK. 2022."],[]);
 
 // TB
-D("rifampicin","Rifampicin","tb","Weight-based",10,"mg/kg",[B("1",0,450),B("2",450,600),B("3",600,"inf")],false,true,null,false,"Potent CYP450 inducer - MAJOR ARV interactions. LFTs monthly. Orange secretions. Do not use as monotherapy. Max 600mg.",["WHO TB Treatment Guidelines 2022.","Rifampicin SPC. 2022."],[]);
-D("isoniazid","Isoniazid","tb","Weight-based",5,"mg/kg",[B("1",0,200),B("2",200,300),B("3",300,"inf")],false,true,null,false,"Pyridoxine (B6) 10-25mg/day MANDATORY. LFTs monthly. Max dose 300mg. Slow acetylator monitoring.",["WHO TB Treatment Guidelines 2022.","Isoniazid SPC. 2022."],[]);
-D("pyrazinamide","Pyrazinamide","tb","Weight-based",25,"mg/kg",[B("1",0,1000),B("2",1000,1500),B("3",1500,2000),B("4",2000,"inf")],true,true,null,false,"LFTs monthly - hepatotoxic. Uric acid monitoring - gout risk. Initial 2-month phase only. Max 2g/day.",["WHO TB Treatment Guidelines 2022."],[]);
-D("ethambutol","Ethambutol","tb","Weight-based",15,"mg/kg",[B("1",0,600),B("2",600,900),B("3",900,1200),B("4",1200,"inf")],true,false,null,false,"Visual acuity and colour vision monthly - optic neuritis risk. Reduce if CrCl <30. Max 1.6g/day.",["WHO TB Treatment Guidelines 2022.","Ethambutol SPC. 2022."],[]);
-D("streptomycin","Streptomycin IM","tb","Weight-based",15,"mg/kg",[B("L",0,500),B("M",500,750),B("H",750,"inf")],true,false,3.0,false,"IM injection only - never IV bolus. Audiometry monthly. Elderly max 10mg/kg. Avoid in pregnancy. Max 1g.",["WHO TB Treatment Guidelines 2022.","Streptomycin SPC. 2022."],[P("Sub-Saharan Africa","-15%","-12%","+18%","Mehta 2019")]);
+addDrug("rifampicin","Rifampicin","tb","Weight-based",10,"mg/kg",[b("1",0,450),b("2",450,600),b("3",600,9999)],false,true,null,false,"Potent CYP450 inducer. Major ARV interactions. LFTs monthly. Orange discolouration. Max 600mg.","10 mg/kg OD (max 600mg).",["WHO TB Guidelines. 2022."],[{pop:"HIV+ on ART",vd:"-",cl:"-",t12:"-",src:"CYP3A4 induction",adj:"DANGER - specialist review"}]);
+addDrug("isoniazid","Isoniazid","tb","Weight-based",5,"mg/kg",[b("1",0,200),b("2",200,300),b("3",300,9999)],false,true,null,false,"Pyridoxine B6 10-25mg/day MANDATORY. LFTs monthly. Max 300mg. Slow acetylators: higher levels.","5 mg/kg OD (max 300mg).",["WHO TB Guidelines. 2022."],[{pop:"Malnourished",vd:"-",cl:"-",t12:"-",src:"Increased neuropathy risk",adj:"Increase pyridoxine"}]);
+addDrug("pyrazinamide","Pyrazinamide","tb","Weight-based",25,"mg/kg",[b("1",0,1000),b("2",1000,1500),b("3",1500,2000),b("4",2000,9999)],true,true,null,false,"LFTs monthly. Uric acid monitoring. Initial 2-month intensive phase only. Max 2g/day.","25 mg/kg OD (max 2g).",["WHO TB Guidelines. 2022."],[]);
+addDrug("ethambutol","Ethambutol","tb","Weight-based",15,"mg/kg",[b("1",0,600),b("2",600,900),b("3",900,1200),b("4",1200,9999)],true,false,null,false,"Visual acuity and colour vision monthly. Reduce dose if CrCl <30. Max 1.6g/day.","15 mg/kg OD (max 1.6g).",["WHO TB Guidelines. 2022."],[]);
+addDrug("streptomycin","Streptomycin IM","tb","Weight-based",15,"mg/kg",[b("L",0,500),b("M",500,750),b("H",750,9999)],true,false,3.0,false,"IM only - never IV bolus. Audiometry monthly. Elderly max 10mg/kg. Avoid in pregnancy. Max 1g.","15 mg/kg IM OD (max 1g).",["WHO TB Guidelines. 2022."],[{pop:"Sub-Saharan Africa",vd:"-15%",cl:"-12%",t12:"+18%",src:"Aminoglycoside PK",adj:"x0.87"},{pop:"Elderly",vd:"-",cl:"-20%",t12:"+25%",src:"Age-related",adj:"x0.75"}]);
 
 // HIV ARVs
-D("tenofovir","Tenofovir (TDF)","hiv","Fixed dose",300,"mg OD",[B("Standard",0,301),B("Adjusted",301,"inf")],true,false,null,false,"Reduce/extend interval if CrCl 30-50. Avoid if CrCl <30. Monitor renal function and bone density.",["WHO HIV Treatment Guidelines 2022.","TDF SPC. Gilead. 2022."],[]);
-D("lamivudine","Lamivudine (3TC)","hiv","Fixed dose",150,"mg BD (or 300mg OD)",[B("Standard",0,301),B("Adjusted",301,"inf")],true,false,null,false,"Reduce dose if CrCl <50. HBV flare risk if stopped in HBV co-infection. Check HBV status before starting.",["WHO HIV Treatment Guidelines 2022.","3TC SPC. ViiV. 2022."],[]);
-D("zidovudine","Zidovudine (AZT)","hiv","Fixed dose",300,"mg BD",[B("Standard",0,301),B("Adjusted",301,"inf")],true,true,null,false,"FBC at baseline, 2 weeks, monthly. Avoid if Hb <7g/dL. Lactic acidosis risk. Mitochondrial toxicity.",["WHO HIV Treatment Guidelines 2022.","AZT SPC. ViiV. 2022."],[]);
-D("efavirenz","Efavirenz (EFV)","hiv","Fixed dose",600,"mg OD (at night)",[B("Standard",0,601),B("Adjusted",601,"inf")],false,true,null,false,"600mg once daily at night. CYP inducer. Avoid in 1st trimester. CNS side effects first 4 weeks. Screen psychiatric history.",["WHO HIV Treatment Guidelines 2022.","Sustiva SPC. BMS. 2022."],[]);
-D("dolutegravir","Dolutegravir (DTG)","hiv","Fixed dose",50,"mg OD (50mg BD if on rifampicin)",[B("Standard",0,51),B("Double dose",51,"inf")],false,true,null,false,"50mg OD standard; 50mg BD if on rifampicin (WHO 2019). Neural tube defect risk - counsel women of childbearing age. Weight gain common.",["WHO HIV Treatment Guidelines 2022.","Tivicay SPC. ViiV. 2022.","Zash R et al. N Engl J Med. 2019;381(9):827-840."],[]);
-D("nevirapine","Nevirapine (NVP)","hiv","Fixed dose",200,"mg OD lead-in then BD",[B("Lead-in",0,201),B("Full dose",201,"inf")],false,true,null,false,"200mg OD x2 weeks lead-in then 200mg BD. LFTs at 2,4,8,12,18 weeks. Do NOT start if CD4 >250(F) or >400(M). Stevens-Johnson risk.",["WHO HIV Treatment Guidelines 2022.","Viramune SPC. Boehringer. 2022."],[]);
-D("lopinavirRitonavir","Lopinavir/r (LPV/r)","hiv","Fixed dose",400,"mg lopinavir/100mg ritonavir BD",[B("Standard",0,401),B("Adjusted",401,"inf")],false,true,null,false,"400/100mg BD. GI side effects common. Lipids and glucose monitoring. CYP3A4 inhibitor - major drug interactions. Avoid rifampicin.",["WHO HIV Treatment Guidelines 2022.","Kaletra SPC. AbbVie. 2022."],[]);
+addDrug("tenofovir","Tenofovir (TDF)","hiv","Fixed dose",300,"mg",[b("Standard",0,300),b("Adjusted",300,9999)],true,false,null,false,"Reduce/extend interval if CrCl 30-50. Avoid if CrCl <30. Monitor renal function and bone density.","300mg OD.",["WHO HIV Guidelines. 2021."],[{pop:"ART naive",vd:"-",cl:"-",t12:"-",src:"WHO first-line backbone",adj:"Standard dosing"}]);
+addDrug("lamivudine","Lamivudine (3TC)","hiv","Fixed dose",150,"mg",[b("Standard",0,300),b("Higher",300,9999)],true,false,null,false,"150mg BD or 300mg OD. Reduce if CrCl <50. HBV flare risk if stopped in HBV co-infection.","150mg BD or 300mg OD.",["WHO HIV Guidelines. 2021."],[]);
+addDrug("zidovudine","Zidovudine (AZT)","hiv","Fixed dose",300,"mg",[b("Standard",0,300),b("Higher",300,9999)],true,true,null,false,"FBC at baseline, 2 weeks, monthly. Avoid if Hb <7g/dL. Lactic acidosis risk with prolonged use.","300mg BD.",["WHO HIV Guidelines. 2021."],[{pop:"Malnourished",vd:"-",cl:"-",t12:"-",src:"Increased toxicity",adj:"x0.85 - monitor FBC"},{pop:"Pregnant",vd:"-",cl:"-",t12:"-",src:"PMTCT standard",adj:"Standard dosing"}]);
+addDrug("efavirenz","Efavirenz (EFV)","hiv","Fixed dose",600,"mg",[b("Standard",0,600),b("High",600,9999)],false,true,null,false,"600mg OD at night. CYP inducer. Avoid 1st trimester (teratogenic). CNS side effects first 4 weeks.","600mg OD (nocte).",["WHO HIV Guidelines. 2021."],[{pop:"TB-HIV co-infection",vd:"-",cl:"-",t12:"-",src:"Compatible with rifampicin",adj:"No change needed"}]);
+addDrug("dolutegravir","Dolutegravir (DTG)","hiv","Fixed dose",50,"mg",[b("Standard",0,50),b("Double (TB)",50,9999)],false,true,null,false,"50mg OD; 50mg BD if on rifampicin. Neural tube defect risk - counsel women of childbearing age.","50mg OD standard; 50mg BD with rifampicin.",["WHO HIV Guidelines. 2021."],[{pop:"TB-HIV (rifampicin)",vd:"-",cl:"-50%",t12:"-",src:"CYP3A4 induction",adj:"x2 (50mg BD)"},{pop:"Pregnant",vd:"-",cl:"-",t12:"-",src:"Neural tube defect risk",adj:"Counsel - benefit outweighs risk 2nd/3rd trimester"}]);
+addDrug("nevirapine","Nevirapine (NVP)","hiv","Fixed dose",200,"mg",[b("Lead-in",0,200),b("Full dose",200,9999)],false,true,null,false,"200mg OD x2 weeks lead-in then 200mg BD. LFTs at 2,4,8,12,18 weeks. SJS risk. Avoid if CD4 >250(F)/400(M).","200mg OD x2 weeks then 200mg BD.",["WHO HIV Guidelines. 2021."],[{pop:"HIV naive (high CD4)",vd:"-",cl:"-",t12:"-",src:"Hepatotoxicity risk",adj:"DO NOT USE if CD4 >250(F) or >400(M)"}]);
+addDrug("lopinavirRitonavir","Lopinavir/r (LPV/r)","hiv","Fixed dose",400,"mg (LPV component)",[b("Standard",0,400),b("Higher",400,9999)],false,true,null,false,"400/100mg BD. GI side effects. Lipids and glucose monitoring. CYP3A4 inhibitor. Avoid with rifampicin.","400/100mg BD.",["WHO HIV Guidelines. 2021."],[{pop:"TB-HIV (rifampicin)",vd:"-",cl:"-75%",t12:"-",src:"CYP3A4 induction",adj:"AVOID - use rifabutin instead"}]);
 
 // HIV FDCs
-D("tdf_3tc_dtg","TDF/3TC/DTG","hiv_fdc","Fixed-dose combination (OD)",1,"tablet once daily",[B("1 tablet",0,1.5),B("2 tablets",1.5,"inf")],true,true,null,true,"WHO first-line 2019. One tablet OD. Renal monitoring (TDF). LFTs (DTG). Neural tube defect counselling. Weight gain on DTG.",["WHO HIV Treatment Guidelines 2022.","Zash R et al. N Engl J Med. 2019;381(9):827-840."],[]);
-D("tdf_3tc_efv","TDF/3TC/EFV 600","hiv_fdc","Fixed-dose combination (OD)",1,"tablet once daily (at night)",[B("1 tablet",0,1.5),B("2 tablets",1.5,"inf")],true,true,null,true,"One tablet OD at night. Previous WHO first-line. EFV CNS effects first 4 weeks. Avoid 1st trimester. CYP inducer.",["WHO HIV Treatment Guidelines 2019.","Atripla SPC. BMS/Gilead. 2022."],[]);
-D("azt_3tc_nvp","AZT/3TC/NVP","hiv_fdc","Fixed-dose combination (BD)",1,"tablet twice daily",[B("1 tablet",0,1.5),B("2 tablets",1.5,"inf")],true,true,null,true,"One tablet BD. FBC monitoring (AZT haematotoxicity). LFTs every 2 weeks x18 weeks (NVP hepatotoxicity). Do NOT start if CD4 >250(F)/400(M).",["WHO HIV Treatment Guidelines 2016."],[]);
-D("tdf_3tc_nvp","TDF/3TC/NVP","hiv_fdc","Fixed-dose combination (BD)",1,"tablet twice daily",[B("1 tablet",0,1.5),B("2 tablets",1.5,"inf")],true,true,null,true,"One tablet BD or OD depending on formulation. LFTs every 2 weeks x18 weeks. Renal monitoring (TDF). Do NOT start if CD4 >250(F)/400(M).",["WHO HIV Treatment Guidelines 2016."],[]);
-D("azt_3tc","AZT/3TC (backbone)","hiv_fdc","Fixed-dose combination (BD)",1,"tablet twice daily",[B("1 tablet",0,1.5),B("2 tablets",1.5,"inf")],true,true,null,true,"One tablet BD. Dual NRTI backbone - requires addition of 3rd agent. FBC monitoring. Check HBV status.",["WHO HIV Treatment Guidelines 2022."],[]);
+addDrug("tdf_3tc_dtg","TDF/3TC/DTG","hiv_fdc","Fixed dose (FDC)",1,"tablet(s) OD",[b("1 tablet",0,1.5),b("2 tablets",1.5,9999)],true,true,null,true,"WHO first-line 2019. Renal monitoring (TDF). Neural tube defect counselling. Weight gain on DTG.","1 tablet OD.",["WHO HIV Guidelines. 2021."],[{pop:"TB-HIV (rifampicin)",vd:"-",cl:"-",t12:"-",src:"DTG induction by rifampicin",adj:"Add extra DTG 50mg for total 50mg BD"},{pop:"Pregnant",vd:"-",cl:"-",t12:"-",src:"Neural tube defect risk",adj:"WHO recommended - counsel"}]);
+addDrug("tdf_3tc_efv","TDF/3TC/EFV 600","hiv_fdc","Fixed dose (FDC)",1,"tablet(s) OD",[b("1 tablet",0,1.5),b("2 tablets",1.5,9999)],true,true,null,true,"1 tablet OD at night. EFV CNS side effects first 4 weeks. Avoid 1st trimester pregnancy.","1 tablet OD (nocte).",["WHO HIV Guidelines. 2019."],[{pop:"TB-HIV",vd:"-",cl:"-",t12:"-",src:"EFV compatible with rifampicin",adj:"No dose adjustment"}]);
+addDrug("azt_3tc_nvp","AZT/3TC/NVP","hiv_fdc","Fixed dose (FDC)",1,"tablet(s) BD",[b("1 tablet",0,1.5),b("2 tablets",1.5,9999)],true,true,null,true,"1 tablet BD. FBC monitoring (AZT). LFTs q2 weeks x18 weeks (NVP). Do not start if CD4 >250(F)/400(M).","1 tablet BD.",["WHO HIV Guidelines. 2016."],[{pop:"TB-HIV (rifampicin)",vd:"-",cl:"-55%",t12:"-",src:"NVP reduced by rifampicin",adj:"AVOID - switch to EFV or DTG regimen"}]);
+addDrug("tdf_3tc_nvp","TDF/3TC/NVP","hiv_fdc","Fixed dose (FDC)",1,"tablet(s) BD/OD",[b("1 tablet",0,1.5),b("2 tablets",1.5,9999)],true,true,null,true,"1 tablet BD or OD depending on formulation. LFTs q2 weeks x18 weeks. Renal monitoring (TDF).","1 tablet BD or OD.",["WHO HIV Guidelines. 2016."],[{pop:"TB-HIV",vd:"-",cl:"-",t12:"-",src:"NVP incompatible with rifampicin",adj:"AVOID - switch to TDF/3TC/EFV or TDF/3TC/DTG"}]);
+addDrug("azt_3tc","AZT/3TC (backbone)","hiv_fdc","Fixed dose (FDC)",1,"tablet(s) BD",[b("1 tablet",0,1.5),b("2 tablets",1.5,9999)],true,true,null,true,"1 tablet BD. Dual NRTI backbone requiring 3rd agent. FBC monitoring. Check HBV status.","1 tablet BD + 3rd agent.",["WHO HIV Guidelines. 2021."],[{pop:"Pregnant",vd:"-",cl:"-",t12:"-",src:"PMTCT backbone",adj:"Add DTG or NVP as 3rd agent"}]);
 
 // OI PROPHYLAXIS
-D("cotrimoxazole_px","Co-trimoxazole (prophylaxis)","oi_px","Fixed dose",960,"mg OD (1 DS tablet)",[B("Standard",0,961),B("Double",961,"inf")],true,false,null,false,"Indicated for all HIV+ with CD4 <200 or WHO stage 3/4. FBC every 3 months. Continue until CD4 >200 for 6 months on ART.",["WHO Guidelines on Co-trimoxazole Prophylaxis 2014."],[]);
-D("fluconazole_px","Fluconazole (prophylaxis)","oi_px","Fixed dose",200,"mg OD",[B("Maintenance",0,201),B("High dose",201,"inf")],true,false,null,false,"Secondary cryptococcal prophylaxis after consolidation. Continue until CD4 >100 for 6 months on ART. LFTs and QTc monitoring.",["Perfect JR et al. Clin Infect Dis. 2010;50(3):291-322."],[]);
-D("dapsone_px","Dapsone (PCP prophylaxis)","oi_px","Fixed dose",100,"mg OD",[B("Standard",0,101),B("Reduced",0,51)],false,false,null,false,"Use when cotrimoxazole not tolerated. G6PD testing MANDATORY before starting. FBC monthly. Methaemoglobinaemia risk.",["Bozzette SA et al. N Engl J Med. 1995;332(11):693-699."],[]);
+addDrug("cotrimoxazole_px","Co-trimoxazole (prophylaxis)","oi_px","Fixed dose",960,"mg OD",[b("Standard",0,960),b("Double",960,9999)],true,false,null,false,"960mg (1 DS tablet) OD. FBC every 3 months. K monitoring. Continue until CD4 >200 x6 months on ART.","960mg OD (1 DS tablet).",["WHO HIV Guidelines. 2021."],[{pop:"HIV+ (CD4 <200)",vd:"-",cl:"-",t12:"-",src:"WHO recommendation",adj:"Standard dosing - start immediately"}]);
+addDrug("fluconazole_px","Fluconazole (prophylaxis)","oi_px","Fixed dose",200,"mg OD",[b("Maintenance",0,200),b("Induction",200,9999)],true,false,null,false,"Secondary cryptococcal prophylaxis. Continue until CD4 >100 x6 months on ART. LFTs monitoring.","200mg OD maintenance.",["WHO HIV Guidelines. 2021."],[{pop:"HIV+ post-cryptococcal meningitis",vd:"-",cl:"-",t12:"-",src:"WHO recommendation",adj:"After amphotericin B induction and fluconazole 400mg consolidation"}]);
+addDrug("dapsone_px","Dapsone (PCP prophylaxis)","oi_px","Fixed dose",100,"mg OD",[b("Standard",0,100),b("Reduced",0,50)],false,false,null,false,"G6PD testing MANDATORY before starting. FBC monthly. Methaemoglobinaemia risk.","100mg OD.",["WHO HIV Guidelines. 2021."],[{pop:"HIV+ (SSA)",vd:"-",cl:"-",t12:"-",src:"High G6PD deficiency prevalence",adj:"G6PD testing MANDATORY - haemolysis risk"}]);
 
 // MONOCLONAL ANTIBODIES
-D("rituximab","Rituximab","mab","BSA-based",375,"mg/m2",[B("1",0,500),B("2",500,650),B("3",650,750),B("4",750,"inf")],false,false,null,false,"Pre-medicate: paracetamol + antihistamine + prednisolone MANDATORY. Start at 50mg/hr. PML risk. HBV reactivation - screen ALL patients before starting. Tumour lysis syndrome risk.",["Coiffier B et al. N Engl J Med. 2002;346(4):235-242.","Rituximab SPC. Roche. 2022."],[]);
-D("trastuzumab","Trastuzumab","mab","Weight-based",6,"mg/kg q3w (loading 8mg/kg)",[B("1",0,300),B("2",300,450),B("3",450,600),B("4",600,"inf")],false,false,null,false,"HER2 testing MANDATORY before prescribing. Baseline ECHO mandatory. Do NOT give concurrently with anthracyclines. ECHO every 3 months during treatment.",["Slamon DJ et al. N Engl J Med. 2001;344(11):783-792.","Herceptin SPC. Roche. 2022."],[]);
-D("bevacizumab","Bevacizumab","mab","Weight-based",5,"mg/kg q2w (or 15mg/kg q3w)",[B("1",0,250),B("2",250,400),B("3",400,550),B("4",550,"inf")],false,false,null,false,"BP monitoring each cycle (hypertension in 30%). Hold 4 weeks before/after surgery. Proteinuria monitoring. GI perforation risk. Teratogenic.",["Hurwitz H et al. N Engl J Med. 2004;350(23):2335-2342.","Avastin SPC. Roche. 2022."],[]);
-D("cetuximab","Cetuximab","mab","BSA-based",400,"mg/m2 loading then 250mg/m2 weekly",[B("1",0,500),B("2",500,700),B("3",700,900),B("4",900,"inf")],false,false,null,false,"KRAS/RAS testing MANDATORY (wild-type only for colorectal). Acneiform rash in 80% (marker of response). Hypomagnesaemia - Mg supplementation. Pre-medicate with antihistamine.",["Bonner JA et al. N Engl J Med. 2006;354(6):567-578.","Erbitux SPC. Merck. 2022."],[]);
-D("ibalizumab","Ibalizumab","mab","Fixed dose",2000,"mg IV loading then 800mg q2 weeks",[B("Loading",0,2001),B("Maintenance",2001,"inf")],false,false,null,false,"CD4 post-attachment inhibitor. MULTIDRUG-RESISTANT HIV ONLY. Requires resistance genotype confirming >2 class resistance. Specialist HIV physician required.",["Emu B et al. N Engl J Med. 2018;379(7):645-654.","Trogarzo SPC. TaiMed. 2022."],[]);
-D("lenacapavir","Lenacapavir (6-monthly)","mab","Fixed dose (SC injection)",927,"mg SC at weeks 0 and 26",[B("Induction",0,928),B("Maintenance",928,"inf")],false,true,null,false,"SC 927mg at weeks 0 and 26. Oral lead-in required: 600mg D1, 600mg D2, 300mg D8. Capsid inhibitor - novel mechanism. PURPOSE trials showed >99% PrEP efficacy in SSA. WHO recommended 2024.",["Segal-Maurer S et al. N Engl J Med. 2022;386(11):1000-1011.","Bekker LG et al. PURPOSE 1 Trial. NEJM 2024.","Sunpath H et al. PURPOSE 2 Trial. NEJM 2024."],[]);
+addDrug("rituximab","Rituximab","mab","BSA-based",375,"mg/m2",[b("1",0,500),b("2",500,650),b("3",650,750),b("4",750,9999)],false,false,null,false,"Pre-medicate mandatory (paracetamol + antihistamine + prednisolone). Start at 50mg/hr. HBV reactivation screening ALL patients.","375 mg/m2 q weekly (NHL); 375 mg/m2 x4 cycles.",["Coiffier B et al. NEJM. 2002.","Rituximab SPC. Roche. 2022."],[{pop:"HIV+ (SSA)",vd:"-",cl:"-",t12:"-",src:"B-cell depletion risk",adj:"DANGER: ensure cotrimoxazole prophylaxis. CD4 monitoring. Extreme caution if CD4 <200"},{pop:"SSA",vd:"-",cl:"-",t12:"-",src:"High HBV/TB background",adj:"Mandatory HBV and TB screening before starting"}]);
+addDrug("trastuzumab","Trastuzumab","mab","Weight-based",6,"mg/kg",[b("1",0,300),b("2",300,450),b("3",450,600),b("4",600,9999)],false,false,null,false,"HER2 testing MANDATORY before prescribing. Loading 8mg/kg then 6mg/kg q3w. Baseline ECHO. ECHO every 3 months.","Loading 8mg/kg then 6mg/kg q3w.",["Slamon DJ et al. NEJM. 2001.","Herceptin SPC. Roche. 2022."],[{pop:"SSA",vd:"-",cl:"-",t12:"-",src:"HER2+ breast cancer in Africa",adj:"HER2 testing mandatory - 20-25% of breast cancer HER2+"},{pop:"HIV+",vd:"-",cl:"-",t12:"-",src:"Limited data",adj:"Can use with CD4 >200. Optimise ART first."}]);
+addDrug("bevacizumab","Bevacizumab","mab","Weight-based",5,"mg/kg",[b("1",0,250),b("2",250,400),b("3",400,550),b("4",550,9999)],false,false,null,false,"BP monitoring each cycle. Hold 4 weeks before/after surgery. Proteinuria monitoring. Teratogenic.","5mg/kg q2w (colorectal); 15mg/kg q3w (lung/cervical).",["Hurwitz H et al. NEJM. 2004.","Avastin SPC. Roche. 2022."],[{pop:"SSA",vd:"-",cl:"-",t12:"-",src:"Cervical cancer incidence",adj:"Highest cervical cancer rates globally in SSA - bevacizumab for recurrent/metastatic disease"}]);
+addDrug("cetuximab","Cetuximab","mab","BSA-based",400,"mg/m2",[b("1",0,500),b("2",500,700),b("3",700,900),b("4",900,9999)],false,false,null,false,"KRAS/RAS testing MANDATORY. Loading 400mg/m2 then 250mg/m2 weekly. Hypomagnesaemia - Mg supplementation.","Loading 400mg/m2 then 250mg/m2 weekly.",["Bonner JA et al. NEJM. 2006.","Erbitux SPC. Merck. 2022."],[]);
+addDrug("ibalizumab","Ibalizumab","mab","Fixed dose",2000,"mg IV",[b("Loading",0,2001),b("Maintenance",2001,9999)],false,false,null,false,"Loading 2000mg IV then 800mg IV q2 weeks. MULTIDRUG-RESISTANT HIV ONLY. Resistance genotype required.","Loading 2000mg then 800mg q2w.",["Emu B et al. NEJM. 2018."],[{pop:"HIV (MDR)",vd:"-",cl:"-",t12:"-",src:"Treatment-experienced MDR-HIV only",adj:"Requires resistance genotype with >2 class resistance. Specialist mandatory."}]);
+addDrug("lenacapavir","Lenacapavir (6-monthly)","mab","Fixed dose",927,"mg SC",[b("Induction",0,928),b("Maintenance",928,9999)],false,true,null,false,"SC 927mg at weeks 0 and 26. Oral lead-in: 600mg D1, 600mg D2, 300mg D8. PURPOSE trials >99% PrEP efficacy.","927mg SC q6 months.",["Bekker LG et al. NEJM. 2024 (PURPOSE 1).","Mayer KH et al. NEJM. 2024 (PURPOSE 2)."],[{pop:"SSA",vd:"-",cl:"-",t12:"-",src:"PURPOSE trials",adj:"PURPOSE 1 and 2 in SSA: >99% efficacy. WHO recommended PrEP option 2024."}]);
+
+// CATEGORY LABELS
+var CAT_LABELS = {
+  oncology:"Oncology",id:"Infectious Disease",antifungal:"Antifungal",
+  antiviral:"Antiviral",tb:"TB",hiv:"HIV ARVs",hiv_fdc:"HIV FDCs",
+  oi_px:"OI Prophylaxis",mab:"Monoclonal Antibodies"
+};
 
 // BUILD SIDEBAR
 function buildSidebar(){
-  var container = document.getElementById("sidebar-scroll");
-  container.innerHTML = "";
-  var catOrder = ["oncology","id","antifungal","antiviral","tb","hiv","hiv_fdc","oi_px","mab"];
-  catOrder.forEach(function(cat){
-    var drugs = DRUGS.filter(function(d){ return d.cat===cat; });
-    if(!drugs.length) return;
+  var scroll = document.getElementById("sb-scroll");
+  scroll.innerHTML = "";
+  var byCat = {};
+  Object.keys(DRUGS).forEach(function(k){
+    var cat = DRUGS[k].cat;
+    if(!byCat[cat]) byCat[cat]=[];
+    byCat[cat].push(k);
+  });
+  Object.keys(CAT_LABELS).forEach(function(cat){
+    if(!byCat[cat]) return;
     var sec = document.createElement("div");
-    sec.className = "sb-section";
-    sec.textContent = CATS[cat]||cat;
-    container.appendChild(sec);
-    drugs.forEach(function(drug){
+    sec.className = "sb-sec";
+    sec.textContent = CAT_LABELS[cat];
+    scroll.appendChild(sec);
+    byCat[cat].forEach(function(k){
+      var d = DRUGS[k];
       var item = document.createElement("div");
-      item.className = "drug-item";
-      item.id = "nav-"+drug.key;
-      item.onclick = function(){ loadDrug(drug.key); };
-      item.innerHTML = '<div class="dot dot-pending" id="dot-'+drug.key+'"></div><span class="dname">'+drug.name+(drug.fdc?' <small style="opacity:0.5;font-size:9px">FDC</small>':'')+'</span>';
-      container.appendChild(item);
+      item.className = "ditem";
+      item.id = "nav-"+k;
+      item.onclick = function(){ loadDrug(k); };
+      item.innerHTML = '<div class="dot dot-pending" id="dot-'+k+'"></div><span class="dname">'+d.name+(d.fdc?' <span style="font-family:var(--mono);font-size:8px;color:var(--green)">[FDC]</span>':'')+'</span>';
+      scroll.appendChild(item);
     });
   });
 }
 
 function loadDrug(key){
   state.current = key;
-  var drug = DRUGS.find(function(d){ return d.key===key; });
-  document.querySelectorAll(".drug-item").forEach(function(el){ el.classList.remove("active"); });
+  var drug = DRUGS[key];
+  document.querySelectorAll(".ditem").forEach(function(el){ el.classList.remove("active"); });
   document.getElementById("nav-"+key).classList.add("active");
   document.getElementById("topbar").style.display = "flex";
   document.getElementById("tb-name").textContent = drug.name;
-  document.getElementById("tb-cat").textContent = (CATS[drug.cat]||drug.cat) + (drug.fdc?" · FDC":"");
+  document.getElementById("tb-cat").textContent = CAT_LABELS[drug.cat]||drug.cat;
   updateBadge(key);
-  renderDrug(drug);
+  renderContent(drug);
 }
 
-function renderDrug(drug){
-  var annotation = state.annotations[drug.key]||"";
-  var bands_rows = drug.bands.map(function(b){
-    return '<tr><td class="bl">Band '+b.l+'</td><td>'+b.lo+'</td><td>'+(b.hi==="inf"?"∞":b.hi)+'</td><td class="br">'+b.lo+'–'+(b.hi==="inf"?"∞":b.hi)+' mg</td></tr>';
-  }).join("");
-  var cite_rows = drug.citations.map(function(c,i){
-    return '<div class="cite-item"><span class="cnum">['+(i+1)+']</span><span class="ctext">'+c+'</span><span class="cok">✓</span></div>';
-  }).join("");
-  var pop_rows = "";
-  if(drug.popPK && drug.popPK.length>0){
-    pop_rows = '<div class="pgrid wide"><div class="panel"><div class="phead"><span class="ptitle">Population PK adjustments</span><span style="font-family:var(--mono);font-size:9px;color:var(--muted)">'+drug.popPK.length+' populations</span></div><div class="pbody"><div style="display:grid;grid-template-columns:160px 60px 60px 60px 1fr;gap:6px;font-family:var(--mono);font-size:9px;color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--border2);letter-spacing:0.06em;text-transform:uppercase"><span>Population</span><span>Vd</span><span>CL</span><span>t1/2</span><span>Source</span></div>'+drug.popPK.map(function(p){ return '<div style="display:grid;grid-template-columns:160px 60px 60px 60px 1fr;gap:6px;font-family:var(--mono);font-size:11px;padding:5px 0;border-bottom:1px solid var(--border)"><span style="color:var(--dim)">'+p.pop+'</span><span style="color:'+(p.vd.startsWith("+")?'var(--green)':'var(--red)')+'">'+p.vd+'</span><span style="color:'+(p.cl.startsWith("+")?'var(--green)':'var(--red)')+'">'+p.cl+'</span><span style="color:'+(p.t12.startsWith("+")?'var(--green)':'var(--red)')+'">'+p.t12+'</span><span style="color:var(--muted)">'+p.src+'</span></div>'; }).join("")+'</div></div></div>';
+function renderContent(drug){
+  var ann = state.annotations[drug.key]||"";
+  var html = "";
+
+  // Panel 1: Core parameters
+  html += '<div class="pgrid">';
+  html += '<div class="panel"><div class="phead"><span class="ptitle">Core dosing parameters</span><span style="font-family:var(--mono);font-size:9px;color:var(--muted)">'+drug.method+'</span></div><div class="pbody">';
+  html += prow("Base dose/unit", drug.base+" "+drug.unit);
+  html += prow("Renally cleared", drug.renal?"Yes":"No");
+  html += prow("Hepatically cleared", drug.hepatic?"Yes":"No");
+  if(drug.fdc) html += prow("Type","Fixed-dose combination");
+  html += prow("Target exposure", drug.targetExp||"See monitoring guidance");
+  html += '</div></div>';
+
+  // Panel 2: Bands
+  html += '<div class="panel"><div class="phead"><span class="ptitle">Dose bands</span><span style="font-family:var(--mono);font-size:9px;color:var(--muted)">'+drug.bands.length+' tiers</span></div>';
+  html += '<div class="pbody" style="padding:0"><table class="btable"><thead><tr><th>Band</th><th>Min</th><th>Max</th><th>Range</th></tr></thead><tbody>';
+  drug.bands.forEach(function(b){
+    html += '<tr><td class="bl">'+b.l+'</td><td>'+b.lo+'</td><td>'+(b.hi>=9999?"inf":b.hi)+'</td><td class="br">'+b.lo+'-'+(b.hi>=9999?"inf":b.hi)+'</td></tr>';
+  });
+  html += '</tbody></table></div></div>';
+  html += '</div>';
+
+  // Resistance threshold
+  if(drug.thresh){
+    html += '<div class="pgrid wide"><div class="panel"><div class="phead"><span class="ptitle">Resistance prevention threshold</span></div><div class="pbody">';
+    html += '<div class="rbox"><span class="rlabel">Minimum dose/kg to prevent resistance selection</span><span class="rval">'+drug.thresh+' mg/kg</span></div>';
+    html += '<div style="margin-top:8px;font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.6">Doses below this threshold select for resistant mutants (Craig WA, Clin Infect Dis. 1998). Engine flags RESISTANCE_RISK_UNDEREXPOSURE when breached.</div>';
+    html += '</div></div></div>';
   }
-  var html = '<div class="pgrid"><div class="panel"><div class="phead"><span class="ptitle">Core dosing parameters</span><span style="font-family:var(--mono);font-size:9px;color:var(--muted)">'+drug.method+'</span></div><div class="pbody"><div class="prow"><span class="pkey">Base dose/unit</span><span class="pval">'+drug.base+'</span><span></span></div><div class="prow"><span class="pkey">Unit</span><span class="pval">'+drug.unit+'</span><span></span></div><div class="prow"><span class="pkey">Renally cleared</span><span class="pval">'+(drug.renal?"Yes":"No")+'</span><span></span></div><div class="prow"><span class="pkey">Hepatically cleared</span><span class="pval">'+(drug.hepatic?"Yes":"No")+'</span><span></span></div>'+(drug.fdc?'<div class="prow"><span class="pkey">Type</span><span class="pval"><span class="fdc-badge">Fixed-dose combination</span></span><span></span></div>':'')+'</div></div><div class="panel"><div class="phead"><span class="ptitle">Dose bands</span><span style="font-family:var(--mono);font-size:9px;color:var(--muted)">'+drug.bands.length+' tiers</span></div><div class="pbody" style="padding:0"><table class="bands-table"><thead><tr><th>Band</th><th>Min (mg)</th><th>Max (mg)</th><th>Range</th></tr></thead><tbody>'+bands_rows+'</tbody></table></div></div></div><div class="pgrid"><div class="panel"><div class="phead"><span class="ptitle">Monitoring guidance</span></div><div class="pbody"><div style="font-size:12px;line-height:1.7;color:var(--body)">'+drug.monitor+'</div></div></div><div class="panel"><div class="phead"><span class="ptitle">Resistance threshold</span></div><div class="pbody">'+(drug.thresh?'<div class="resist-box"><span class="rlabel">Min dose/kg to prevent resistance</span><span class="rval">'+drug.thresh+' mg/kg</span></div><div style="margin-top:8px;font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.6">Below this threshold underexposure selects for resistant organisms (Craig WA, 1998).</div>':'<div style="font-family:var(--mono);font-size:11px;color:var(--muted)">No resistance threshold defined for this drug class.</div>')+'</div></div></div>'+pop_rows+'<div class="pgrid wide"><div class="panel"><div class="phead"><span class="ptitle">Clinical citations</span><span style="font-family:var(--mono);font-size:9px;color:var(--muted)">'+drug.citations.length+' references</span></div><div class="pbody">'+cite_rows+'</div></div></div><div class="pgrid wide"><div class="panel"><div class="phead"><span class="ptitle">Pharmacist annotation</span></div><div class="pbody"><textarea class="annotation" id="ann-'+drug.key+'" placeholder="Add clinical notes, concerns, or sign-off comments here..." oninput="state.annotations[\''+drug.key+'\'] = this.value">'+annotation+'</textarea></div></div></div><div class="pgrid wide" style="margin-bottom:0"><div class="panel"><div class="phead"><span class="ptitle">Review log</span></div><div class="pbody" id="log-panel">'+renderLog(drug.key)+'</div></div></div><div style="height:24px"></div>';
+
+  // Monitoring
+  html += '<div class="pgrid"><div class="panel"><div class="phead"><span class="ptitle">Monitoring guidance</span></div><div class="pbody"><div style="font-size:12.5px;line-height:1.7">'+drug.monitoring+'</div></div></div>';
+
+  // Population PK
+  if(drug.popPK && drug.popPK.length>0){
+    html += '<div class="panel"><div class="phead"><span class="ptitle">Population PK adjustments</span><span style="font-family:var(--mono);font-size:9px;color:var(--muted)">'+drug.popPK.length+' populations</span></div><div class="pbody">';
+    html += '<div class="pkrow pkhead"><span>Population</span><span>Vd</span><span>CL</span><span>t1/2</span><span>Source / Adjustment</span></div>';
+    drug.popPK.forEach(function(p){
+      html += '<div class="pkrow">';
+      html += '<span style="color:var(--dim)">'+p.pop+'</span>';
+      html += '<span class="'+(p.vd.indexOf('+')>=0?'pkpos':p.vd==='-'?'':'pkneg')+'">'+p.vd+'</span>';
+      html += '<span class="'+(p.cl.indexOf('+')>=0?'pkpos':p.cl==='-'?'':'pkneg')+'">'+p.cl+'</span>';
+      html += '<span class="'+(p.t12.indexOf('+')>=0?'pkpos':p.t12==='-'?'':'pkneg')+'">'+p.t12+'</span>';
+      html += '<span class="pksrc">'+p.src+' — <strong>'+p.adj+'</strong></span>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+  } else {
+    html += '<div class="panel"><div class="phead"><span class="ptitle">Population PK adjustments</span></div><div class="pbody"><div style="font-family:var(--mono);font-size:11px;color:var(--muted)">No specific population PK adjustments defined for this drug.</div></div></div>';
+  }
+  html += '</div>';
+
+  // Citations
+  html += '<div class="pgrid wide"><div class="panel"><div class="phead"><span class="ptitle">Clinical citations</span><span style="font-family:var(--mono);font-size:9px;color:var(--muted)">'+drug.citations.length+' references</span></div><div class="pbody">';
+  drug.citations.forEach(function(c,i){
+    html += '<div class="cititem"><span class="citnum">['+(i+1)+']</span><span class="ctext">'+c+'</span><span class="cok">verified</span></div>';
+  });
+  if(!drug.citations.length) html += '<div style="font-family:var(--mono);font-size:11px;color:var(--amber)">PLACEHOLDER — citations require pharmacist verification before clinical use.</div>';
+  html += '</div></div></div>';
+
+  // Annotation
+  html += '<div class="pgrid wide"><div class="panel"><div class="phead"><span class="ptitle">Pharmacist annotation</span><span style="font-family:var(--mono);font-size:9px;color:var(--muted)">saved locally</span></div><div class="pbody">';
+  html += '<textarea class="ann" id="ann-'+drug.key+'" placeholder="Add clinical notes, concerns, or sign-off comments here..." oninput="state.annotations[\''+drug.key+'\']=this.value">'+ann+'</textarea>';
+  html += '</div></div></div>';
+
+  // Log
+  html += '<div class="pgrid wide" style="margin-bottom:0"><div class="panel"><div class="phead"><span class="ptitle">Review log</span></div><div class="pbody" id="log-panel">'+renderLog(drug.key)+'</div></div></div>';
+  html += '<div style="height:24px"></div>';
+
   document.getElementById("content").innerHTML = html;
+}
+
+function prow(label, val){
+  return '<div class="prow"><span class="pk">'+label+'</span><span class="pv">'+val+'</span></div>';
 }
 
 function renderLog(key){
   var entries = state.logs[key]||[];
   if(!entries.length) return '<div style="font-family:var(--mono);font-size:10px;color:var(--muted)">No review activity yet.</div>';
   return entries.map(function(e){
-    return '<div class="log-item"><span class="ltime">'+e.time+'</span><span class="ltext"><span class="lactor">Pharmacist</span> <span style="color:'+(e.action==="approve"?'var(--green)':e.action==="flag"?'var(--amber)':'var(--blue)')+'">'+( e.action==="approve"?"approved":e.action==="flag"?"flagged":"edited")+'</span> — '+e.note+'</span></div>';
+    return '<div class="logitem"><span class="logtime">'+e.time+'</span><span class="logtext"><span class="logactor">Pharmacist</span> <span class="log'+e.action+'">'+(e.action==="approve"?"approved":e.action==="flag"?"flagged":"edited")+'</span> — '+e.note+'</span></div>';
   }).join("");
 }
 
@@ -282,7 +358,7 @@ function approveDrug(){
   var key = state.current; if(!key) return;
   state.statuses[key] = "approved";
   var note = state.annotations[key]||"";
-  addLog(key,"approve", note ? 'Approved with note: "'+note.substring(0,60)+(note.length>60?"...":"")+'"' : "Approved — parameters verified");
+  addLog(key,"approve", note?"Approved with note: "+note.substring(0,60)+(note.length>60?"...":""):"Approved — parameters verified");
   updateUI(key);
 }
 
@@ -290,7 +366,7 @@ function flagDrug(){
   var key = state.current; if(!key) return;
   state.statuses[key] = "flagged";
   var note = state.annotations[key]||"";
-  addLog(key,"flag", note ? 'Flagged: "'+note.substring(0,60)+(note.length>60?"...":"")+'"' : "Flagged for further review");
+  addLog(key,"flag", note?"Flagged: "+note.substring(0,60)+(note.length>60?"...":""):"Flagged for further review");
   updateUI(key);
 }
 
@@ -298,8 +374,8 @@ function updateUI(key){
   updateBadge(key);
   var dot = document.getElementById("dot-"+key);
   if(dot) dot.className = "dot dot-"+state.statuses[key];
-  var total = DRUGS.length;
-  var approved = DRUGS.filter(function(d){ return state.statuses[d.key]==="approved"; }).length;
+  var total = Object.keys(DRUGS).length;
+  var approved = Object.values(state.statuses).filter(function(s){ return s==="approved"; }).length;
   var pct = Math.round((approved/total)*100);
   document.getElementById("prog-bar").style.width = pct+"%";
   document.getElementById("prog-count").textContent = approved+"/"+total;
