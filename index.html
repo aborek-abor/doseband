@@ -217,6 +217,8 @@ input:focus,select:focus{border-color:var(--ink);background:#fff}
       <button class="ctx-btn" onclick="setCtx('us',this)">US / FDA</button>
       <button class="ctx-btn" onclick="setCtx('ca',this)">Canada</button>
       <button class="ctx-btn" onclick="setCtx('uae',this)">UAE / GCC</button>
+      <button class="ctx-btn" onclick="setCtx('au',this)">Australia</button>
+      <button class="ctx-btn" onclick="setCtx('nz',this)">New Zealand</button>
     </div>
     <span class="ctx-note" id="ctx-note">Global: WHO-aligned dosing. Switch to UK (BNF) or US (FDA label) for region-specific bands and targets.</span>
   </div>
@@ -289,6 +291,7 @@ input:focus,select:focus{border-color:var(--ink);background:#fff}
           <option value="tbCoinfection">TB co-infection</option>
           <option value="tbHivCoinfection">TB-HIV co-infection</option>
           <option value="southAsian">South Asian (UAE/GCC context)</option>
+          <option value="pacificIslander">Maori / Pacific Islander (NZ/AU context)</option>
         </select>
       </div>
       <div class="fld"><label class="flbl">Hepatic function</label>
@@ -403,7 +406,7 @@ input:focus,select:focus{border-color:var(--ink);background:#fff}
   </div>
 
   <div class="footer">
-    <strong>DoseBand v1.8</strong> — Pre-clinical validation only<br>
+    <strong>DoseBand v2.0</strong> — Pre-clinical validation only<br>
     79 drugs · Audit trail · Pharmacist workflow · PDF &amp; FHIR export<br>
     doseband-production.up.railway.app
   </div>
@@ -412,7 +415,7 @@ input:focus,select:focus{border-color:var(--ink);background:#fff}
 <script>
 // ── DRUG DATABASE ─────────────────────────────────────────────────────────────
 var DRUGS = {};
-var CATS = {all:"All",oncology:"Oncology",id:"Antibiotics",antifungal:"Antifungal",antiviral:"Antiviral",tb:"TB",hiv:"HIV ARVs",hiv_fdc:"HIV FDCs",oi_px:"OI Prophylaxis",mab:"Monoclonal Abs",pain:"Pain/Anaesthesia",cardiac:"Cardiac",anticoag:"Anticoagulation",neuro:"Neurology",steroid:"Steroids",transplant:"Transplant",psych:"Psychiatry/CNS",electrolyte:"Electrolytes",id_uk:"Antibiotics (UK/BNF)"};
+var CATS = {all:"All",oncology:"Oncology",id:"Antibiotics",antifungal:"Antifungal",antiviral:"Antiviral",tb:"TB",hiv:"HIV ARVs",hiv_fdc:"HIV FDCs",oi_px:"OI Prophylaxis",mab:"Monoclonal Abs",pain:"Pain/Anaesthesia",cardiac:"Cardiac",anticoag:"Anticoagulation",neuro:"Neurology",steroid:"Steroids",transplant:"Transplant",psych:"Psychiatry/CNS",electrolyte:"Electrolytes",id_uk:"Antibiotics (UK/BNF)",emergency:"Emergency/Critical Care"};
 var S = {drug:null,reg:"standard",sex:"M",neph:"no",cat:"all",query:""};
 var lastResult = null;
 
@@ -518,7 +521,7 @@ addDrug("dexamethasone","Dexamethasone IV","steroid","wt",0.15,[b("1",0,4),b("2"
 
 
 // ── TRANSPLANT / NARROW THERAPEUTIC INDEX ────────────────────────────────────
-addDrug("tacrolimus","Tacrolimus (FK506)","transplant","wt",0.1,[b("1",0,2),b("2",2,5),b("3",5,8),b("4",8,Infinity)],false,true,null,false,"TDM mandatory — whole blood trough 12h post-dose. Kidney transplant target: 5-15 ng/mL (month 1-3), 4-10 ng/mL (>3 months). Liver: 5-15 ng/mL. Dose titrate to target. CYP3A4 substrate — major drug interactions. Nephrotoxicity and neurotoxicity monitoring.",{hivPositive:{r:1.0,t:"danger",m:"HIV on ART: tacrolimus is a CYP3A4 substrate — ritonavir and PIs dramatically increase tacrolimus levels. Reduce dose by up to 95% and monitor TDM very closely. Specialist review mandatory."},subSaharanAfrica:{r:0.87,t:"info",m:"SSA: lower tacrolimus doses often required in African populations due to CYP3A5 genotype differences. Lower starting dose and early TDM recommended."},southAsian:{r:1.25,t:"warning",m:"South Asian (UAE/GCC): CYP3A5*1 expressors are more prevalent in South Asian populations — higher tacrolimus doses typically required. Genotype-guided dosing recommended where available (CPIC guidelines)."}});
+addDrug("tacrolimus","Tacrolimus (FK506)","transplant","wt",0.1,[b("1",0,2),b("2",2,5),b("3",5,8),b("4",8,Infinity)],false,true,null,false,"TDM mandatory — whole blood trough 12h post-dose. Kidney transplant target: 5-15 ng/mL (month 1-3), 4-10 ng/mL (>3 months). Liver: 5-15 ng/mL. Dose titrate to target. CYP3A4 substrate — major drug interactions. Nephrotoxicity and neurotoxicity monitoring.",{hivPositive:{r:1.0,t:"danger",m:"HIV on ART: tacrolimus is a CYP3A4 substrate — ritonavir and PIs dramatically increase tacrolimus levels. Reduce dose by up to 95% and monitor TDM very closely. Specialist review mandatory."},subSaharanAfrica:{r:0.87,t:"info",m:"SSA: lower tacrolimus doses often required in African populations due to CYP3A5 genotype differences. Lower starting dose and early TDM recommended."},southAsian:{r:1.25,t:"warning",m:"South Asian (UAE/GCC): CYP3A5*1 expressors are more prevalent in South Asian populations — higher tacrolimus doses typically required. Genotype-guided dosing recommended where available (CPIC guidelines)."},pacificIslander:{r:1.3,t:"warning",m:"Maori/Pacific Islander (NZ/AU): High prevalence of CYP3A5*1 expressor genotype — tacrolimus doses typically 30% higher required. ATSI and Pacific Islander transplant guidelines recommend early TDM and genotype testing (TSANZ/ANZSN guidelines)."}});
 
 addDrug("cyclosporine","Ciclosporin IV","transplant","wt",3,[b("1",0,100),b("2",100,200),b("3",200,300),b("4",300,Infinity)],true,true,null,false,"IV dose is approximately 1/3 of oral dose. TDM mandatory — C0 trough or C2 monitoring depending on protocol. Nephrotoxicity, hypertension, neurotoxicity. Major drug interactions via CYP3A4 and P-glycoprotein. Avoid with nephrotoxins.",{hivPositive:{r:1.0,t:"danger",m:"HIV on ART: ciclosporin levels dramatically increased by ritonavir and PIs. Reduce dose significantly and monitor TDM intensively."}});
 
@@ -548,6 +551,33 @@ addDrug("gentamicin_uk","Gentamicin (UK/BNF)","id_uk","wt",7,[b("L",0,280),b("M"
 
 addDrug("vancomycin_uk","Vancomycin (UK/BNF)","id_uk","wt",25,[b("1",0,1000),b("2",1000,1500),b("3",1500,2000),b("4",2000,2500),b("5",2500,Infinity)],true,false,null,false,"UK BNF: 25-30mg/kg/day in 2-4 divided doses. AUC/MIC-guided dosing per BSAC guidelines. Target AUC 400-600 mg.h/L. Trough 10-20 mg/L for MRSA. CrCl monitoring.",{hivPositive:{r:0.9,t:"warning",m:"HIV on ART: dose reduced 10%. TDM essential."}});
 
+
+// ── ONCOLOGY — AU/NZ PBS ADDITIONS ──────────────────────────────────────────
+addDrug("irinotecan","Irinotecan","oncology","bsa",180,[b("1",0,250),b("2",250,350),b("3",350,450),b("4",450,Infinity)],true,true,null,false,"180mg/m2 q2w (FOLFIRI) or 350mg/m2 q3w (monotherapy). Severe diarrhoea risk — loperamide protocol mandatory. Atropine for cholinergic syndrome during infusion. UGT1A1*28 genotype testing recommended — homozygotes at high risk of severe toxicity. Reduce dose if bilirubin elevated.",{subSaharanAfrica:{r:1.0,t:"info",m:"SSA: irinotecan increasingly available in SSA tertiary centres. UGT1A1 genotype frequencies differ in African populations — specialist review recommended."},elderly:{r:0.8,t:"warning",m:"Elderly: irinotecan toxicity increased. Start at 80% dose and titrate."}});
+
+addDrug("gemcitabine","Gemcitabine","oncology","bsa",1000,[b("1",0,1400),b("2",1400,1800),b("3",1800,2200),b("4",2200,Infinity)],true,true,null,false,"1000-1250mg/m2 on days 1, 8, 15 of 28-day cycle (pancreatic) or 1250mg/m2 days 1, 8 of 21-day cycle (lung/breast). Infusion rate matters — do not increase rate above 10mg/m2/min (capillary leak syndrome risk). FBC nadir day 10-14.",{elderly:{r:0.85,t:"info",m:"Elderly: gemcitabine generally well tolerated. Monitor FBC and renal function closely."}});
+
+addDrug("pemetrexed","Pemetrexed","oncology","bsa",500,[b("1",0,700),b("2",700,900),b("3",900,1100),b("4",1100,Infinity)],true,false,null,false,"500mg/m2 q3w. Folic acid 400mcg/day from 7 days before first dose and throughout treatment MANDATORY. Vitamin B12 1000mcg IM 7 days before first dose, then every 3 cycles. Dexamethasone premedication. CrCl >45 mL/min required.",{subSaharanAfrica:{r:1.0,t:"info",m:"SSA: pemetrexed used for mesothelioma and non-squamous NSCLC. Available at tertiary oncology centres."}});
+
+addDrug("etoposide","Etoposide IV","oncology","bsa",100,[b("1",0,150),b("2",150,250),b("3",250,350),b("4",350,Infinity)],true,true,null,false,"100-120mg/m2/day x3-5 days (solid tumours) or 50-100mg/m2/day x3-5 days (haematological). Infuse over minimum 30-60 min — hypotension with rapid infusion. CrCl monitoring. Secondary leukaemia risk with cumulative doses. Myelosuppression nadir day 10-14.",{elderly:{r:0.75,t:"warning",m:"Elderly: etoposide clearance reduced. Start at 75% dose."}});
+
+addDrug("pembrolizumab","Pembrolizumab","mab","fixed",200,[b("1",0,200),b("2",200,400),b("3",400,Infinity)],false,false,null,false,"200mg IV q3w or 400mg IV q6w (fixed dose — not weight-based above 40kg). PD-L1 testing recommended before use. Immune-related adverse events monitoring mandatory — pneumonitis, colitis, hepatitis, endocrinopathies. High-dose corticosteroids for grade 3-4 irAEs. Permanently discontinue for most grade 4 irAEs.",{hivPositive:{r:1.0,t:"warning",m:"HIV+: pembrolizumab can be used in HIV+ patients with adequate immune function. Monitor for immune reconstitution events and irAEs. Limited clinical trial data in HIV+ patients."},subSaharanAfrica:{r:1.0,t:"info",m:"SSA: pembrolizumab now available in SSA for cervical cancer (highest global incidence), Kaposi sarcoma, and other PD-L1 positive tumours through access programmes."}});
+
+addDrug("nivolumab","Nivolumab","mab","fixed",240,[b("1",0,240),b("2",240,480),b("3",480,Infinity)],false,false,null,false,"240mg IV q2w or 480mg IV q4w (flat dose). PD-1 checkpoint inhibitor. irAE monitoring mandatory — same spectrum as pembrolizumab. Combination with ipilimumab increases irAE frequency and severity. Permanently discontinue for grade 4 immune-related toxicity.",{hivPositive:{r:1.0,t:"warning",m:"HIV+: nivolumab checkpoint inhibitor therapy in HIV+ patients — monitor for immune activation. Emerging evidence supports use with adequate viral suppression."}});
+
+// ── ANTIBIOTICS — AU/NZ/CRITICAL CARE ADDITIONS ──────────────────────────────
+addDrug("colistin","Colistin (Polymyxin E)","id","wt",9,[b("1",0,150),b("2",150,250),b("3",250,Infinity)],true,false,null,false,"LAST-RESORT antibiotic for MDR gram-negative organisms only. 9 million IU/day (colistin base activity 4.5mg/kg/day) in 2-3 divided doses. LOADING DOSE 9 million IU (360mg CBA) in critically ill. Renal toxicity in up to 60% — CrCl every 6h in ICU. Nebulised form used for respiratory infections. Therapeutic drug monitoring where available — target Css 2-4 mg/L.",{subSaharanAfrica:{r:1.0,t:"danger",m:"SSA: colistin use increasing due to NDM-1 and ESBL-producing organism prevalence. TDM not widely available — clinical and renal monitoring is essential. Reserve strictly for confirmed MDR organisms."}});
+
+addDrug("linezolid","Linezolid IV","id","fixed",600,[b("1",0,600),b("2",600,Infinity)],false,false,null,false,"600mg IV q12h. No dose adjustment for renal or hepatic impairment. FBC weekly — myelosuppression risk, especially thrombocytopaenia. Serotonin syndrome risk with SSRIs, MAOIs, triptans. Lactic acidosis with prolonged use (>2 weeks). Monitor for optic neuropathy with extended courses.",{hivPositive:{r:1.0,t:"warning",m:"HIV+: linezolid used for XDR-TB and MDR-TB. Prolonged courses required — weekly FBC, monthly optic nerve assessment, and lactic acid monitoring essential."},subSaharanAfrica:{r:1.0,t:"info",m:"SSA: linezolid is a key drug for XDR-TB treatment in South Africa and other high-burden settings. WHO recommended for drug-resistant TB."},tbHivCoinfection:{r:1.0,t:"danger",m:"TB-HIV: linezolid + ARV combinations — significant serotonin syndrome risk if co-prescribed with efavirenz. Avoid concurrent use with serotonergic agents."}});
+
+// ── EMERGENCY / CRITICAL CARE ────────────────────────────────────────────────
+addDrug("nacetylcysteine","N-Acetylcysteine IV","emergency","wt",150,[b("Loading",0,7500),b("Second",7500,15000),b("Third",15000,Infinity)],false,false,null,false,"Paracetamol overdose: 150mg/kg in 200mL over 1h (loading) then 50mg/kg in 500mL over 4h then 100mg/kg in 1L over 16h. Anaphylactoid reactions common with loading dose — slow infusion if reaction occurs. Treatment of choice for paracetamol hepatotoxicity. Use Rumack-Matthew nomogram to determine treatment need.",{pregnant:{r:1.0,t:"info",m:"Pregnancy: N-acetylcysteine is safe in pregnancy for paracetamol overdose. Treat all pregnant patients above treatment line — fetal hepatotoxicity risk."},subSaharanAfrica:{r:1.0,t:"info",m:"SSA: paracetamol overdose is a leading cause of acute liver failure in SSA. N-acetylcysteine is on all national EMLs and should be stocked at all hospitals."}});
+
+addDrug("insulin_infusion","Insulin IV (infusion)","emergency","wt",0.1,[b("Low",0,4),b("Standard",4,8),b("High",8,Infinity)],true,false,null,false,"DKA protocol: 0.1 units/kg/h IV infusion (standard) or 0.14 units/kg/h if no bolus. Hourly glucose monitoring. Target glucose fall 2-3 mmol/L/h. Switch to SC when pH >7.3, HCO3 >18, AG <12. Hyperkalaemia correction before starting insulin. Potassium replacement mandatory during infusion.",{subSaharanAfrica:{r:1.0,t:"info",m:"SSA: DKA is a leading cause of mortality in young patients with diabetes across SSA. Insulin infusion protocols and glucose monitoring are essential hospital competencies."},elderly:{r:0.75,t:"warning",m:"Elderly: reduced insulin clearance and hypoglycaemia risk. Start at 0.05-0.075 units/kg/h and monitor glucose every 30 minutes."}});
+
+// ── TRANSPLANT ADDITION ──────────────────────────────────────────────────────
+addDrug("mycophenolate","Mycophenolate IV (MMF)","transplant","fixed",1000,[b("1",0,500),b("2",500,1000),b("3",1000,1500),b("4",1500,Infinity)],false,true,null,false,"1g IV BD (kidney transplant induction and maintenance). IV formulation used when oral not tolerated. Switch to oral (1.5g BD = 1g IV BD) as soon as possible. Myelosuppression — FBC weekly. Teratogenic — effective contraception mandatory. GI side effects common with oral formulation.",{hivPositive:{r:1.0,t:"info",m:"HIV+: mycophenolate used in HIV+ transplant recipients. Monitor for increased infection risk and cytomegalovirus reactivation."}});
+
 // ── PK ────────────────────────────────────────────────────────────────────────
 function crcl(a,w,c,s){return Math.max(((140-a)*w)/(c*0.814)*(s==="F"?0.85:1),5);}
 function bsa(w,h){return Math.sqrt((h*w)/3600);}
@@ -557,79 +587,79 @@ function band(dose,bands){return bands.find(function(bx){return dose>=bx.lo&&dos
 
 
 var FORMULARY = { // who=WHO EML, ke=Kenya, ng=Nigeria, za=S.Africa, gh=Ghana, ca=Canada CPS, uae=UAE MOHAP
-  carboplatin:            {who:true, ke:true,  ng:true,  za:true,  gh:false, ca:true, uae:true},
-  cisplatin:              {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  oxaliplatin:            {who:false,ke:false, ng:false, za:true,  gh:false, ca:true, uae:true},
-  docetaxel:              {who:false,ke:true,  ng:false, za:true,  gh:false, ca:true, uae:true},
-  paclitaxel:             {who:true, ke:true,  ng:true,  za:true,  gh:false, ca:true, uae:true},
-  cyclophosphamide:       {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  doxorubicin:            {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  fluorouracil:           {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  vincristine:            {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  gentamicin:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  amikacin:               {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  vancomycin:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  piperacillinTazobactam: {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  meropenem:              {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  ceftriaxone:            {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  ampicillin:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  metronidazole:          {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  azithromycin:           {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  cotrimoxazole:          {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  fluconazole:            {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  voriconazole:           {who:true, ke:true,  ng:false, za:true,  gh:false, ca:true, uae:true},
-  acyclovir:              {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  rifampicin:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  isoniazid:              {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  pyrazinamide:           {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  ethambutol:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  streptomycin:           {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:false, uae:false},
-  tenofovir:              {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  lamivudine:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  zidovudine:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  efavirenz:              {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  dolutegravir:           {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  nevirapine:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  lopinavirRitonavir:     {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  tdf_3tc_dtg:            {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  tdf_3tc_efv:            {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  azt_3tc_nvp:            {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:false, uae:false},
-  tdf_3tc_nvp:            {who:false,ke:true,  ng:true,  za:false, gh:true, ca:false, uae:false},
-  azt_3tc:                {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  cotrimoxazole_px:       {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:false},
-  fluconazole_px:         {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  dapsone_px:             {who:true, ke:true,  ng:true,  za:true,  gh:false, ca:false, uae:false},
-  rituximab:              {who:true, ke:false, ng:false, za:true,  gh:false, ca:true, uae:true},
-  trastuzumab:            {who:true, ke:false, ng:false, za:true,  gh:false, ca:true, uae:true},
-  bevacizumab:            {who:false,ke:false, ng:false, za:true,  gh:false, ca:true, uae:true},
-  cetuximab:              {who:false,ke:false, ng:false, za:false, gh:false, ca:true, uae:true},
-  ibalizumab:             {who:false,ke:false, ng:false, za:false, gh:false, ca:false, uae:true},
-  lenacapavir:            {who:true, ke:false, ng:false, za:false, gh:false, ca:true, uae:true},
-  morphine:               {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  ketamine:               {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  fentanyl:               {who:true, ke:true,  ng:true,  za:true,  gh:false, ca:true, uae:true},
-  digoxin:                {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  aminophylline:          {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  heparin:                {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  enoxaparin:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  benzylpenicillin:       {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  clindamycin:            {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  chloramphenicol:        {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:false, uae:false},
-  phenytoin:              {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  amphotericinB:          {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  dexamethasone:          {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  tacrolimus:             {who:true, ke:true,  ng:false, za:true,  gh:false, ca:true, uae:true},
-  cyclosporine:           {who:true, ke:true,  ng:true,  za:true,  gh:false, ca:true, uae:true},
-  lithium:                {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  methotrexate:           {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  busulfan:               {who:true, ke:false, ng:false, za:true,  gh:false, ca:false, uae:true},
-  bleomycin:              {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:false, uae:true},
-  warfarin:               {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  potassiumChloride:      {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  magnesiumSulphate:      {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  hydrocortisone:         {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true},
-  gentamicin_uk:          {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:false, uae:false},
-  vancomycin_uk:          {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:false, uae:false}
+  carboplatin:            {who:true, ke:true,  ng:true,  za:true,  gh:false, ca:true, uae:true, au:true, nz:true},
+  cisplatin:              {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  oxaliplatin:            {who:false,ke:false, ng:false, za:true,  gh:false, ca:true, uae:true, au:true, nz:true},
+  docetaxel:              {who:false,ke:true,  ng:false, za:true,  gh:false, ca:true, uae:true, au:true, nz:true},
+  paclitaxel:             {who:true, ke:true,  ng:true,  za:true,  gh:false, ca:true, uae:true, au:true, nz:true},
+  cyclophosphamide:       {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  doxorubicin:            {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  fluorouracil:           {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  vincristine:            {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  gentamicin:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  amikacin:               {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  vancomycin:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  piperacillinTazobactam: {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  meropenem:              {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  ceftriaxone:            {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  ampicillin:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  metronidazole:          {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  azithromycin:           {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  cotrimoxazole:          {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  fluconazole:            {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  voriconazole:           {who:true, ke:true,  ng:false, za:true,  gh:false, ca:true, uae:true, au:true, nz:true},
+  acyclovir:              {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  rifampicin:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  isoniazid:              {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  pyrazinamide:           {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  ethambutol:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  streptomycin:           {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:false, uae:false, au:false, nz:false},
+  tenofovir:              {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  lamivudine:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  zidovudine:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  efavirenz:              {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  dolutegravir:           {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  nevirapine:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  lopinavirRitonavir:     {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  tdf_3tc_dtg:            {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  tdf_3tc_efv:            {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  azt_3tc_nvp:            {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:false, uae:false, au:false, nz:false},
+  tdf_3tc_nvp:            {who:false,ke:true,  ng:true,  za:false, gh:true, ca:false, uae:false, au:false, nz:false},
+  azt_3tc:                {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  cotrimoxazole_px:       {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:false, au:true, nz:true},
+  fluconazole_px:         {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  dapsone_px:             {who:true, ke:true,  ng:true,  za:true,  gh:false, ca:false, uae:false, au:false, nz:false},
+  rituximab:              {who:true, ke:false, ng:false, za:true,  gh:false, ca:true, uae:true, au:true, nz:true},
+  trastuzumab:            {who:true, ke:false, ng:false, za:true,  gh:false, ca:true, uae:true, au:true, nz:true},
+  bevacizumab:            {who:false,ke:false, ng:false, za:true,  gh:false, ca:true, uae:true, au:true, nz:true},
+  cetuximab:              {who:false,ke:false, ng:false, za:false, gh:false, ca:true, uae:true, au:true, nz:false},
+  ibalizumab:             {who:false,ke:false, ng:false, za:false, gh:false, ca:false, uae:true, au:false, nz:false},
+  lenacapavir:            {who:true, ke:false, ng:false, za:false, gh:false, ca:true, uae:true, au:true, nz:false},
+  morphine:               {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  ketamine:               {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  fentanyl:               {who:true, ke:true,  ng:true,  za:true,  gh:false, ca:true, uae:true, au:true, nz:true},
+  digoxin:                {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  aminophylline:          {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  heparin:                {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  enoxaparin:             {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  benzylpenicillin:       {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  clindamycin:            {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  chloramphenicol:        {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:false, uae:false, au:false, nz:false},
+  phenytoin:              {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  amphotericinB:          {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  dexamethasone:          {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  tacrolimus:             {who:true, ke:true,  ng:false, za:true,  gh:false, ca:true, uae:true, au:true, nz:true},
+  cyclosporine:           {who:true, ke:true,  ng:true,  za:true,  gh:false, ca:true, uae:true, au:true, nz:true},
+  lithium:                {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  methotrexate:           {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  busulfan:               {who:true, ke:false, ng:false, za:true,  gh:false, ca:false, uae:true, au:true, nz:false},
+  bleomycin:              {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:false, uae:true, au:true, nz:false},
+  warfarin:               {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  potassiumChloride:      {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  magnesiumSulphate:      {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  hydrocortisone:         {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:true, uae:true, au:true, nz:true},
+  gentamicin_uk:          {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:false, uae:false, au:false, nz:false},
+  vancomycin_uk:          {who:true, ke:true,  ng:true,  za:true,  gh:true, ca:false, uae:false, au:false, nz:false}
 };
 
 
@@ -695,6 +725,17 @@ var DRUG_LINKS = {
   phenytoin:              {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/084528s043lbl.pdf", who:"https://list.essentialmedicines.org"},
   amphotericinB:          {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2012/050473s017lbl.pdf", who:"https://list.essentialmedicines.org"},
   dexamethasone:          {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2008/011664s039lbl.pdf", who:"https://list.essentialmedicines.org"},
+  irinotecan:             {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2014/020571s048lbl.pdf", who:"https://list.essentialmedicines.org"},
+  gemcitabine:            {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2019/020509s062lbl.pdf", who:"https://list.essentialmedicines.org"},
+  pemetrexed:             {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2022/021462s046lbl.pdf", who:"https://list.essentialmedicines.org"},
+  etoposide:              {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2021/019297s031lbl.pdf", who:"https://list.essentialmedicines.org"},
+  pembrolizumab:          {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2023/125514s119lbl.pdf", who:"https://list.essentialmedicines.org"},
+  nivolumab:              {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2023/125554s117lbl.pdf", who:"https://list.essentialmedicines.org"},
+  colistin:               {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2022/050108s016lbl.pdf", who:"https://list.essentialmedicines.org"},
+  linezolid:              {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2021/021130s035lbl.pdf", who:"https://list.essentialmedicines.org"},
+  nacetylcysteine:        {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2006/020200s002lbl.pdf", who:"https://list.essentialmedicines.org"},
+  insulin_infusion:       {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2015/018780s144lbl.pdf", who:"https://list.essentialmedicines.org"},
+  mycophenolate:          {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2021/050717s035lbl.pdf", who:"https://list.essentialmedicines.org"},
   tacrolimus:             {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2021/050708s041lbl.pdf", who:"https://list.essentialmedicines.org"},
   cyclosporine:           {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2015/050715s033lbl.pdf", who:"https://list.essentialmedicines.org"},
   lithium:                {fda:"https://www.accessdata.fda.gov/drugsatfda_docs/label/2011/017812s036lbl.pdf", who:"https://list.essentialmedicines.org"},
@@ -719,7 +760,9 @@ var CTX_NOTES = {
   uk:     'UK / BNF: British National Formulary dosing. NHS-standard band structures and monitoring targets.',
   us:     'US / FDA: FDA prescribing information dosing. ASHP/IDSA/ASCO guideline-aligned band structures.',
   ca:     'Canada / Health Canada: CPS (Compendium of Pharmaceuticals and Specialties) dosing. Provincial formulary aligned. CKD-EPI renal staging.',
-  uae:    'UAE / GCC: MOHAP-registered dosing. Covers UAE, Saudi Arabia, Kuwait, Bahrain, Qatar, Oman. South Asian population PK considerations applied where relevant.'
+  uae:    'UAE / GCC: MOHAP-registered dosing. Covers UAE, Saudi Arabia, Kuwait, Bahrain, Qatar, Oman. South Asian population PK considerations applied where relevant.',
+  au:     'Australia / TGA: PBS-listed dosing. Australian Medicines Handbook (AMH) aligned. Renal dosing follows Australian guidelines. Oncology per MSAC/PBS listings.',
+  nz:     'New Zealand / Medsafe: Pharmac Schedule and NZ Formulary (NZF) aligned. Closely follows BNF. Maori and Pacific Islander population PK considerations available.'
 };
 
 var CTX_BAND_ADJUSTMENTS = {
@@ -914,7 +957,9 @@ function calculate(){
       {key:"za",  label:"S. Africa EDL", cls:"fbadge-yes"},
       {key:"gh",  label:"Ghana GEML",    cls:"fbadge-yes"},
       {key:"ca",  label:"Canada CPS",    cls:"fbadge-yes"},
-      {key:"uae", label:"UAE MOHAP",     cls:"fbadge-yes"}
+      {key:"uae", label:"UAE MOHAP",     cls:"fbadge-yes"},
+      {key:"au",  label:"Australia PBS", cls:"fbadge-yes"},
+      {key:"nz",  label:"NZ Pharmac",    cls:"fbadge-yes"}
     ];
     document.getElementById("r-formulary-badges").innerHTML = entries.map(function(e){
       var on = fdata[e.key];
@@ -926,8 +971,13 @@ function calculate(){
     if(ldata){
       document.getElementById("r-links").innerHTML =
         '<a href="'+ldata.fda+'" target="_blank" style="font-family:var(--mono);font-size:10px;color:var(--blue);text-decoration:none;padding:3px 9px;border:1px solid var(--blue-bd);border-radius:4px;background:var(--blue-bg)">FDA label</a>'+
-        '<a href="'+ldata.who+'" target="_blank" style="font-family:var(--mono);font-size:10px;color:var(--blue);text-decoration:none;padding:3px 9px;border:1px solid var(--blue-bd);border-radius:4px;background:var(--blue-bg)">WHO EML</a>'+
-        '<a href="https://clinicaltrials.gov/search?term='+encodeURIComponent(drug.name)+'&cond=&country=KE,NG,ZA,GH" target="_blank" style="font-family:var(--mono);font-size:10px;color:var(--green);text-decoration:none;padding:3px 9px;border:1px solid var(--green-bd);border-radius:4px;background:var(--green-bg)">Clinical trials (SSA)</a>';
+        (CTX==='uk'||CTX==='nz'?'<a href="'+(ldata.who.indexOf('bnf')>=0?ldata.who:'https://bnf.nice.org.uk')+'" target="_blank" style="font-family:var(--mono);font-size:10px;color:var(--blue);text-decoration:none;padding:3px 9px;border:1px solid var(--blue-bd);border-radius:4px;background:var(--blue-bg)">BNF / NZF</a>':
+         CTX==='au'?'<a href="https://www.pbs.gov.au/browse/medicine-listing" target="_blank" style="font-family:var(--mono);font-size:10px;color:var(--blue);text-decoration:none;padding:3px 9px;border:1px solid var(--blue-bd);border-radius:4px;background:var(--blue-bg)">AU PBS</a>':
+         CTX==='ca'?'<a href="https://www.drugbank.ca" target="_blank" style="font-family:var(--mono);font-size:10px;color:var(--blue);text-decoration:none;padding:3px 9px;border:1px solid var(--blue-bd);border-radius:4px;background:var(--blue-bg)">Health Canada</a>':
+         '<a href="'+ldata.who+'" target="_blank" style="font-family:var(--mono);font-size:10px;color:var(--blue);text-decoration:none;padding:3px 9px;border:1px solid var(--blue-bd);border-radius:4px;background:var(--blue-bg)">WHO EML</a>')+
+        '<a href="https://clinicaltrials.gov/search?term='+encodeURIComponent(drug.name)+'&cond=&country='+
+        (CTX==='au'?'AU':CTX==='nz'?'NZ':CTX==='ca'?'CA':CTX==='uk'?'GB':CTX==='uae'?'AE':'KE,NG,ZA,GH')+
+        '" target="_blank" style="font-family:var(--mono);font-size:10px;color:var(--green);text-decoration:none;padding:3px 9px;border:1px solid var(--green-bd);border-radius:4px;background:var(--green-bg)">Clinical trials</a>';
     }
   } else {
     fwrap.style.display = "none";
@@ -979,7 +1029,7 @@ function pharmQuery(){
 // ── EXPORT PDF ────────────────────────────────────────────────────────────────
 function exportPDF(){
   if(!lastResult){return;}
-  document.getElementById("pdf-timestamp").textContent="Generated: "+new Date().toLocaleString()+" | Version: DoseBand v1.8";
+  document.getElementById("pdf-timestamp").textContent="Generated: "+new Date().toLocaleString()+" | Version: DoseBand v2.0";
   document.getElementById("pdf-patientid").textContent="Patient ID: "+lastResult.patientId+" | Prescriber: "+lastResult.prescriber;
   window.print();
 }
@@ -990,7 +1040,7 @@ function exportFHIR(){
   var fhir={
     resourceType:"MedicationRequest",
     id:"doseband-"+Date.now(),
-    meta:{profile:["http://hl7.org/fhir/StructureDefinition/MedicationRequest"],source:"DoseBand v1.8 | https://doseband-production.up.railway.app"},
+    meta:{profile:["http://hl7.org/fhir/StructureDefinition/MedicationRequest"],source:"DoseBand v2.0 | https://doseband-production.up.railway.app"},
     status:"active",
     intent:"order",
     authoredOn:lastResult.ts,
