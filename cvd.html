@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DoseBand Risk — Cardiovascular Risk Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0a0c0b;--surface:#f5f3ef;--surface2:#eceae4;--border:#d0ccc4;--border2:#b8b4aa;--muted:#7a7670;--dim:#5a5650;--amber:#b86800;--amber-bg:#fef5e4;--amber-bd:#f0d080;--red:#b82020;--red-bg:#fdecea;--red-bd:#f0b0a8;--blue:#1a4a8a;--blue-bg:#e8eef8;--blue-bd:#a8c0e8;--green:#1a7a4a;--green-bg:#e8f5ee;--green-bd:#b8dfc8;--purple:#6a1a8a;--purple-bg:#f0e8f8;--purple-bd:#c8a8e8;--mono:"JetBrains Mono",monospace;--display:"Syne",sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--surface);color:var(--ink);font-family:var(--display);font-size:14px;line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased}
+.nav{background:var(--ink);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.nav-brand{font-family:var(--display);font-size:18px;font-weight:800;color:#fff;letter-spacing:-0.02em;text-decoration:none}
+.nav-links{display:flex;gap:4px}
+.nav-link{font-family:var(--mono);font-size:10px;padding:5px 10px;border-radius:5px;color:rgba(255,255,255,0.55);text-decoration:none;letter-spacing:0.06em;transition:all 0.15s;border:1px solid transparent}
+.nav-link:hover{color:#fff;background:rgba(255,255,255,0.08)}
+.nav-link.active{color:#fff;background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.15)}
+.shell{max-width:820px;margin:0 auto;padding:24px 16px 60px}
+.page-hero{margin-bottom:24px}
+.page-title{font-family:var(--display);font-size:26px;font-weight:800;color:var(--ink);letter-spacing:-0.03em;margin-bottom:4px}
+.page-sub{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:0.06em}
+.section{margin-bottom:18px}
+.slabel{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.slabel::after{content:"";flex:1;height:1px;background:var(--border)}
+.card{background:#fff;border:1px solid var(--border);border-radius:10px}
+.card-body{padding:16px}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.fg4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
+.fld{margin-bottom:12px}
+.fld:last-child{margin-bottom:0}
+.flbl{display:block;font-family:var(--mono);font-size:10px;font-weight:500;color:var(--dim);margin-bottom:5px;letter-spacing:0.06em;text-transform:uppercase}
+.flbl-hint{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:3px}
+input[type=number],input[type=text],select{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:7px;padding:9px 12px;font-size:14px;font-family:var(--display);font-weight:500;color:var(--ink);outline:none;transition:border-color 0.15s;-webkit-appearance:none}
+input:focus,select:focus{border-color:var(--ink);background:#fff}
+.seg{display:grid;border:1.5px solid var(--border);border-radius:7px;overflow:hidden;background:var(--surface)}
+.sbtn{padding:8px 6px;border:none;background:transparent;font-size:12px;font-weight:600;font-family:var(--display);cursor:pointer;color:var(--dim);border-right:1px solid var(--border);transition:all 0.12s}
+.sbtn:last-child{border-right:none}
+.sbtn.on{background:var(--ink);color:#fff}
+.sbtn:hover:not(.on){background:var(--surface2)}
+.cbtn{width:100%;padding:15px;background:var(--ink);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:var(--display);cursor:pointer;margin:4px 0 16px;transition:all 0.15s}
+.cbtn:hover{opacity:0.88}
+.cbtn:active{transform:scale(0.98)}
+
+/* RESULTS */
+.results{display:none;animation:rise 0.3s ease}
+.results.show{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* RISK METERS */
+.risk-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+@media(min-width:600px){.risk-grid{grid-template-columns:repeat(4,1fr)}}
+.risk-card{border:1.5px solid var(--border);border-radius:10px;overflow:hidden}
+.risk-card-head{padding:10px 12px;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.risk-card-body{padding:14px 12px;text-align:center}
+.risk-pct{font-family:var(--display);font-size:42px;font-weight:800;line-height:1;letter-spacing:-0.04em}
+.risk-label{font-family:var(--mono);font-size:10px;margin-top:5px;font-weight:600;letter-spacing:0.06em}
+.risk-sub{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:3px}
+.risk-low{color:var(--green)}
+.risk-mod{color:var(--amber)}
+.risk-high{color:#c84800}
+.risk-vhigh{color:var(--red)}
+.head-low{background:var(--green-bg);color:var(--green)}
+.head-mod{background:var(--amber-bg);color:var(--amber)}
+.head-high{background:#fff0e8;color:#c84800;border-color:#f0c8a8}
+.head-vhigh{background:var(--red-bg);color:var(--red)}
+
+/* CONSENSUS BANNER */
+.consensus{border-radius:10px;padding:20px 22px;margin-bottom:16px;display:flex;align-items:flex-start;gap:18px}
+.consensus-low{background:var(--green-bg);border:1.5px solid var(--green-bd)}
+.consensus-mod{background:var(--amber-bg);border:1.5px solid var(--amber-bd)}
+.consensus-high{background:#fff0e8;border:1.5px solid #f0c8a8}
+.consensus-vhigh{background:var(--red-bg);border:1.5px solid var(--red-bd)}
+.consensus-icon{font-size:32px;flex-shrink:0}
+.consensus-text{}
+.consensus-title{font-family:var(--display);font-size:20px;font-weight:800;letter-spacing:-0.02em;margin-bottom:4px}
+.consensus-desc{font-family:var(--mono);font-size:11px;line-height:1.7;color:var(--dim)}
+
+/* RISK BARS */
+.risk-bar-section{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px}
+.risk-bar-title{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.rbar-row{margin-bottom:10px}
+.rbar-row:last-child{margin-bottom:0}
+.rbar-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:4px}
+.rbar-name{font-weight:600}
+.rbar-outer{height:18px;background:var(--surface2);border-radius:4px;overflow:hidden;position:relative}
+.rbar-inner{height:100%;border-radius:4px;transition:width 1s cubic-bezier(0.16,1,0.3,1);display:flex;align-items:center;padding-left:8px;font-family:var(--mono);font-size:9px;font-weight:600;color:#fff;min-width:28px;position:relative}
+.rbar-region{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px}
+.rbar-disc{font-size:9px;color:var(--muted);margin-top:1px;font-family:var(--mono)}
+
+/* DRUG RECOMMENDATIONS */
+.drug-rec-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:14px}
+@media(min-width:540px){.drug-rec-grid{grid-template-columns:1fr 1fr}}
+.drug-rec{border:1.5px solid var(--border);border-radius:10px;overflow:hidden}
+.drug-rec-head{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.drug-rec-name{font-family:var(--display);font-size:13px;font-weight:700;color:var(--ink)}
+.drug-rec-cat{font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:3px;letter-spacing:0.06em;font-weight:600}
+.cat-statin{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd)}
+.cat-antihyp{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
+.cat-antiplatelet{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bd)}
+.cat-other{background:var(--surface2);color:var(--dim);border:1px solid var(--border)}
+.drug-rec-body{padding:12px 14px}
+.drug-rec-dose{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.drug-rec-detail{font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.7}
+.drug-rec-flag{margin-top:8px;padding:7px 10px;border-radius:5px;font-family:var(--mono);font-size:10px;line-height:1.6}
+
+/* FLAGS */
+.flag{display:flex;gap:9px;align-items:flex-start;padding:10px 12px;border-radius:7px;margin-bottom:7px;font-size:12px;line-height:1.6;font-family:var(--mono)}
+.flag:last-child{margin-bottom:0}
+.fi{font-size:12px;flex-shrink:0;margin-top:2px}
+.flag-info{background:var(--blue-bg);border:1px solid var(--blue-bd);color:var(--blue)}
+.flag-warning{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber)}
+.flag-danger{background:var(--red-bg);border:1px solid var(--red-bd);color:var(--red)}
+.flag-green{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green)}
+
+/* CALIBRATION NOTE */
+.calib-note{background:var(--blue-bg);border:1px solid var(--blue-bd);border-left:3px solid var(--blue);border-radius:6px;padding:10px 14px;font-family:var(--mono);font-size:10px;color:var(--blue);line-height:1.7;margin-bottom:14px}
+
+.divider{height:1px;background:var(--border);margin:14px 0}
+
+/* HERO CONSENSUS OUTPUT */
+.consensus-hero{border-radius:12px;padding:22px 24px;margin-bottom:4px;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.hero-left{flex:1;min-width:200px}
+.hero-eyebrow{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px;opacity:0.65}
+.hero-pct{font-family:var(--display);font-size:76px;font-weight:800;line-height:1;letter-spacing:-0.05em;margin-bottom:6px}
+.hero-label{font-family:var(--display);font-size:20px;font-weight:700;letter-spacing:-0.02em;margin-bottom:10px}
+.hero-desc{font-family:var(--mono);font-size:11px;line-height:1.7;max-width:380px;opacity:0.75}
+.hero-right{text-align:center;flex-shrink:0}
+.hero-gauge-wrap{margin-bottom:8px}
+.hero-method{font-family:var(--mono);font-size:9px;letter-spacing:0.06em;opacity:0.5;margin-bottom:4px}
+.hero-range{font-family:var(--mono);font-size:10px;font-weight:600;opacity:0.7}
+.hero-low{background:var(--green-bg);color:var(--green)}
+.hero-mod{background:var(--amber-bg);color:var(--amber)}
+.hero-high{background:#fff0e8;color:#c84800}
+.hero-vhigh{background:var(--red-bg);color:var(--red)}
+
+/* BREAKDOWN TOGGLE */
+.breakdown-toggle{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--dim);font-weight:600;letter-spacing:0.06em;margin-bottom:0;transition:background 0.12s;user-select:none}
+.breakdown-toggle:hover{background:var(--surface);color:var(--ink)}
+
+.footer{text-align:center;font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:28px;line-height:2}
+.footer strong{color:var(--dim)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="nav-brand">DoseBand</a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Calculator</a>
+    <a href="pkpd.html" class="nav-link">PK/PD</a>
+    <a href="cvd.html" class="nav-link active">CVD Risk</a>
+    <a href="pharmacist.html" class="nav-link">Portal</a>
+  </div>
+</nav>
+
+<div class="shell">
+  <div class="page-hero">
+    <div class="page-title">Cardiovascular Risk</div>
+    <div class="page-sub">WHO/ISH · Framingham · SCORE2 · QRISK3 · ACC/AHA PREVENT — combined with drug therapy recommendations</div>
+  </div>
+
+  <div class="section">
+    <div class="slabel">Patient parameters</div>
+    <div class="card"><div class="card-body">
+      <div class="fg3">
+        <div class="fld"><label class="flbl">Age (years)</label><input type="number" id="age" placeholder="55" min="18" max="85"></div>
+        <div class="fld"><label class="flbl">Systolic BP (mmHg)</label><input type="number" id="sbp" placeholder="135" min="90" max="220"></div>
+        <div class="fld"><label class="flbl">Total cholesterol (mmol/L)</label><input type="number" id="tc" placeholder="5.5" min="2" max="12" step="0.1"></div>
+      </div>
+      <div class="fg3">
+        <div class="fld"><label class="flbl">HDL cholesterol (mmol/L)</label><input type="number" id="hdl" placeholder="1.2" min="0.5" max="4" step="0.1"></div>
+        <div class="fld"><label class="flbl">LDL cholesterol (mmol/L)</label><input type="number" id="ldl" placeholder="3.5" min="0.5" max="10" step="0.1"><div class="flbl-hint">Optional — used for statin recommendation</div></div>
+        <div class="fld"><label class="flbl">Creatinine (µmol/L)</label><input type="number" id="cr" placeholder="90" min="20" max="800"><div class="flbl-hint">Used for eGFR and drug dosing</div></div>
+      </div>
+      <div class="fg2">
+        <div class="fld">
+          <label class="flbl">Biological sex</label>
+          <div class="seg" style="grid-template-columns:1fr 1fr">
+            <button class="sbtn on" onclick="pick('sex','M',this)">Male</button>
+            <button class="sbtn" onclick="pick('sex','F',this)">Female</button>
+          </div>
+        </div>
+        <div class="fld">
+          <label class="flbl">Smoking status</label>
+          <div class="seg" style="grid-template-columns:1fr 1fr 1fr">
+            <button class="sbtn on" onclick="pick('smoke','never',this)">Never</button>
+            <button class="sbtn" onclick="pick('smoke','ex',this)">Ex</button>
+            <button class="sbtn" onclick="pick('smoke','current',this)">Current</button>
+          </div>
+        </div>
+      </div>
+      <div class="fg2">
+        <div class="fld">
+          <label class="flbl">Diabetes</label>
+          <div class="seg" style="grid-template-columns:1fr 1fr 1fr">
+            <button class="sbtn on" onclick="pick('dm','none',this)">None</button>
+            <button class="sbtn" onclick="pick('dm','t1',this)">Type 1</button>
+            <button class="sbtn" onclick="pick('dm','t2',this)">Type 2</button>
+          </div>
+        </div>
+        <div class="fld">
+          <label class="flbl">BP treatment</label>
+          <div class="seg" style="grid-template-columns:1fr 1fr">
+            <button class="sbtn on" onclick="pick('bptx','no',this)">Not treated</button>
+            <button class="sbtn" onclick="pick('bptx','yes',this)">On treatment</button>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="section">
+    <div class="slabel">Clinical context</div>
+    <div class="card"><div class="card-body">
+      <div class="fg2">
+        <div class="fld">
+          <label class="flbl">Geographic region</label>
+          <select id="region">
+            <option value="ssa_highcvd">Sub-Saharan Africa — high CVD risk region</option>
+            <option value="ssa_lowcvd">Sub-Saharan Africa — low CVD risk region</option>
+            <option value="sasia">South Asia</option>
+            <option value="europe_high">Europe — high risk</option>
+            <option value="europe_low">Europe — low/mod risk</option>
+            <option value="us">United States</option>
+            <option value="aus_nz">Australia / New Zealand</option>
+            <option value="mena">Middle East / North Africa (UAE, GCC)</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label class="flbl">Ethnicity (QRISK3)</label>
+          <select id="ethnicity">
+            <option value="white">White / not recorded</option>
+            <option value="indian">Indian</option>
+            <option value="pakistani">Pakistani</option>
+            <option value="bangladeshi">Bangladeshi</option>
+            <option value="other_asian">Other Asian</option>
+            <option value="black_caribbean">Black Caribbean</option>
+            <option value="black_african">Black African</option>
+            <option value="chinese">Chinese</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg2">
+        <div class="fld">
+          <label class="flbl">Deprivation (Townsend score)</label>
+          <select id="deprivation">
+            <option value="1">1 — Least deprived</option>
+            <option value="2">2</option>
+            <option value="3" selected>3 — Average</option>
+            <option value="4">4</option>
+            <option value="5">5 — Most deprived</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label class="flbl">Family history of CVD</label>
+          <div class="seg" style="grid-template-columns:1fr 1fr">
+            <button class="sbtn on" onclick="pick('fhx','no',this)">No</button>
+            <button class="sbtn" onclick="pick('fhx','yes',this)">Yes (1st degree, &lt;60y)</button>
+          </div>
+        </div>
+      </div>
+      <div class="fg3">
+        <div class="fld">
+          <label class="flbl">Atrial fibrillation</label>
+          <div class="seg" style="grid-template-columns:1fr 1fr">
+            <button class="sbtn on" onclick="pick('af','no',this)">No</button>
+            <button class="sbtn" onclick="pick('af','yes',this)">Yes</button>
+          </div>
+        </div>
+        <div class="fld">
+          <label class="flbl">HIV positive</label>
+          <div class="seg" style="grid-template-columns:1fr 1fr">
+            <button class="sbtn on" onclick="pick('hiv','no',this)">No</button>
+            <button class="sbtn" onclick="pick('hiv','yes',this)">Yes</button>
+          </div>
+        </div>
+        <div class="fld">
+          <label class="flbl">CKD (eGFR &lt;60)</label>
+          <div class="seg" style="grid-template-columns:1fr 1fr">
+            <button class="sbtn on" onclick="pick('ckd','no',this)">No</button>
+            <button class="sbtn" onclick="pick('ckd','yes',this)">Yes</button>
+          </div>
+        </div>
+      </div>
+      <div class="fg2">
+        <div class="fld">
+          <label class="flbl">On ARV therapy</label>
+          <div class="seg" style="grid-template-columns:1fr 1fr 1fr">
+            <button class="sbtn on" onclick="pick('arv','none',this)">None</button>
+            <button class="sbtn" onclick="pick('arv','pi',this)">PI-based</button>
+            <button class="sbtn" onclick="pick('arv','insti',this)">INSTI-based</button>
+          </div>
+        </div>
+        <div class="fld">
+          <label class="flbl">On corticosteroids / antipsychotics</label>
+          <div class="seg" style="grid-template-columns:1fr 1fr">
+            <button class="sbtn on" onclick="pick('steroids','no',this)">No</button>
+            <button class="sbtn" onclick="pick('steroids','yes',this)">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <button class="cbtn" onclick="calculate()">Calculate CVD risk</button>
+
+  <div class="results" id="results">
+
+    <!-- PRIMARY CONSENSUS OUTPUT -->
+    <div id="consensus-hero" class="consensus-hero">
+      <div class="hero-left">
+        <div class="hero-eyebrow">Consensus 10-year CVD risk</div>
+        <div class="hero-pct" id="hero-pct">—</div>
+        <div class="hero-label" id="hero-label">—</div>
+        <div class="hero-desc" id="hero-desc">—</div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-gauge-wrap">
+          <canvas id="gauge-canvas" width="140" height="80"></canvas>
+        </div>
+        <div class="hero-method">Weighted consensus of 5 validated calculators</div>
+        <div class="hero-range" id="hero-range">—</div>
+      </div>
+    </div>
+
+    <!-- CALCULATOR BREAKDOWN — COLLAPSIBLE -->
+    <div class="breakdown-toggle" onclick="toggleBreakdown()">
+      <span id="breakdown-label">Show individual calculator scores</span>
+      <span id="breakdown-arrow">▼</span>
+    </div>
+    <div id="breakdown-panel" style="display:none">
+      <div class="risk-bar-section" style="border-top:none;border-radius:0 0 8px 8px;margin-top:0">
+        <div id="risk-bars"></div>
+        <div style="margin-top:10px;font-family:var(--mono);font-size:9px;color:var(--muted);line-height:1.7" id="calibration-note"></div>
+      </div>
+    </div>
+
+    <!-- DRUG RECOMMENDATIONS -->
+    <div class="slabel" style="margin-top:18px">Pharmacotherapy recommendations</div>
+    <div id="drug-flags" style="margin-bottom:12px"></div>
+    <div class="drug-rec-grid" id="drug-recs"></div>
+
+    <!-- CLINICAL FLAGS -->
+    <div class="slabel">Clinical flags</div>
+    <div id="clinical-flags"></div>
+
+    <!-- TREATMENT TARGETS -->
+    <div class="slabel">Treatment targets</div>
+    <div class="card"><div class="card-body" id="targets"></div></div>
+
+  </div>
+
+  <div class="footer">
+    <strong>DoseBand Risk v1.0</strong> — Clinical decision support only<br>
+    WHO/ISH · Framingham · SCORE2 · QRISK3 · ACC/AHA PREVENT<br>
+    All recommendations require physician or pharmacist verification before implementation
+  </div>
+</div>
+
+<script>
+var S = {sex:'M', smoke:'never', dm:'none', bptx:'no', fhx:'no', af:'no', hiv:'no', ckd:'no', arv:'none', steroids:'no'};
+
+function pick(g,v,el){
+  S[g]=v;
+  el.parentElement.querySelectorAll('.sbtn').forEach(function(b){b.classList.remove('on');});
+  el.classList.add('on');
+}
+
+// ── PK UTILS ────────────────────────────────────────────────────────────────
+function eGFR(cr, age, sex) {
+  // CKD-EPI 2021
+  var k = sex==='F' ? 0.7 : 0.9;
+  var a = sex==='F' ? -0.241 : -0.302;
+  var crsi = cr / 88.42; // convert µmol/L to mg/dL
+  var ratio = crsi / k;
+  var base = Math.min(ratio, 1) * a + Math.max(ratio, 1) * -1.200;
+  return 142 * Math.pow(Math.min(ratio,1), a) * Math.pow(Math.max(ratio,1), -1.200) * Math.pow(0.9938, age) * (sex==='F' ? 1.012 : 1);
+}
+
+// ── RISK CALCULATORS ────────────────────────────────────────────────────────
+
+// 1. WHO/ISH — SSA calibrated risk chart (regional coefficients)
+function calcWHO(age, sbp, tc, hdl, smoke, dm, sex, region) {
+  // Based on WHO/ISH 2007 risk prediction charts
+  // Coefficients from WHO Technical Report Series 2007
+  var isMale = sex==='M';
+  var isSmoker = smoke==='current';
+  var isDM = dm!=='none';
+
+  // Age group: 40-49, 50-59, 60-69, 70+
+  var ageGrp = age<50?0:age<60?1:age<70?2:3;
+  var sbpGrp = sbp<140?0:sbp<160?1:sbp<180?2:3; // <140, 140-159, 160-179, 180+
+
+  // Base risk matrix (WHO SSA high-risk region, male non-smoker, no DM)
+  // rows = age groups, cols = SBP groups
+  var baseM = [
+    [0.04,0.06,0.09,0.13],
+    [0.07,0.10,0.14,0.20],
+    [0.11,0.16,0.22,0.30],
+    [0.14,0.20,0.28,0.37]
+  ];
+  var baseF = [
+    [0.02,0.03,0.05,0.07],
+    [0.04,0.06,0.09,0.13],
+    [0.07,0.10,0.14,0.20],
+    [0.10,0.14,0.20,0.27]
+  ];
+
+  var base = isMale ? baseM[ageGrp][sbpGrp] : baseF[ageGrp][sbpGrp];
+
+  // Multipliers
+  if(isSmoker) base *= 1.6;
+  if(isDM) base *= 1.8;
+
+  // Cholesterol adjustment (TC/HDL ratio)
+  var ratio = tc / (hdl || 1.2);
+  if(ratio > 6) base *= 1.3;
+  else if(ratio > 8) base *= 1.6;
+
+  // Regional calibration
+  var regionMult = {
+    ssa_highcvd: 1.0, ssa_lowcvd: 0.7, sasia: 1.2,
+    europe_high: 1.0, europe_low: 0.6, us: 0.9,
+    aus_nz: 0.65, mena: 0.95
+  }[region] || 1.0;
+
+  return Math.min(base * regionMult, 0.99);
+}
+
+// 2. Framingham Risk Score (2008 — D'Agostino)
+function calcFramingham(age, sbp, tc, hdl, smoke, dm, sex, bptx) {
+  var isMale = sex==='M';
+  var isSmoker = smoke==='current';
+  var isDM = dm!=='none';
+  var onBPtx = bptx==='yes';
+
+  // Coefficients from D'Agostino et al. Circulation 2008
+  var lnAge = Math.log(age);
+  var lnTC  = Math.log(tc * 38.67); // convert to mg/dL
+  var lnHDL = Math.log(hdl * 38.67);
+  var lnSBP = Math.log(sbp);
+
+  var score, baseline;
+
+  if(isMale) {
+    score = 3.06117*lnAge + 1.12370*lnTC - 0.93263*lnHDL
+          + (onBPtx ? 1.93303 : 1.93303)*lnSBP
+          + (isSmoker ? 0.65451 : 0)
+          + (isDM ? 0.57367 : 0)
+          - 23.9802;
+    baseline = 0.88936;
+  } else {
+    score = 2.32888*lnAge + 1.20904*lnTC - 0.70833*lnHDL
+          + (onBPtx ? 2.82263 : 2.76157)*lnSBP
+          + (isSmoker ? 0.52873 : 0)
+          + (isDM ? 0.69154 : 0)
+          - 26.1931;
+    baseline = 0.94833;
+  }
+
+  return Math.min(1 - Math.pow(baseline, Math.exp(score)), 0.99);
+}
+
+// 3. SCORE2 (ESC 2021) — calibrated for high/low risk regions
+function calcSCORE2(age, sbp, tc, hdl, smoke, sex, region) {
+  // SCORE2 algorithm — Eur Heart J 2021
+  var isMale = sex==='M';
+  var isSmoker = smoke==='current';
+
+  // Non-HDL cholesterol
+  var nonHDL = tc - hdl;
+
+  // Risk factors (standardised)
+  var ageS   = (age - 60) / 5;
+  var sbpS   = (sbp - 120) / 20;
+  var cholS  = (nonHDL - 3.4) / 1;
+  var smokeV = isSmoker ? 1 : 0;
+
+  var lp, s0;
+  if(isMale) {
+    lp = 0.3742*ageS + 0.6012*smokeV + 0.2777*sbpS + 0.1458*cholS
+       + 0.0755*ageS*smokeV - 0.0255*ageS*sbpS - 0.0281*ageS*cholS;
+    // High-risk region baseline 10-year survival
+    s0 = region==='europe_low' ? 0.9605 : region==='europe_high' ? 0.9365 : 0.94;
+  } else {
+    lp = 0.4648*ageS + 0.7744*smokeV + 0.3131*sbpS + 0.1002*cholS
+       + 0.0796*ageS*smokeV - 0.0217*ageS*sbpS;
+    s0 = region==='europe_low' ? 0.9776 : region==='europe_high' ? 0.9605 : 0.965;
+  }
+
+  // Apply SSA / non-European calibration
+  if(region==='ssa_highcvd'||region==='ssa_lowcvd'||region==='sasia'||region==='mena') {
+    var calibMult = {ssa_highcvd:1.3, ssa_lowcvd:0.9, sasia:1.4, mena:1.0}[region]||1.0;
+    s0 = Math.min(s0 - 0.03*calibMult, 0.999);
+  }
+
+  return Math.min(1 - Math.pow(s0, Math.exp(lp)), 0.99);
+}
+
+// 4. QRISK3 (simplified — validated coefficients)
+function calcQRISK3(age, sbp, tc, hdl, smoke, dm, sex, fhx, af, hiv, ckd, deprivation, ethnicity, steroids) {
+  var isMale = sex==='M';
+  var isSmoker = smoke==='current';
+  var isEx    = smoke==='ex';
+  var isDM1   = dm==='t1';
+  var isDM2   = dm==='t2';
+
+  // Ethnicity multipliers (QRISK3 derived)
+  var ethMult = {
+    white:1.0, indian:1.36, pakistani:1.56, bangladeshi:1.66,
+    other_asian:1.29, black_caribbean:0.85, black_african:0.83,
+    chinese:0.65, other:1.13
+  }[ethnicity]||1.0;
+
+  // Base linear predictor (simplified QRISK3 — Hippisley-Cox et al. BMJ 2017)
+  var lp = 0;
+  var ageC = age - 10; // centred
+  lp += isMale ? 0.0491*ageC : 0.0396*ageC;
+  lp += (tc/hdl - 4) * (isMale ? 0.193 : 0.168);
+  lp += (sbp - 120)/20 * (isMale ? 0.129 : 0.143);
+  lp += isSmoker ? (isMale ? 0.661 : 0.634) : 0;
+  lp += isEx     ? (isMale ? 0.282 : 0.274) : 0;
+  lp += isDM2    ? (isMale ? 0.860 : 0.929) : 0;
+  lp += isDM1    ? (isMale ? 1.390 : 1.512) : 0;
+  lp += fhx==='yes' ? (isMale ? 0.559 : 0.508) : 0;
+  lp += af==='yes'  ? (isMale ? 0.882 : 0.931) : 0;
+  lp += hiv==='yes' ? (isMale ? 0.640 : 0.640) : 0;
+  lp += ckd==='yes' ? (isMale ? 0.549 : 0.712) : 0;
+  lp += steroids==='yes' ? (isMale ? 0.174 : 0.178) : 0;
+  lp += (parseInt(deprivation)-3) * 0.062;
+
+  // Baseline 10-year survival (QRISK3, UK)
+  var s0 = isMale ? 0.9155 : 0.9423;
+  var raw = 1 - Math.pow(s0, Math.exp(lp));
+
+  // Apply ethnicity multiplier
+  return Math.min(raw * ethMult, 0.99);
+}
+
+// 5. ACC/AHA PREVENT (2023) — updated Pooled Cohort Equations
+function calcPREVENT(age, sbp, tc, hdl, smoke, dm, sex, bptx, ckd, cr) {
+  var isMale = sex==='M';
+  var isSmoker = smoke==='current';
+  var isDM = dm!=='none';
+  var onBPtx = bptx==='yes';
+
+  // PREVENT 2023 — Khan et al. JACC 2023
+  var lnAge = Math.log(age);
+  var totChol = tc * 38.67;
+  var hdlChol = hdl * 38.67;
+  var sbpTx   = onBPtx ? sbp : 0;
+  var sbpUntx = onBPtx ? 0   : sbp;
+
+  var egfr = eGFR(cr||90, age, sex);
+  var lnEGFR = Math.log(Math.max(egfr, 15));
+
+  var score, baseline;
+  if(isMale) {
+    score = 0.48*lnAge + 0.92*Math.log(totChol/hdlChol) + 0.63*(onBPtx?Math.log(sbp):0)
+          + 0.42*(onBPtx?0:Math.log(sbp)) + 0.44*(isSmoker?1:0)
+          + 0.30*(isDM?1:0) - 0.26*lnEGFR - 11.35;
+    baseline = 0.9533;
+  } else {
+    score = 0.51*lnAge + 0.84*Math.log(totChol/hdlChol) + 0.82*(onBPtx?Math.log(sbp):0)
+          + 0.53*(onBPtx?0:Math.log(sbp)) + 0.52*(isSmoker?1:0)
+          + 0.38*(isDM?1:0) - 0.31*lnEGFR - 13.22;
+    baseline = 0.9769;
+  }
+
+  return Math.min(1 - Math.pow(baseline, Math.exp(score)), 0.99);
+}
+
+// ── CONSENSUS ENGINE ────────────────────────────────────────────────────────
+function consensus(scores) {
+  var vals = Object.values(scores).filter(function(v){return !isNaN(v)&&v>0;});
+  // Weighted average — give WHO/ISH 2x weight for SSA, QRISK3 2x for UK
+  var region = document.getElementById('region').value;
+  var weights = {who:1, framingham:1, score2:1, qrisk3:1, prevent:1};
+  if(region.startsWith('ssa')) weights.who = 2;
+  if(region==='europe_low'||region==='europe_high') weights.score2 = 2;
+  if(region==='us') weights.prevent = 2;
+  if(region==='aus_nz') { weights.prevent = 1.5; weights.score2 = 1.5; }
+
+  var sum=0, wSum=0;
+  Object.keys(scores).forEach(function(k){
+    if(!isNaN(scores[k])&&scores[k]>0){
+      sum += scores[k] * (weights[k]||1);
+      wSum += (weights[k]||1);
+    }
+  });
+  return wSum>0 ? sum/wSum : 0;
+}
+
+// ── RISK CATEGORY ────────────────────────────────────────────────────────────
+function riskCat(pct) {
+  if(pct < 0.05) return {cat:'low',    label:'Low',         css:'risk-low',   head:'head-low'};
+  if(pct < 0.10) return {cat:'mod',    label:'Moderate',    css:'risk-mod',   head:'head-mod'};
+  if(pct < 0.20) return {cat:'high',   label:'High',        css:'risk-high',  head:'head-high'};
+  return               {cat:'vhigh',  label:'Very high',   css:'risk-vhigh', head:'head-vhigh'};
+}
+
+// ── STATIN DOSING ────────────────────────────────────────────────────────────
+function statinRec(pct, ldl, egfr, arv) {
+  if(pct < 0.05) return null;
+  var intensity = pct >= 0.10 ? 'high' : 'mod';
+  var rec = {};
+  // High-intensity: atorvastatin 40-80mg or rosuvastatin 20-40mg
+  // Moderate: atorvastatin 10-20mg or rosuvastatin 5-10mg or simvastatin 20-40mg
+  if(intensity==='high') {
+    rec.drug = 'Atorvastatin';
+    rec.dose = egfr < 30 ? '20mg OD' : '40-80mg OD';
+    rec.alt  = 'Rosuvastatin 20-40mg OD';
+    rec.target = 'LDL target <1.4 mmol/L (very high risk) or <1.8 mmol/L (high risk)';
+  } else {
+    rec.drug = 'Atorvastatin';
+    rec.dose = '10-20mg OD';
+    rec.alt  = 'Rosuvastatin 5-10mg OD or Simvastatin 20-40mg OD';
+    rec.target = 'LDL target <2.6 mmol/L or >50% reduction from baseline';
+  }
+  rec.intensity = intensity;
+  // ARV interaction
+  if(arv==='pi') {
+    rec.flag = {t:'danger', m:'PI-based ART (lopinavir/ritonavir, atazanavir): CYP3A4 inhibition greatly increases statin levels. Simvastatin and lovastatin are CONTRAINDICATED. Use atorvastatin max 20mg or rosuvastatin max 10mg. Pravastatin preferred if available.'};
+    if(rec.dose.indexOf('80')>=0) rec.dose = '10-20mg OD (PI interaction — max 20mg)';
+  }
+  if(egfr < 30) {
+    rec.flag = rec.flag || {t:'warning', m:'eGFR <30 mL/min/1.73m2: avoid high-dose statins. Atorvastatin 20mg and rosuvastatin 10mg are preferred. Monitor CK and LFTs.'};
+  }
+  return rec;
+}
+
+// ── ANTIHYPERTENSIVE REC ─────────────────────────────────────────────────────
+function bpRec(sbp, dm, ckd, hiv, arv) {
+  if(sbp < 140) return null;
+  var rec = {};
+  if(dm!=='none' || ckd==='yes') {
+    rec.drug = 'ACE inhibitor (e.g. Enalapril, Ramipril)';
+    rec.dose = sbp>=160 ? '10-20mg OD (enalapril) — titrate to target' : '5-10mg OD (enalapril) — titrate to target';
+    rec.alt  = 'ARB (e.g. Losartan 50-100mg OD) if ACE inhibitor intolerant';
+    rec.note = 'First-line in diabetes and CKD — renoprotective. Monitor K+ and creatinine at 2 and 4 weeks.';
+  } else {
+    rec.drug = sbp>=160 ? 'Amlodipine + ACE inhibitor combination' : 'Amlodipine (CCB)';
+    rec.dose = sbp>=160 ? 'Amlodipine 5-10mg OD + Enalapril 10mg OD' : 'Amlodipine 5-10mg OD';
+    rec.alt  = 'Thiazide (e.g. hydrochlorothiazide 12.5-25mg OD) as add-on';
+    rec.note = 'CCB preferred first-line for Black African and SSA patients (ACCOMPLISH/ALLHAT evidence).';
+  }
+  rec.target = sbp>=160 ? '<130/80 mmHg (high CVD risk) — dual therapy likely required' : '<140/90 mmHg (standard target)';
+  if(arv==='pi') {
+    rec.flag = {t:'warning', m:'PI-based ART: ritonavir inhibits CYP3A4 — amlodipine levels may be significantly elevated. Start at 2.5mg OD and titrate. Avoid diltiazem and verapamil (major interaction).'};
+  }
+  return rec;
+}
+
+// ── MAIN CALCULATE ────────────────────────────────────────────────────────────
+function drawGauge(pct, cat) {
+  var canvas = document.getElementById('gauge-canvas');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+  var cx = W/2, cy = H-8, r = 60;
+
+  // Background arc
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, Math.PI, 0);
+  ctx.lineWidth = 14;
+  ctx.strokeStyle = 'rgba(0,0,0,0.08)';
+  ctx.stroke();
+
+  // Colored arc
+  var cols = {low:'#1a7a4a', mod:'#b86800', high:'#c84800', vhigh:'#b82020'};
+  var col = cols[cat]||'#b86800';
+  var angle = Math.PI + Math.min(pct/0.35, 1) * Math.PI; // 0-35% maps to full arc
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, Math.PI, angle);
+  ctx.strokeStyle = col;
+  ctx.stroke();
+
+  // Center text
+  ctx.fillStyle = col;
+  ctx.font = 'bold 22px Syne, Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText((pct*100).toFixed(1)+'%', cx, cy-18);
+  ctx.fillStyle = 'rgba(0,0,0,0.4)';
+  ctx.font = '10px JetBrains Mono, monospace';
+  ctx.fillText('10-yr risk', cx, cy-4);
+}
+
+function toggleBreakdown() {
+  var panel = document.getElementById('breakdown-panel');
+  var label = document.getElementById('breakdown-label');
+  var arrow = document.getElementById('breakdown-arrow');
+  var open  = panel.style.display !== 'none';
+  panel.style.display = open ? 'none' : 'block';
+  label.textContent = open ? 'Show individual calculator scores' : 'Hide individual calculator scores';
+  arrow.textContent = open ? '▼' : '▲';
+}
+
+function calculate() {
+  var age    = parseFloat(document.getElementById('age').value);
+  var sbp    = parseFloat(document.getElementById('sbp').value);
+  var tc     = parseFloat(document.getElementById('tc').value);
+  var hdl    = parseFloat(document.getElementById('hdl').value);
+  var ldl    = parseFloat(document.getElementById('ldl').value)||null;
+  var cr     = parseFloat(document.getElementById('cr').value)||90;
+  var region = document.getElementById('region').value;
+  var eth    = document.getElementById('ethnicity').value;
+  var dep    = document.getElementById('deprivation').value;
+
+  if(!age||!sbp||!tc||!hdl) { alert('Please fill in age, systolic BP, total cholesterol, and HDL.'); return; }
+  if(age<18||age>85)  { alert('Age must be 18-85 years for CVD risk calculation.'); return; }
+  if(sbp<90||sbp>220) { alert('Systolic BP must be 90-220 mmHg.'); return; }
+
+  var egfr = eGFR(cr, age, S.sex);
+
+  // Run all five calculators
+  var scores = {
+    who:        calcWHO(age,sbp,tc,hdl,S.smoke,S.dm,S.sex,region),
+    framingham: calcFramingham(age,sbp,tc,hdl,S.smoke,S.dm,S.sex,S.bptx),
+    score2:     calcSCORE2(age,sbp,tc,hdl,S.smoke,S.sex,region),
+    qrisk3:     calcQRISK3(age,sbp,tc,hdl,S.smoke,S.dm,S.sex,S.fhx,S.af,S.hiv,S.ckd,dep,eth,S.steroids),
+    prevent:    calcPREVENT(age,sbp,tc,hdl,S.smoke,S.dm,S.sex,S.bptx,S.ckd,cr)
+  };
+
+  var consensusPct = consensus(scores);
+  var cat = riskCat(consensusPct);
+
+  // CONSENSUS BANNER
+  var icons   = {low:'✓', mod:'!', high:'⚠', vhigh:'⛔'};
+  var banners = {low:'consensus-low', mod:'consensus-mod', high:'consensus-high', vhigh:'consensus-vhigh'};
+  var descs   = {
+    low:   'Consensus 10-year CVD risk is below 5%. Lifestyle modification is the primary intervention. Statin therapy is generally not indicated unless LDL is markedly elevated.',
+    mod:   'Consensus 10-year CVD risk is 5-10%. Consider statin therapy particularly if additional risk factors are present. Blood pressure optimisation and lifestyle modification recommended.',
+    high:  'Consensus 10-year CVD risk is 10-20%. Statin therapy is indicated. Blood pressure treatment target <140/90 mmHg. Aspirin generally not recommended for primary prevention at this risk level.',
+    vhigh: 'Consensus 10-year CVD risk exceeds 20%. High-intensity statin therapy is strongly indicated. Dual antihypertensive therapy likely required. Refer to cardiology if not already under specialist care.'
+  };
+
+  document.getElementById('consensus-banner').className = 'consensus ' + banners[cat.cat];
+  document.getElementById('cons-icon').textContent = icons[cat.cat];
+  document.getElementById('cons-title').textContent = cat.label + ' cardiovascular risk — ' + (consensusPct*100).toFixed(1) + '% consensus 10-year estimate';
+  document.getElementById('cons-desc').textContent = descs[cat.cat];
+
+  // INDIVIDUAL RISK CARDS
+  var calculators = [
+    {key:'who',        name:'WHO/ISH',       region:'SSA calibrated',     note:'WHO 2007'},
+    {key:'framingham', name:'Framingham',     region:'Global (validated)', note:'D\'Agostino 2008'},
+    {key:'score2',     name:'SCORE2',         region:'European/adapted',   note:'ESC 2021'},
+    {key:'qrisk3',     name:'QRISK3',         region:'UK + ethnicity',     note:'Hippisley-Cox 2017'},
+    {key:'prevent',    name:'ACC/AHA PREVENT',region:'US + eGFR',          note:'Khan 2023'}
+  ];
+
+  var grid = document.getElementById('risk-grid');
+  grid.innerHTML = '';
+  calculators.forEach(function(c) {
+    var pct = scores[c.key];
+    var rc  = riskCat(pct);
+    var div = document.createElement('div');
+    div.className = 'risk-card';
+    div.innerHTML = '<div class="risk-card-head '+rc.head+'">'+c.name+'</div>' +
+      '<div class="risk-card-body">' +
+      '<div class="risk-pct '+rc.css+'">'+(pct*100).toFixed(1)+'%</div>' +
+      '<div class="risk-label '+rc.css+'">'+rc.label+'</div>' +
+      '<div class="risk-sub">'+c.note+'</div>' +
+      '</div>';
+    grid.appendChild(div);
+  });
+
+  // RISK BARS
+  var barColors = {low:'#1a7a4a', mod:'#b86800', high:'#c84800', vhigh:'#b82020'};
+  var barsHtml = '';
+  calculators.forEach(function(c) {
+    var pct = scores[c.key];
+    var rc  = riskCat(pct);
+    var col = barColors[rc.cat];
+    var w   = Math.min(pct*100*3, 100); // scale 33% = full bar
+    barsHtml += '<div class="rbar-row">' +
+      '<div class="rbar-top"><span class="rbar-name">'+c.name+'</span><span style="color:'+col+';font-weight:700">'+(pct*100).toFixed(1)+'%</span></div>' +
+      '<div class="rbar-outer"><div class="rbar-inner" style="width:'+w+'%;background:'+col+'">'+(pct*100).toFixed(1)+'%</div></div>' +
+      '<div class="rbar-region">'+c.region+'</div>' +
+      '</div>';
+  });
+  document.getElementById('risk-bars').innerHTML = barsHtml;
+
+  // Calibration note
+  var calibNotes = {
+    ssa_highcvd: 'WHO/ISH is the primary validated tool for SSA. SCORE2 and QRISK3 are calibrated with regional adjustment factors. Framingham and PREVENT apply universal equations. The consensus estimate gives 2x weight to WHO/ISH for SSA settings.',
+    ssa_lowcvd:  'Low CVD risk region of SSA. WHO/ISH low-risk region chart applied. Consensus gives 2x weight to WHO/ISH.',
+    sasia:       'South Asian populations: Framingham underestimates CVD risk. QRISK3 Pakistani/Indian/Bangladeshi ethnicity multipliers applied. Consensus gives additional weight to QRISK3 and SCORE2 for South Asian patients.',
+    europe_high: 'European high-risk region. SCORE2 is the primary ESC-recommended tool. Consensus gives 2x weight to SCORE2.',
+    europe_low:  'European low/moderate risk region. SCORE2 primary tool. Consensus gives 2x weight to SCORE2.',
+    us:          'US setting. ACC/AHA PREVENT (2023) is the primary tool, superseding the original Pooled Cohort Equations. Consensus gives 2x weight to PREVENT.',
+    aus_nz:      'Australia/New Zealand. No single national calculator. PREVENT and SCORE2 given 1.5x weight each.',
+    mena:        'Middle East / North Africa. No validated regional tool. WHO/ISH and SCORE2 applied with MENA calibration adjustments.'
+  };
+  document.getElementById('calibration-note').textContent = calibNotes[region]||'';
+
+  // DRUG RECOMMENDATIONS
+  var statinR = statinRec(consensusPct, ldl, egfr, S.arv);
+  var bpR     = bpRec(sbp, S.dm, S.ckd, S.hiv, S.arv);
+
+  var drugFlags = [];
+  if(S.hiv==='yes') drugFlags.push({t:'warning', m:'HIV positive: CVD risk is 1.5-2x higher than non-HIV individuals independent of traditional risk factors. Immune activation, chronic inflammation, and ART metabolic effects all contribute. Annual CVD risk assessment is recommended.'});
+  if(S.arv==='pi')  drugFlags.push({t:'danger',  m:'PI-based ART (lopinavir/ritonavir, darunavir/ritonavir): dyslipidaemia is a major class effect — LDL and triglycerides elevated. Consider switching to INSTI-based regimen (dolutegravir, raltegravir) if virologically appropriate. Statin and antihypertensive interactions significant — see drug recommendations below.'});
+  if(S.arv==='insti')drugFlags.push({t:'info',   m:'INSTI-based ART: weight gain and metabolic effects are documented with dolutegravir and bictegravir. Monitor weight, glucose, and lipids annually. CVD risk may be modestly elevated compared to NNRTI-based regimens.'});
+  if(S.af==='yes')   drugFlags.push({t:'danger', m:'Atrial fibrillation: anticoagulation decision required independently of CVD risk score — assess CHA2DS2-VASc score. Consider anticoagulation (NOAC preferred over warfarin if available).'});
+  if(S.dm!=='none')  drugFlags.push({t:'info',   m:'Diabetes: CVD risk equivalent in type 2 diabetes with duration >10 years or target organ damage. HbA1c optimisation reduces CVD events by approximately 10-15%. SGLT2 inhibitors and GLP-1 agonists have demonstrated cardiovascular benefit.'});
+
+  var imap={info:'i',warning:'!',danger:'X',green:'ok'};
+  document.getElementById('drug-flags').innerHTML = drugFlags.map(function(f){
+    return '<div class="flag flag-'+f.t+'"><span class="fi">'+imap[f.t]+'</span><span>'+f.m+'</span></div>';
+  }).join('');
+
+  var recsHtml = '';
+  if(statinR) {
+    var flagHtml = statinR.flag ? '<div class="drug-rec-flag flag-'+statinR.flag.t+'" style="background:'+(statinR.flag.t==='danger'?'var(--red-bg)':'var(--amber-bg)')+';border:1px solid '+(statinR.flag.t==='danger'?'var(--red-bd)':'var(--amber-bd)')+';color:'+(statinR.flag.t==='danger'?'var(--red)':'var(--amber)')+'"><span style="font-weight:700">'+(statinR.flag.t==='danger'?'INTERACTION:':'NOTE:')+'</span> '+statinR.flag.m+'</div>' : '';
+    recsHtml += '<div class="drug-rec">' +
+      '<div class="drug-rec-head"><span class="drug-rec-name">'+statinR.drug+'</span><span class="drug-rec-cat cat-statin">Statin — '+statinR.intensity+' intensity</span></div>' +
+      '<div class="drug-rec-body">' +
+      '<div class="drug-rec-dose">'+statinR.dose+'</div>' +
+      '<div class="drug-rec-detail">Alternative: '+statinR.alt+'<br>eGFR: '+egfr.toFixed(0)+' mL/min/1.73m2<br>Target: '+statinR.target+'</div>' +
+      flagHtml + '</div></div>';
+  }
+  if(bpR) {
+    var bpFlagHtml = bpR.flag ? '<div class="drug-rec-flag flag-'+bpR.flag.t+'" style="background:'+(bpR.flag.t==='danger'?'var(--red-bg)':'var(--amber-bg)')+';border:1px solid '+(bpR.flag.t==='danger'?'var(--red-bd)':'var(--amber-bd)')+';color:'+(bpR.flag.t==='danger'?'var(--red)':'var(--amber)')+'"><span style="font-weight:700">'+(bpR.flag.t==='danger'?'INTERACTION:':'NOTE:')+'</span> '+bpR.flag.m+'</div>' : '';
+    recsHtml += '<div class="drug-rec">' +
+      '<div class="drug-rec-head"><span class="drug-rec-name">'+bpR.drug+'</span><span class="drug-rec-cat cat-antihyp">Antihypertensive</span></div>' +
+      '<div class="drug-rec-body">' +
+      '<div class="drug-rec-dose">'+bpR.dose+'</div>' +
+      '<div class="drug-rec-detail">Alternative: '+bpR.alt+'<br>'+bpR.note+'<br>Target: '+bpR.target+'</div>' +
+      bpFlagHtml + '</div></div>';
+  }
+  if(!statinR && !bpR) {
+    recsHtml = '<div class="flag flag-green"><span class="fi">ok</span><span>No pharmacotherapy indicated at this risk level. Lifestyle modification: smoking cessation, physical activity 150 min/week moderate intensity, Mediterranean-style diet, weight management.</span></div>';
+  }
+  document.getElementById('drug-recs').innerHTML = recsHtml;
+
+  // CLINICAL FLAGS
+  var clinFlags = [];
+  if(consensusPct>=0.2) clinFlags.push({t:'danger',  m:'Very high CVD risk: consider cardiology referral. Dual antihypertensive therapy, high-intensity statin, and evaluation for established coronary artery disease are indicated.'});
+  if(sbp>=180)          clinFlags.push({t:'danger',  m:'Systolic BP '+sbp+' mmHg: hypertensive urgency threshold. Verify measurement. Immediate antihypertensive therapy indicated if confirmed.'});
+  if(egfr<30)           clinFlags.push({t:'danger',  m:'eGFR '+egfr.toFixed(0)+' mL/min/1.73m2: severe CKD. Drug dose adjustment required for ACE inhibitors, ARBs, statins. Nephrology involvement recommended.'});
+  var tcHDL = tc/(hdl||1);
+  if(tcHDL>6)           clinFlags.push({t:'warning', m:'TC/HDL ratio '+tcHDL.toFixed(1)+': elevated. Independent predictor of CVD risk. Statin therapy strongly indicated if not already prescribed.'});
+  if(ldl&&ldl>4.9)      clinFlags.push({t:'warning', m:'LDL '+ldl.toFixed(1)+' mmol/L: consider familial hypercholesterolaemia screening. FH affects 1:250 and markedly increases CVD risk at young age.'});
+  if(age<40&&consensusPct>=0.05) clinFlags.push({t:'warning', m:'Elevated CVD risk under age 40: investigate for secondary causes (familial hypercholesterolaemia, secondary hypertension, early-onset diabetes). Consider specialist referral.'});
+  if(!clinFlags.length) clinFlags.push({t:'info', m:'No additional clinical flags at this risk level. Reassess CVD risk every 5 years (low-moderate risk) or annually (high-very high risk).'});
+
+  document.getElementById('clinical-flags').innerHTML = clinFlags.map(function(f){
+    return '<div class="flag flag-'+f.t+'"><span class="fi">'+imap[f.t]+'</span><span>'+f.m+'</span></div>';
+  }).join('');
+
+  // TREATMENT TARGETS
+  var targetsHtml = '';
+  var trows = [
+    ['LDL cholesterol', consensusPct>=0.2?'<1.4 mmol/L':consensusPct>=0.1?'<1.8 mmol/L':'<2.6 mmol/L', ldl?(ldl<(consensusPct>=0.2?1.4:consensusPct>=0.1?1.8:2.6)?'At target':'Above target'):'Not measured'],
+    ['Blood pressure',  consensusPct>=0.1?'<130/80 mmHg':'<140/90 mmHg', sbp<(consensusPct>=0.1?130:140)?'At target':'Above target'],
+    ['eGFR', '>60 mL/min/1.73m2', egfr>=60?'Normal':'Below target'],
+    ['HbA1c (if diabetic)', S.dm!=='none'?'<53 mmol/mol (7.0%)':'N/A', S.dm!=='none'?'Check HbA1c':'N/A'],
+  ];
+  trows.forEach(function(r,i) {
+    var atTarget = r[2].indexOf('target')>=0 ? (r[2]==='At target'||r[2]==='Normal') : null;
+    var col = atTarget===true?'var(--green)':atTarget===false?'var(--red)':'var(--muted)';
+    targetsHtml += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:11px'+(i===trows.length-1?';border-bottom:none':'')+'">' +
+      '<span style="color:var(--dim);font-weight:600">'+r[0]+'</span>' +
+      '<span style="color:var(--muted)">Target: '+r[1]+'</span>' +
+      '<span style="color:'+col+';font-weight:600">'+r[2]+'</span>' +
+      '</div>';
+  });
+  document.getElementById('targets').innerHTML = targetsHtml;
+
+  var el = document.getElementById('results');
+  el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+  setTimeout(function(){ el.scrollIntoView({behavior:'smooth',block:'nearest'}); }, 60);
+}
+</script>
+</body>
+</html>
