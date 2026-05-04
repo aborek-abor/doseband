@@ -292,6 +292,9 @@ input:focus,select:focus{border-color:var(--ink);background:#fff}
           <option value="tbHivCoinfection">TB-HIV co-infection</option>
           <option value="southAsian">South Asian (UAE/GCC context)</option>
           <option value="pacificIslander">Maori / Pacific Islander (NZ/AU context)</option>
+          <option value="asaII">ASA II — mild systemic disease</option>
+          <option value="asaIII">ASA III — severe systemic disease</option>
+          <option value="asaIV">ASA IV — life-threatening disease</option>
         </select>
       </div>
       <div class="fld"><label class="flbl">Hepatic function</label>
@@ -406,7 +409,7 @@ input:focus,select:focus{border-color:var(--ink);background:#fff}
   </div>
 
   <div class="footer">
-    <strong>DoseBand v2.0</strong> — Pre-clinical validation only<br>
+    <strong>DoseBand v2.1</strong> — Pre-clinical validation only<br>
     79 drugs · Audit trail · Pharmacist workflow · PDF &amp; FHIR export<br>
     doseband-production.up.railway.app
   </div>
@@ -415,7 +418,7 @@ input:focus,select:focus{border-color:var(--ink);background:#fff}
 <script>
 // ── DRUG DATABASE ─────────────────────────────────────────────────────────────
 var DRUGS = {};
-var CATS = {all:"All",oncology:"Oncology",id:"Antibiotics",antifungal:"Antifungal",antiviral:"Antiviral",tb:"TB",hiv:"HIV ARVs",hiv_fdc:"HIV FDCs",oi_px:"OI Prophylaxis",mab:"Monoclonal Abs",pain:"Pain/Anaesthesia",cardiac:"Cardiac",anticoag:"Anticoagulation",neuro:"Neurology",steroid:"Steroids",transplant:"Transplant",psych:"Psychiatry/CNS",electrolyte:"Electrolytes",id_uk:"Antibiotics (UK/BNF)",emergency:"Emergency/Critical Care"};
+var CATS = {all:"All",oncology:"Oncology",id:"Antibiotics",antifungal:"Antifungal",antiviral:"Antiviral",tb:"TB",hiv:"HIV ARVs",hiv_fdc:"HIV FDCs",oi_px:"OI Prophylaxis",mab:"Monoclonal Abs",pain:"Pain/Anaesthesia",cardiac:"Cardiac",anticoag:"Anticoagulation",neuro:"Neurology",steroid:"Steroids",transplant:"Transplant",psych:"Psychiatry/CNS",electrolyte:"Electrolytes",id_uk:"Antibiotics (UK/BNF)",emergency:"Emergency/Critical Care",anaesthesia:"Anaesthesia"};
 var S = {drug:null,reg:"standard",sex:"M",neph:"no",cat:"all",query:""};
 var lastResult = null;
 
@@ -577,6 +580,54 @@ addDrug("insulin_infusion","Insulin IV (infusion)","emergency","wt",0.1,[b("Low"
 
 // ── TRANSPLANT ADDITION ──────────────────────────────────────────────────────
 addDrug("mycophenolate","Mycophenolate IV (MMF)","transplant","fixed",1000,[b("1",0,500),b("2",500,1000),b("3",1000,1500),b("4",1500,Infinity)],false,true,null,false,"1g IV BD (kidney transplant induction and maintenance). IV formulation used when oral not tolerated. Switch to oral (1.5g BD = 1g IV BD) as soon as possible. Myelosuppression — FBC weekly. Teratogenic — effective contraception mandatory. GI side effects common with oral formulation.",{hivPositive:{r:1.0,t:"info",m:"HIV+: mycophenolate used in HIV+ transplant recipients. Monitor for increased infection risk and cytomegalovirus reactivation."}});
+
+
+// ── ANAESTHESIA — INDUCTION AGENTS ──────────────────────────────────────────
+addDrug("propofol","Propofol IV","anaesthesia","wt",2,[b("1",0,80),b("2",80,150),b("3",150,200),b("4",200,Infinity)],false,true,null,false,"Induction: 1.5-2.5mg/kg IV (healthy adult); 0.5-1.5mg/kg (elderly/frail/ASA III-IV); 1-1.5mg/kg (pre-medicated). Inject at 40mg/10 sec titrating to response. Apnoea risk — airway equipment must be available. BP drop of 15-25% typical — vasopressor ready. Pain on injection — lignocaine 20-40mg IV pretreatment. Maintenance: 4-12mg/kg/h infusion.",{elderly:{r:0.5,t:"danger",m:"Elderly (>70y): propofol dose reduced 50% — increased sensitivity, prolonged effect, marked hypotension risk. Inject slowly and titrate carefully."},malnourished:{r:0.7,t:"warning",m:"Malnutrition/cachexia: reduced dose by 30% — decreased protein binding and Vd."},subSaharanAfrica:{r:1.0,t:"warning",m:"SSA: propofol requires resuscitation equipment, airway management skill, and monitoring. Do not administer without anaesthetist or trained provider present."},asaIII:{r:0.5,t:"danger",m:"ASA III: propofol dose reduced 50% (0.5-1.5mg/kg). Titrate slowly — marked cardiovascular depression expected. Vasopressor standby."},asaIV:{r:0.3,t:"danger",m:"ASA IV: propofol dose reduced 70% (0.3-0.5mg/kg). Consider alternative induction agent (ketamine or etomidate). Anaesthetist essential."}});
+
+addDrug("thiopentone","Thiopentone (Thiopental) IV","anaesthesia","wt",5,[b("1",0,250),b("2",250,375),b("3",375,500),b("4",500,Infinity)],false,true,null,false,"Induction: 3-5mg/kg IV (healthy adult); 1-3mg/kg (elderly/poor risk). Inject 2.5% solution at 50mg/15 sec titrating to response. Profound cardiovascular depression — avoid in haemodynamically unstable patients. Contraindicated in porphyria. Arterial injection causes gangrene — IV placement must be confirmed. Single-use only.",{elderly:{r:0.5,t:"danger",m:"Elderly: thiopentone dose reduced 50%. Severe cardiovascular depression risk. Propofol or ketamine preferred in elderly."},subSaharanAfrica:{r:1.0,t:"info",m:"SSA: thiopentone remains widely available in SSA district hospitals. Ketamine is safer in low-resource settings without full monitoring."},asaIII:{r:0.4,t:"danger",m:"ASA III: thiopentone dose reduced 60% (1-2mg/kg). Profound cardiovascular depression expected. Etomidate or ketamine preferred."},asaIV:{r:0.0,t:"danger",m:"ASA IV: thiopentone CONTRAINDICATED in haemodynamically unstable patients. Use etomidate or ketamine."}});
+
+addDrug("etomidate","Etomidate IV","anaesthesia","wt",0.3,[b("1",0,15),b("2",15,20),b("3",20,Infinity)],false,true,null,false,"Induction: 0.3mg/kg IV (0.2-0.4mg/kg range). Cardiovascularly stable — preferred in haemodynamically compromised patients. Adrenocortical suppression after single dose — avoid prolonged infusion or repeated doses. Myoclonus common — reduce with midazolam pretreatment. Pain on injection — lignocaine pretreatment.",{elderly:{r:0.8,t:"info",m:"Elderly: reduce to 0.2mg/kg. Cardiovascular stability is the key advantage in elderly high-risk patients."},subSaharanAfrica:{r:1.0,t:"info",m:"SSA: etomidate is preferred induction agent in shocked or haemodynamically compromised patients. Single dose only — do not use for ICU sedation."}});
+
+// ── ANAESTHESIA — NEUROMUSCULAR BLOCKING AGENTS ──────────────────────────────
+addDrug("suxamethonium","Suxamethonium (Succinylcholine)","anaesthesia","wt",1.5,[b("1",0,75),b("2",75,100),b("3",100,150),b("4",150,Infinity)],false,false,null,false,"RSI: 1.5mg/kg IV (1-2mg/kg range); 4mg/kg IM if no IV access. Onset 30-60 sec, duration 10-15 min. CONTRAINDICATED: burns >24h old, crush injuries >24h, hyperkalaemia, personal/family history of malignant hyperthermia, pseudocholinesterase deficiency. Bradycardia with repeat doses — atropine ready. Masseter spasm may indicate MH — stop immediately.",{elderly:{r:0.8,t:"warning",m:"Elderly: increased sensitivity. Use 1mg/kg. Check for hyperkalaemia before use."},subSaharanAfrica:{r:1.0,t:"warning",m:"SSA: suxamethonium is the agent of choice for RSI. Malignant hyperthermia is rare but fatal without dantrolene — ensure access if possible."}});
+
+addDrug("rocuronium","Rocuronium IV","anaesthesia","wt",0.6,[b("1",0,30),b("2",30,50),b("3",50,70),b("4",70,Infinity)],false,false,null,false,"Intubation: 0.6mg/kg (onset 60-90 sec, duration 30-40 min). RSI dose: 1.2mg/kg (onset 60 sec, duration 60-70 min). Maintenance: 0.1-0.2mg/kg boluses or 0.3-0.6mg/kg/h infusion. Reversal: sugammadex 16mg/kg (immediate reversal of 1.2mg/kg dose). Train-of-four monitoring recommended.",{elderly:{r:0.8,t:"info",m:"Elderly: prolonged duration — use lower maintenance doses and TOF monitoring."},subSaharanAfrica:{r:1.0,t:"info",m:"SSA: rocuronium + sugammadex is preferred over suxamethonium where sugammadex is available, as it is reversible and avoids hyperkalaemia risk."}});
+
+addDrug("vecuronium","Vecuronium IV","anaesthesia","wt",0.1,[b("1",0,5),b("2",5,8),b("3",8,12),b("4",12,Infinity)],false,true,null,false,"Intubation: 0.1mg/kg (onset 3-5 min, duration 25-40 min). High-dose RSI: 0.15-0.2mg/kg (onset 90-120 sec). Maintenance: 0.01-0.02mg/kg boluses or 1-2 mcg/kg/min infusion. Reversal: neostigmine 40-70 mcg/kg + atropine 20 mcg/kg (at >=1 twitch on TOF). No cardiovascular effects — preferred in cardiac patients.",{elderly:{r:0.7,t:"warning",m:"Elderly: prolonged duration due to reduced hepatic clearance. Use 0.07mg/kg and TOF monitoring."}});
+
+addDrug("atracurium","Atracurium IV","anaesthesia","wt",0.5,[b("1",0,25),b("2",25,40),b("3",40,55),b("4",55,Infinity)],false,false,null,false,"Intubation: 0.5mg/kg (onset 2-3 min, duration 20-35 min). Maintenance: 0.1-0.2mg/kg boluses or 5-10 mcg/kg/min infusion. Hofmann elimination — does not require renal or hepatic function for metabolism. Preferred in renal and hepatic failure. Histamine release may cause hypotension — inject slowly.",{elderly:{r:1.0,t:"info",m:"Elderly: no dose adjustment needed. Hofmann elimination is independent of organ function — ideal in elderly with renal/hepatic impairment."},subSaharanAfrica:{r:1.0,t:"info",m:"SSA: atracurium is preferred NMBA in patients with renal or hepatic impairment as it does not rely on organ clearance."}});
+
+// ── ANAESTHESIA — OPIOIDS ────────────────────────────────────────────────────
+addDrug("remifentanil","Remifentanil IV infusion","anaesthesia","wt",0.25,[b("1",0,10),b("2",10,20),b("3",20,Infinity)],false,false,null,false,"Intraoperative analgesia: 0.1-0.5 mcg/kg/min infusion. Dose in MICROGRAMS/kg/min — confirm units. Ultra-short acting (t½ 3-5 min) — provide longer-acting analgesia before stopping. Apnoea and chest wall rigidity risk at high doses. No dose adjustment in renal/hepatic failure. TIVA with propofol: remifentanil 0.05-0.4 mcg/kg/min.",{elderly:{r:0.5,t:"warning",m:"Elderly: remifentanil infusion rate reduced 50%. Start at 0.05 mcg/kg/min and titrate. Profound respiratory depression risk."}});
+
+addDrug("alfentanil","Alfentanil IV","anaesthesia","wt",10,[b("1",0,500),b("2",500,1000),b("3",1000,Infinity)],false,true,null,false,"Dose in MICROGRAMS. Bolus 10-20 mcg/kg for induction (repeat 5 mcg/kg). Infusion 0.5-1 mcg/kg/min. Shorter duration than fentanyl. Hepatic metabolism — reduce in hepatic impairment. Respiratory depression monitoring. Chest wall rigidity at high doses.",{elderly:{r:0.5,t:"warning",m:"Elderly: alfentanil dose reduced 50%. Prolonged effect due to reduced hepatic clearance and protein binding."}});
+
+// ── ANAESTHESIA — LOCAL ANAESTHETICS ─────────────────────────────────────────
+addDrug("lignocaine","Lignocaine (Lidocaine) IV/local","anaesthesia","wt",3,[b("1",0,150),b("2",150,200),b("3",200,Infinity)],false,false,null,false,"Max dose 3mg/kg plain; 7mg/kg with adrenaline. IV: antiarrhythmic 1-1.5mg/kg bolus then 1-4mg/kg/h infusion. Local infiltration: 0.5-2% solution. Epidural: 1-2%. Toxicity: circumoral tingling, tinnitus, convulsions, cardiac arrhythmia. Resuscitation and lipid emulsion 20% MUST be available for regional techniques.",{elderly:{r:0.75,t:"warning",m:"Elderly: maximum dose reduced 25% due to reduced hepatic clearance and increased sensitivity to toxicity."},subSaharanAfrica:{r:1.0,t:"info",m:"SSA: lignocaine is the most widely available local anaesthetic. 20% lipid emulsion (intralipid) for toxicity reversal should be stocked wherever regional anaesthesia is performed."}});
+
+addDrug("bupivacaine","Bupivacaine (local/epidural/spinal)","anaesthesia","wt",2,[b("1",0,80),b("2",80,120),b("3",120,Infinity)],false,true,null,false,"Max dose 2mg/kg (plain) or 2.5mg/kg (with adrenaline). NEVER give IV — cardiac toxicity (ventricular fibrillation). Spinal: 2-3ml of 0.5% hyperbaric. Epidural: 0.25-0.5% solution 10-20ml. Onset slower, duration longer than lignocaine. Levobupivacaine preferred where available (less cardiotoxic).",{elderly:{r:0.75,t:"danger",m:"Elderly: bupivacaine dose reduced 25%. Increased cardiac toxicity risk. Use lowest effective dose. Levobupivacaine preferred."},subSaharanAfrica:{r:1.0,t:"warning",m:"SSA: bupivacaine is the workhorse local anaesthetic for spinal and epidural anaesthesia. Cardiotoxicity from IV injection is fatal — aspirate before every injection, and inject incrementally."}});
+
+addDrug("ropivacaine","Ropivacaine (local/epidural)","anaesthesia","wt",3,[b("1",0,150),b("2",150,225),b("3",225,Infinity)],false,false,null,false,"Max dose 3mg/kg. Less cardiotoxic than bupivacaine — preferred for epidural infusions and nerve blocks. Epidural: 0.2% infusion 6-14ml/h. Peripheral nerve block: 0.5-0.75% solution 20-40ml. Spinal: not licenced for intrathecal use in most countries. Motor block less dense than bupivacaine at equivalent concentrations.",{elderly:{r:0.75,t:"info",m:"Elderly: reduce dose by 25%. Preferred over bupivacaine in elderly due to lower cardiac toxicity."}});
+
+// ── ANAESTHESIA — REVERSAL AGENTS ────────────────────────────────────────────
+addDrug("sugammadex","Sugammadex IV","anaesthesia","wt",4,[b("1",0,200),b("2",200,400),b("3",400,Infinity)],true,false,null,false,"Routine reversal at T2 or greater: 2mg/kg. Immediate reversal of rocuronium 1.2mg/kg: 16mg/kg. Deep block reversal (post-tetanic count 1-2): 4mg/kg. Only reverses rocuronium and vecuronium — not suxamethonium or atracurium. CrCl <30: not recommended (prolonged action). Bradycardia reported — monitor HR.",{elderly:{r:1.0,t:"info",m:"Elderly: standard weight-based dosing. Renal function check important as clearance is renal."},subSaharanAfrica:{r:1.0,t:"info",m:"SSA: sugammadex is transformative for reversal safety but expensive. Where available, 16mg/kg immediate reversal of rocuronium is the recommended 'cannot intubate cannot oxygenate' rescue strategy."}});
+
+addDrug("neostigmine","Neostigmine IV","anaesthesia","wt",0.05,[b("1",0,2),b("2",2,3.5),b("3",3.5,Infinity)],false,false,null,false,"Reversal: 0.04-0.07mg/kg IV (max 5mg). MUST be given with atropine 0.6-1.2mg IV to prevent bradycardia and secretions. Use only when TOF ratio >=0.1 (at least 1 twitch). Incomplete reversal if given too early. Excessive dose causes cholinergic crisis.",{});
+
+addDrug("atropine_anaes","Atropine IV (anaesthesia)","anaesthesia","wt",0.02,[b("1",0,0.6),b("2",0.6,1.0),b("3",1.0,Infinity)],false,false,null,false,"Premedication: 0.6mg IV/IM. With neostigmine: 0.6-1.2mg IV per 2.5mg neostigmine. Bradycardia treatment: 0.5-1mg IV (repeat up to 3mg). Minimum dose 0.5mg — paradoxical bradycardia with smaller doses.",{});
+
+// ── ANAESTHESIA — SEDATION / ANXIOLYSIS ──────────────────────────────────────
+addDrug("midazolam_iv","Midazolam IV (anaesthesia)","anaesthesia","wt",0.07,[b("1",0,2),b("2",2,5),b("3",5,Infinity)],false,true,null,false,"Premedication: 0.07-0.1mg/kg IV/IM (max 5mg). Sedation: 0.5-1mg IV increments titrated. Induction co-induction: 0.2mg/kg reduces propofol dose by 30-50%. Flumazenil reversal available. Respiratory depression — O2 and airway equipment ready.",{elderly:{r:0.5,t:"danger",m:"Elderly: midazolam dose reduced 50%. Prolonged sedation and respiratory depression. Start at 0.5mg and titrate slowly."},subSaharanAfrica:{r:1.0,t:"info",m:"SSA: midazolam is the preferred benzodiazepine for premedication and procedural sedation. Flumazenil for reversal should be available wherever midazolam is used."}});
+
+addDrug("dexmedetomidine","Dexmedetomidine IV","anaesthesia","wt",1,[b("1",0,40),b("2",40,80),b("3",80,Infinity)],false,true,null,false,"Loading: 1 mcg/kg over 10 min. Maintenance infusion: 0.2-0.7 mcg/kg/h. Dose in MICROGRAMS. Alpha-2 agonist — sedation without respiratory depression. Bradycardia and hypotension common — avoid in heart block or severe LV dysfunction. Used for awake fibreoptic intubation, ICU sedation, and opioid-sparing analgesia.",{elderly:{r:0.5,t:"warning",m:"Elderly: dexmedetomidine dose reduced 50%. Profound bradycardia risk. Use 0.1 mcg/kg/h maintenance."}});
+
+// ── ANAESTHESIA — EMERGENCY / RESUSCITATION ──────────────────────────────────
+addDrug("lipidEmulsion","Lipid emulsion 20% (Intralipid)","anaesthesia","wt",1.5,[b("Bolus",0,100),b("Infusion",100,Infinity)],false,false,null,false,"EMERGENCY TREATMENT OF LOCAL ANAESTHETIC TOXICITY ONLY. Bolus 1.5ml/kg 20% IV over 1 min. If no response: repeat bolus twice at 5-min intervals. Infusion: 15ml/kg/h for 10 min then reduce. Max total dose 12ml/kg. Continue CPR throughout. Avoid propofol as lipid substitute — insufficient lipid content.",{subSaharanAfrica:{r:1.0,t:"danger",m:"SSA: lipid emulsion should be stocked in every theatre where bupivacaine or ropivacaine is used. Local anaesthetic toxicity is rapidly fatal without this treatment."}});
+
+addDrug("naloxone_anaes","Naloxone IV (reversal)","anaesthesia","wt",0.4,[b("1",0,0.4),b("2",0.4,Infinity)],true,false,null,false,"Opioid reversal: 0.1-0.4mg IV every 2-3 min titrating to effect (max 10mg). Start low (0.1mg) to avoid precipitating acute pain/tachycardia/pulmonary oedema. Duration shorter than most opioids — re-dosing or infusion may be required. Infusion: 2/3 of reversal dose per hour.",{});
+
+addDrug("flumazenil","Flumazenil IV (reversal)","anaesthesia","wt",0.01,[b("1",0,0.2),b("2",0.2,0.5),b("3",0.5,Infinity)],false,true,null,false,"Benzodiazepine reversal: 0.2mg IV over 15 sec. Repeat 0.1mg at 60-sec intervals up to 1mg total. Duration 45-90 min — shorter than most benzodiazepines. Re-sedation is common — patient must be monitored for 2h. Contraindicated in epilepsy controlled with benzodiazepines — may precipitate seizures.",{elderly:{r:0.75,t:"warning",m:"Elderly: increased re-sedation risk. Monitor for minimum 2 hours after flumazenil administration."}});
 
 // ── PK ────────────────────────────────────────────────────────────────────────
 function crcl(a,w,c,s){return Math.max(((140-a)*w)/(c*0.814)*(s==="F"?0.85:1),5);}
@@ -1029,7 +1080,7 @@ function pharmQuery(){
 // ── EXPORT PDF ────────────────────────────────────────────────────────────────
 function exportPDF(){
   if(!lastResult){return;}
-  document.getElementById("pdf-timestamp").textContent="Generated: "+new Date().toLocaleString()+" | Version: DoseBand v2.0";
+  document.getElementById("pdf-timestamp").textContent="Generated: "+new Date().toLocaleString()+" | Version: DoseBand v2.1";
   document.getElementById("pdf-patientid").textContent="Patient ID: "+lastResult.patientId+" | Prescriber: "+lastResult.prescriber;
   window.print();
 }
@@ -1040,7 +1091,7 @@ function exportFHIR(){
   var fhir={
     resourceType:"MedicationRequest",
     id:"doseband-"+Date.now(),
-    meta:{profile:["http://hl7.org/fhir/StructureDefinition/MedicationRequest"],source:"DoseBand v2.0 | https://doseband-production.up.railway.app"},
+    meta:{profile:["http://hl7.org/fhir/StructureDefinition/MedicationRequest"],source:"DoseBand v2.1 | https://doseband-production.up.railway.app"},
     status:"active",
     intent:"order",
     authoredOn:lastResult.ts,
