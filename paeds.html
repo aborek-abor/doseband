@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DoseBand Paediatric — Weight-Based Dosing</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0a0c0b;--surface:#f5f3ef;--surface2:#eceae4;--border:#d0ccc4;--border2:#b8b4aa;--muted:#7a7670;--dim:#5a5650;--amber:#b86800;--amber-bg:#fef5e4;--amber-bd:#f0d080;--red:#b82020;--red-bg:#fdecea;--red-bd:#f0b0a8;--blue:#1a4a8a;--blue-bg:#e8eef8;--blue-bd:#a8c0e8;--green:#1a7a4a;--green-bg:#e8f5ee;--green-bd:#b8dfc8;--purple:#6a1a8a;--purple-bg:#f0e8f8;--purple-bd:#c8a8e8;--mono:"JetBrains Mono",monospace;--display:"Syne",sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--surface);color:var(--ink);font-family:var(--display);font-size:14px;line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased}
+.nav{background:var(--ink);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.nav-brand{font-family:var(--display);font-size:18px;font-weight:800;color:#fff;letter-spacing:-0.02em;text-decoration:none}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap}
+.nav-link{font-family:var(--mono);font-size:10px;padding:5px 10px;border-radius:5px;color:rgba(255,255,255,0.55);text-decoration:none;letter-spacing:0.06em;transition:all 0.15s;border:1px solid transparent}
+.nav-link:hover{color:#fff;background:rgba(255,255,255,0.08)}
+.nav-link.active{color:#fff;background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.15)}
+.shell{max-width:760px;margin:0 auto;padding:24px 16px 60px}
+.page-title{font-family:var(--display);font-size:26px;font-weight:800;color:var(--ink);letter-spacing:-0.03em;margin-bottom:4px}
+.page-sub{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:0.06em;margin-bottom:20px}
+.disclaimer{background:var(--red-bg);border:1px solid var(--red-bd);border-left:3px solid var(--red);border-radius:6px;padding:11px 14px;font-family:var(--mono);font-size:11px;color:var(--red);line-height:1.6;margin-bottom:20px}
+.section{margin-bottom:16px}
+.slabel{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.slabel::after{content:"";flex:1;height:1px;background:var(--border)}
+.card{background:#fff;border:1px solid var(--border);border-radius:10px}
+.card-body{padding:16px}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.fld{margin-bottom:12px}
+.fld:last-child{margin-bottom:0}
+.flbl{display:block;font-family:var(--mono);font-size:10px;font-weight:500;color:var(--dim);margin-bottom:5px;letter-spacing:0.06em;text-transform:uppercase}
+.flbl-hint{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:3px}
+input[type=number],input[type=text],select{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:7px;padding:9px 12px;font-size:14px;font-family:var(--display);font-weight:500;color:var(--ink);outline:none;transition:border-color 0.15s;-webkit-appearance:none}
+input:focus,select:focus{border-color:var(--ink);background:#fff}
+.seg{display:grid;border:1.5px solid var(--border);border-radius:7px;overflow:hidden;background:var(--surface)}
+.sbtn{padding:8px 6px;border:none;background:transparent;font-size:12px;font-weight:600;font-family:var(--display);cursor:pointer;color:var(--dim);border-right:1px solid var(--border);transition:all 0.12s}
+.sbtn:last-child{border-right:none}
+.sbtn.on{background:var(--ink);color:#fff}
+.sbtn:hover:not(.on){background:var(--surface2)}
+.cat-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.cpill{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--dim);cursor:pointer;transition:all 0.15s}
+.cpill:hover{border-color:var(--border2);background:var(--surface2)}
+.cpill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.search-wrap{position:relative;margin-bottom:10px}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none}
+.search-input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:7px;padding:9px 36px;font-size:13px;font-family:var(--display);color:var(--ink);outline:none;transition:border-color 0.15s}
+.search-input:focus{border-color:var(--ink);background:#fff}
+.dcount{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:8px}
+.dgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+@media(min-width:480px){.dgrid{grid-template-columns:repeat(3,1fr)}}
+.dtile{padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;transition:all 0.14s;text-align:left}
+.dtile:hover{border-color:var(--border2);background:#fff;transform:translateY(-1px)}
+.dtile.on{border-color:var(--ink);background:var(--ink);transform:translateY(-1px)}
+.dname{font-size:12px;font-weight:600;color:var(--ink);display:block;line-height:1.3}
+.dtile.on .dname{color:#fff}
+.dcat{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px;display:block}
+.dtile.on .dcat{color:rgba(255,255,255,0.45)}
+.cbtn{width:100%;padding:15px;background:var(--ink);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:var(--display);cursor:pointer;margin:4px 0 16px;transition:all 0.15s}
+.cbtn:hover{opacity:0.88}
+.cbtn:active{transform:scale(0.98)}
+.result{display:none;animation:rise 0.3s ease;margin-bottom:20px}
+.result.show{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.rhero{border-radius:10px 10px 0 0;padding:22px 20px 18px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.rhero-low{background:var(--green)}
+.rhero-mod{background:var(--blue)}
+.rhero-high{background:#c84800}
+.rhero-danger{background:var(--red)}
+.reyebrow{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.5);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px}
+.rdose-big{font-family:var(--display);font-size:52px;font-weight:800;color:#fff;line-height:1;letter-spacing:-0.04em}
+.rdose-unit{font-family:var(--mono);font-size:13px;color:rgba(255,255,255,0.7);margin-top:4px}
+.rright{text-align:right}
+.rdrug{font-family:var(--display);font-size:13px;font-weight:700;color:#fff}
+.rrange{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,0.5);margin-top:3px}
+.rbody{background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;padding:16px}
+.pkrow{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px}
+.pkc{background:var(--surface);border-radius:7px;padding:9px 11px}
+.pkv{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--ink);line-height:1}
+.pkl{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:3px}
+.flag{display:flex;gap:9px;align-items:flex-start;padding:10px 12px;border-radius:7px;margin-bottom:7px;font-size:12px;line-height:1.6;font-family:var(--mono)}
+.flag:last-child{margin-bottom:0}
+.fi{font-size:12px;flex-shrink:0;margin-top:2px}
+.flag-info{background:var(--blue-bg);border:1px solid var(--blue-bd);color:var(--blue)}
+.flag-warning{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber)}
+.flag-danger{background:var(--red-bg);border:1px solid var(--red-bd);color:var(--red)}
+.flag-green{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green)}
+.divider{height:1px;background:var(--border);margin:14px 0}
+.wt-calc{background:var(--blue-bg);border:1px solid var(--blue-bd);border-radius:8px;padding:12px 14px;margin-bottom:14px}
+.wt-calc-title{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+.wt-formula-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.wt-formula-label{font-family:var(--mono);font-size:10px;color:var(--blue)}
+.wt-formula-val{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--blue)}
+.age-band-info{background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:6px;padding:8px 12px;font-family:var(--mono);font-size:10px;color:var(--amber);margin-bottom:10px;line-height:1.6}
+.footer{text-align:center;font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:28px;line-height:2}
+.footer strong{color:var(--dim)}
+.no-results{font-family:var(--mono);font-size:11px;color:var(--muted);padding:12px 0;text-align:center}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="nav-brand">DoseBand</a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Adult</a>
+    <a href="pkpd.html" class="nav-link">PK/PD</a>
+    <a href="cvd.html" class="nav-link">CVD Risk</a>
+    <a href="paeds.html" class="nav-link active">Paediatric</a>
+    <a href="pharmacist.html" class="nav-link">Portal</a>
+  </div>
+</nav>
+
+<div class="shell">
+  <div class="page-title">Paediatric Dosing</div>
+  <div class="page-sub">Weight-based dose calculator for neonates, infants, children, and adolescents</div>
+
+  <div class="disclaimer">⛔ Paediatric drugs require specialist verification. All doses must be confirmed by a paediatrician or paediatric pharmacist before administration. Never extrapolate from adult doses. This tool is pre-clinical — for guidance only.</div>
+
+  <!-- PATIENT -->
+  <div class="section">
+    <div class="slabel">Patient</div>
+    <div class="card"><div class="card-body">
+      <div class="fg3">
+        <div class="fld">
+          <label class="flbl">Age</label>
+          <input type="number" id="age-val" placeholder="e.g. 6" min="0" max="18" step="0.5" oninput="onAgeChange()">
+        </div>
+        <div class="fld">
+          <label class="flbl">Age unit</label>
+          <select id="age-unit" onchange="onAgeChange()">
+            <option value="days">Days</option>
+            <option value="weeks">Weeks</option>
+            <option value="months" selected>Months</option>
+            <option value="years">Years</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label class="flbl">Sex</label>
+          <div class="seg" style="grid-template-columns:1fr 1fr">
+            <button class="sbtn on" onclick="pickS('sex','M',this)">Male</button>
+            <button class="sbtn" onclick="pickS('sex','F',this)">Female</button>
+          </div>
+        </div>
+      </div>
+      <div class="fg2">
+        <div class="fld">
+          <label class="flbl">Weight (kg)</label>
+          <input type="number" id="wt" placeholder="e.g. 15" min="0.3" max="100" step="0.1" oninput="onWtChange()">
+          <div class="flbl-hint">Actual body weight. Use estimated weight if not available.</div>
+        </div>
+        <div class="fld">
+          <label class="flbl">Height / Length (cm)</label>
+          <input type="number" id="ht" placeholder="e.g. 95" min="30" max="200" step="0.5">
+          <div class="flbl-hint">Optional — used for BSA and ideal weight</div>
+        </div>
+      </div>
+      <!-- WEIGHT ESTIMATION -->
+      <div class="wt-calc" id="wt-est" style="display:none">
+        <div class="wt-calc-title">Estimated weight (if actual weight unavailable)</div>
+        <div class="wt-formula-row">
+          <span class="wt-formula-label">APLS formula:</span>
+          <span class="wt-formula-val" id="apls-wt">—</span>
+          <span class="wt-formula-label">kg</span>
+        </div>
+        <div class="wt-formula-row">
+          <span class="wt-formula-label">Mercy / Broselow:</span>
+          <span class="wt-formula-val" id="mercy-wt">—</span>
+          <span class="wt-formula-label">kg (based on length if entered)</span>
+        </div>
+      </div>
+      <!-- AGE BAND -->
+      <div class="age-band-info" id="age-band-info" style="display:none"></div>
+    </div></div>
+  </div>
+
+  <!-- CLINICAL CONTEXT -->
+  <div class="section">
+    <div class="slabel">Clinical context</div>
+    <div class="card"><div class="card-body">
+      <div class="fg2">
+        <div class="fld">
+          <label class="flbl">Renal function</label>
+          <select id="renal">
+            <option value="normal">Normal</option>
+            <option value="mild">Mild impairment (eGFR 50–80)</option>
+            <option value="moderate">Moderate impairment (eGFR 30–50)</option>
+            <option value="severe">Severe impairment (eGFR &lt;30)</option>
+            <option value="neonate_term">Term neonate (immature renal function)</option>
+            <option value="neonate_preterm">Preterm neonate (&lt;37 weeks)</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label class="flbl">Hepatic function</label>
+          <select id="hepatic">
+            <option value="normal">Normal</option>
+            <option value="mild">Mild impairment</option>
+            <option value="severe">Severe impairment</option>
+            <option value="neonate">Neonatal (immature hepatic metabolism)</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg2">
+        <div class="fld">
+          <label class="flbl">Nutritional status</label>
+          <select id="nutrition">
+            <option value="normal">Normal</option>
+            <option value="mam">Moderate acute malnutrition</option>
+            <option value="sam">Severe acute malnutrition (SAM)</option>
+            <option value="obese">Obese (BMI &gt;95th centile)</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label class="flbl">Indication severity</label>
+          <div class="seg" style="grid-template-columns:1fr 1fr 1fr">
+            <button class="sbtn on" onclick="pickS('severity','standard',this)">Standard</button>
+            <button class="sbtn" onclick="pickS('severity','severe',this)">Severe</button>
+            <button class="sbtn" onclick="pickS('severity','critical',this)">Critical</button>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- DRUG SELECTION -->
+  <div class="section">
+    <div class="slabel">Drug</div>
+    <div class="card"><div class="card-body">
+      <div class="cat-row" id="cats"></div>
+      <div class="search-wrap">
+        <span class="search-icon">&#x2315;</span>
+        <input type="text" class="search-input" id="drug-search" placeholder="Search paediatric drugs..." oninput="onSearch(this.value)" autocomplete="off">
+      </div>
+      <div class="dcount" id="dcount"></div>
+      <div class="dgrid" id="dgrid"></div>
+    </div></div>
+  </div>
+
+  <button class="cbtn" onclick="calculate()">Calculate paediatric dose</button>
+
+  <div class="result" id="result">
+    <div class="rhero rhero-mod" id="r-hero">
+      <div>
+        <div class="reyebrow">Calculated dose</div>
+        <div class="rdose-big" id="r-dose">—</div>
+        <div class="rdose-unit" id="r-unit">—</div>
+      </div>
+      <div class="rright">
+        <div class="rdrug" id="r-drug">—</div>
+        <div class="rrange" id="r-range">—</div>
+      </div>
+    </div>
+    <div class="rbody">
+      <div class="pkrow">
+        <div class="pkc"><div class="pkv" id="r-wt">—</div><div class="pkl">Weight kg</div></div>
+        <div class="pkc"><div class="pkv" id="r-bsa">—</div><div class="pkl">BSA m²</div></div>
+        <div class="pkc"><div class="pkv" id="r-age-grp">—</div><div class="pkl">Age group</div></div>
+        <div class="pkc"><div class="pkv" id="r-max">—</div><div class="pkl">Max dose</div></div>
+      </div>
+      <div id="r-flags"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <strong>DoseBand Paediatric v1.0</strong> — Pre-clinical validation only<br>
+    Neonates · Infants · Children · Adolescents · BNFc / WHO aligned<br>
+    All doses require paediatrician or paediatric pharmacist verification
+  </div>
+</div>
+
+<script>
+var S = {drug:null, sex:'M', severity:'standard', cat:'all', query:''};
+
+// ── PAEDIATRIC DRUG DATABASE ─────────────────────────────────────────────────
+// Format: key, name, cat, dosing method, dose per kg (or fixed),
+//         min-max range, max single dose, frequency, route,
+//         renal adjustment, hepatic adjustment,
+//         neonatal dose (if different), monitoring, notes
+var PDRUGS = {};
+var PCATS = {
+  all:'All', abx:'Antibiotics', anaes:'Anaesthesia',
+  analgesic:'Analgesia', antifungal:'Antifungal', antiviral:'Antiviral',
+  cardio:'Cardiovascular', emergency:'Emergency', gi:'GI / Fluids',
+  neuro:'Neurology', onco:'Oncology', resp:'Respiratory',
+  hiv:'HIV / ARV', tb:'TB'
+};
+
+function addP(key,name,cat,method,dose,unit,freq,route,maxDose,ageMin,ageMax,neonatalNote,renalAdj,hepaticAdj,monitoring,notes,samAdj){
+  PDRUGS[key]={key,name,cat,method,dose,unit,freq,route,maxDose,ageMin,ageMax,neonatalNote:neonatalNote||null,renalAdj:renalAdj||null,hepaticAdj:hepaticAdj||null,monitoring:monitoring||'',notes:notes||'',samAdj:samAdj||null};
+}
+// ageMin/ageMax in months. dose in mg/kg unless method='fixed' or 'bsa'
+
+// ── ANTIBIOTICS ──────────────────────────────────────────────────────────────
+addP("amox_po","Amoxicillin oral","abx","wt",25,"mg/kg","8h","PO",500,0,216,
+  "Neonate: 30mg/kg/dose q12h (term); q8h (>7 days old)",
+  "Reduce dose/extend interval if eGFR <30",null,
+  "Rash monitoring. EBV maculopapular rash.","Standard: 25mg/kg/dose q8h. Severe: 40mg/kg/dose q8h. Max 500mg/dose (standard), 1g/dose (severe).");
+addP("amox_clav","Co-amoxiclav (Augmentin) oral","abx","wt",25,"mg/kg (amoxicillin component)","8h","PO",500,2,216,null,
+  "Reduce if eGFR <30. Avoid if eGFR <10",null,
+  "LFTs if prolonged course. Diarrhoea monitoring.","Based on amoxicillin component. Max 500mg amoxicillin/dose. Available as 250/62 and 500/125 suspensions.");
+addP("amoxicillin_iv","Amoxicillin IV","abx","wt",50,"mg/kg","6h","IV",1000,0,216,
+  "Neonate: 30mg/kg q12h (<7 days), 30mg/kg q8h (>7 days)",
+  "Extend interval if eGFR <30. Halve dose if eGFR <10",null,
+  "CrCl monitoring.","Meningitis: 50-100mg/kg/dose q4-6h (max 2g/dose). Max 1g/dose standard infection.");
+addP("benzylpen","Benzylpenicillin IV","abx","wt",50,"mg/kg","4-6h","IV",2400,0,216,
+  "Neonate: 50mg/kg q12h (<7 days), 50mg/kg q8h (7-28 days)",
+  "Reduce dose/extend interval if eGFR <30",null,
+  "Meningitis: 50-100mg/kg/dose q4-6h. 1 million units = 600mg. Max 2.4g/dose.");
+addP("ceftriaxone_p","Ceftriaxone IV","abx","wt",50,"mg/kg","24h","IV",2000,0,216,
+  "Neonate (>41 weeks PCA): 50mg/kg once daily. Avoid in jaundiced neonates — displaces bilirubin.",
+  "No adjustment unless combined renal+hepatic failure",null,
+  "Meningitis: 100mg/kg/day in 1-2 divided doses. Max 2g/dose standard; 4g/day meningitis. Avoid IV calcium co-administration.");
+addP("cefotaxime","Cefotaxime IV","abx","wt",50,"mg/kg","6-8h","IV",2000,0,216,
+  "Neonate <7 days: 50mg/kg q12h. Neonate 7-28 days: 50mg/kg q8h. Preferred over ceftriaxone in neonates/jaundiced infants.",
+  "Reduce dose if eGFR <20",null,"Meningitis: 50mg/kg q6h (max 2g/dose).");
+addP("gent_p","Gentamicin IV (paediatric)","abx","wt",7,"mg/kg","24h","IV",320,0,216,
+  "Neonate term: 5mg/kg q36h (first week), q24h after. Preterm <30wk: 5mg/kg q48h. Preterm 30-34wk: 5mg/kg q36h.",
+  "Extend interval significantly. Target pre-dose level <1 mg/L",null,
+  "Pre-dose level before 3rd dose (target <1 mg/L). Once-daily dosing preferred in children >1 month. Audiometry if prolonged course.");
+addP("metronidazole_p","Metronidazole IV/oral","abx","wt",7.5,"mg/kg","8h","IV/PO",500,0,216,
+  "Neonate: 7.5mg/kg q12h (loading 15mg/kg then 7.5mg/kg q12h)",
+  "No adjustment",{mild:0.75,severe:0.5},
+  "Max 500mg/dose. Oral bioavailability nearly 100% — switch to oral early.");
+addP("cotrimoxazole_p","Co-trimoxazole oral (TMP component)","abx","wt",4,"mg/kg (TMP)","12h","PO",160,2,216,null,
+  "Reduce dose if eGFR 15-30. Avoid if eGFR <15",null,
+  "FBC if prolonged. Folate supplementation. PCP treatment: 5mg/kg TMP q6h.");
+addP("azithromycin_p","Azithromycin oral","abx","wt",10,"mg/kg","24h","PO",500,6,216,null,null,null,
+  "Max 500mg/dose. 3-day course for community pneumonia. QTc monitoring if prolonged.");
+addP("clindamycin_p","Clindamycin IV/oral","abx","wt",10,"mg/kg","6-8h","IV/PO",450,1,216,
+  "Neonate: 5mg/kg q8h",null,{mild:0.75,severe:0.5},
+  "Bone and soft tissue penetration excellent. C.diff risk. Max 450mg/dose.");
+addP("meropenem_p","Meropenem IV","abx","wt",20,"mg/kg","8h","IV",1000,0,216,
+  "Neonate: 20mg/kg q12h (<32wk PCA), 20mg/kg q8h (>32wk PCA)",
+  "Reduce dose if eGFR <26",null,
+  "Meningitis: 40mg/kg q8h (max 2g/dose). Standard max 1g/dose.");
+addP("vancomycin_p","Vancomycin IV","abx","wt",15,"mg/kg","6h","IV",750,0,216,
+  "Neonate: 15mg/kg q12h (term, <7 days); q8h (>7 days). Preterm: 15mg/kg q18-24h.",
+  "Extend interval. TDM essential",null,
+  "AUC-guided TDM preferred. Trough after dose 3-4 (target 10-20 mg/L for MRSA). CrCl q48h. Red man syndrome with rapid infusion — infuse over 60 min minimum.");
+
+// ── ANAESTHESIA / SEDATION ───────────────────────────────────────────────────
+addP("ketamine_p","Ketamine IV/IM","anaes","wt",1.5,"mg/kg","single","IV/IM",300,0,216,
+  "Neonate: use with caution — reduced clearance. 0.5-1mg/kg IV only.",null,null,
+  "IV: 1-2mg/kg. IM: 4-6mg/kg. Atropine pretreatment recommended. Emergence reactions — benzodiazepine cover in children >5y. Airway secretions monitoring.");
+addP("propofol_p","Propofol IV","anaes","wt",2.5,"mg/kg","single","IV",200,36,216,null,null,null,
+  "NOT for sedation in children <16y in ICU (propofol infusion syndrome). Induction 2.5mg/kg (healthy child); reduce in premedicated. Max 200mg.");
+addP("midazolam_p","Midazolam IV/IM/oral","anaes","wt",0.1,"mg/kg","single","IV/IM/PO",5,1,216,
+  "Neonate: 0.05-0.1mg/kg IV for sedation only — respiratory depression risk.",null,{mild:0.75,severe:0.5},
+  "IV sedation: 0.05-0.1mg/kg. IM premedication: 0.1-0.2mg/kg. Oral premedication: 0.5mg/kg (max 20mg). Flumazenil reversal must be available.");
+addP("suxamethonium_p","Suxamethonium IV/IM","anaes","wt",2,"mg/kg","single","IV/IM",150,0,216,
+  "Infant/child: 2mg/kg IV (higher dose than adult due to higher Vd). IM: 4mg/kg if no IV access.",null,null,
+  "Hyperkalemia risk in burns, crush injury, neuromuscular disease — check history carefully. Max 150mg.");
+addP("rocuronium_p","Rocuronium IV","anaes","wt",0.6,"mg/kg","single","IV",50,0,216,
+  "Neonate: 0.6mg/kg (prolonged duration — use carefully).",null,null,
+  "Intubation: 0.6mg/kg. RSI: 1.2mg/kg. Sugammadex reversal available. Neuromuscular monitoring recommended.");
+addP("morphine_p","Morphine IV/IM/SC","analgesic","wt",0.1,"mg/kg","4h","IV/IM/SC",10,1,216,
+  "Neonate: 0.05mg/kg q4-6h IV — respiratory depression risk. Prolonged half-life in neonates. Use with extreme caution.",
+  "Reduce dose 50% if eGFR <30",{severe:0.5},
+  "Max 10mg/dose (child). Naloxone must be available. Respiratory rate monitoring every 30 min. Use lowest effective dose and shortest duration.");
+addP("paracetamol_iv","Paracetamol (Acetaminophen) IV","analgesic","wt",15,"mg/kg","6h","IV",1000,28,216,
+  "Neonate 28-44 weeks PCA: 7.5mg/kg q8h. Term neonate: 10mg/kg q6-8h.",
+  "Reduce dose frequency if eGFR <30",{severe:0.5},
+  "Max 1g/dose. Max 4g/day (child >50kg). Hepatotoxicity risk in overdose — N-acetylcysteine treatment.");
+addP("paracetamol_po","Paracetamol oral","analgesic","wt",15,"mg/kg","4-6h","PO",1000,0,216,
+  "Neonate: 10-15mg/kg q6-8h. Max 4 doses/24h.",
+  "Reduce frequency if eGFR <30",{severe:0.5},
+  "Max 1g/dose. Max 5 doses/24h (child). Do not exceed 60mg/kg/day.");
+addP("ibuprofen_p","Ibuprofen oral","analgesic","wt",5,"mg/kg","6-8h","PO",400,3,216,null,
+  "Avoid if eGFR <30",null,
+  "MAX 400mg/dose. AVOID in asthma, renal impairment, dehydration, GI bleeding. Not recommended <3 months. Anti-inflammatory: 5-10mg/kg/dose.");
+
+// ── EMERGENCY ────────────────────────────────────────────────────────────────
+addP("adrenaline_arrest","Adrenaline IV (cardiac arrest)","emergency","wt",0.01,"mg/kg","4 min","IV",1,0,216,
+  "All ages: 0.01mg/kg (0.1ml/kg of 1:10,000) IV/IO every 4 minutes during CPR.",null,null,
+  "RESUSCITATION USE ONLY. Max 1mg/dose. IO route equally effective if no IV access. 1:10,000 concentration for IV/IO. 1:1,000 via ETT if no IV/IO access.");
+addP("adrenaline_anaphylaxis","Adrenaline IM (anaphylaxis)","emergency","wt",0.01,"mg/kg","repeat 5min","IM",0.5,0,216,
+  "All ages: 0.01mg/kg IM into anterolateral thigh. Repeat every 5 min if no response.",null,null,
+  "USE 1:1,000 CONCENTRATION IM. Max 0.5mg (child). <6 months: 0.15mg. 6 months-6 years: 0.15mg. 6-12 years: 0.3mg. >12 years: 0.5mg.");
+addP("glucose_dextrose","Dextrose 10% IV (hypoglycaemia)","emergency","wt",2,"ml/kg (10% dextrose)","bolus","IV",50,0,216,
+  "Neonate: 2ml/kg of 10% dextrose (= 0.2g/kg glucose). DO NOT use 50% dextrose in children — causes hyperosmolarity.",null,null,
+  "2ml/kg of 10% dextrose IV bolus over 5 min. Follow with glucose infusion 4-6mg/kg/min. Recheck glucose after 15 min.");
+addP("diazepam_rectal","Diazepam rectal (seizure)","emergency","wt",0.5,"mg/kg","single","Rectal",10,1,216,
+  "Neonate: 1.25-2.5mg/dose. <1 year: 2.5mg. 1-3 years: 5mg. 4-12 years: 5-10mg.",null,{severe:0.5},
+  "Max 10mg. Repeat once after 10 min if seizure continuing. IV diazepam: 0.2-0.3mg/kg (max 10mg, rate 1mg/min). Respiratory depression risk.");
+addP("lorazepam_p","Lorazepam IV (status epilepticus)","emergency","wt",0.1,"mg/kg","repeat 10min","IV",4,1,216,null,null,{severe:0.5},
+  "First-line for status epilepticus. 0.1mg/kg IV over 1-2 min. Max 4mg/dose. Repeat once after 10 min. Buccal midazolam 0.5mg/kg (max 10mg) if no IV access.");
+addP("adenosine_p","Adenosine IV (SVT)","emergency","wt",0.1,"mg/kg","repeat 2min","IV rapid bolus",6,0,216,
+  "Same weight-based dosing in neonates.",null,null,
+  "0.1mg/kg RAPID IV bolus, flush immediately. Repeat 0.2mg/kg then 0.3mg/kg. Max 6mg/dose (child <50kg), 12mg/dose (>50kg). ECG monitoring. Brief asystole expected.");
+addP("atropine_p","Atropine IV (bradycardia)","emergency","wt",0.02,"mg/kg","single","IV",0.6,0,216,
+  "Minimum dose 0.1mg in infants — paradoxical bradycardia with smaller doses.",null,null,
+  "Min 0.1mg (paradoxical bradycardia risk with <0.1mg). Max 0.6mg child, 1mg adolescent. Repeat once after 5 min. Max total 1mg child.");
+addP("fluids_bolus","IV fluid bolus (shock)","emergency","wt",10,"ml/kg","reassess","IV",500,0,216,
+  "Neonate: 10ml/kg bolus and reassess — be cautious in neonates.",null,null,
+  "NICE 2023: 10ml/kg 0.9% NaCl or Hartmann's bolus over 15-30 min. Reassess after each bolus. Max 3 boluses (30ml/kg) before senior review. DO NOT use hypotonic fluids in shock.");
+
+// ── RESPIRATORY ──────────────────────────────────────────────────────────────
+addP("salbutamol_neb","Salbutamol nebulised","resp","wt",2.5,"mg fixed <5y / 5mg >5y","20 min","Neb",5,0,216,
+  "Neonate/infant: 0.15mg/kg (min 0.5mg) in 2.5ml saline.",null,null,
+  "Acute asthma: 2.5mg (<5y) or 5mg (>5y) every 20-30 min for 3 doses then reassess. Continuous nebulisation in severe attacks. Tachycardia monitoring. IV salbutamol 15mcg/kg loading if severe.");
+addP("dexamethasone_croup","Dexamethasone oral (croup)","resp","wt",0.15,"mg/kg","single dose","PO/IV",10,1,84,null,null,null,
+  "Single dose 0.15-0.6mg/kg (max 10mg). Oral preferred — as effective as IM. For moderate-severe croup. Onset 30-60 min. Adrenaline nebulisation if severe/stridor at rest.");
+addP("prednisolone_p","Prednisolone oral (asthma)","resp","wt",1,"mg/kg","24h","PO",40,12,216,null,null,null,
+  "Acute asthma: 1-2mg/kg/day (max 40mg) for 3-5 days. No taper needed for courses <1 week.");
+addP("caffeine","Caffeine citrate (apnoea of prematurity)","resp","wt",20,"mg/kg loading then 5mg/kg","24h","IV/PO",30,0,6,
+  "NEONATES ONLY. Loading 20mg/kg caffeine citrate IV over 30 min. Maintenance 5-10mg/kg/day.",null,null,
+  "TDM: target 8-20 mg/L. Tachycardia at high levels. Continue until 34-35 weeks PCA or no apnoea for 7 days.");
+
+// ── CARDIOVASCULAR ───────────────────────────────────────────────────────────
+addP("digoxin_p","Digoxin oral (heart failure/SVT)","cardio","wt",0.01,"mg/kg","12h","PO",0.25,0,216,
+  "Neonates/infants: loading 15-20 mcg/kg in divided doses (6h intervals), then 5 mcg/kg/12h maintenance.",
+  "Reduce maintenance 50% if eGFR <30. TDM essential",null,
+  "TDM: target 0.8-2.0 ng/mL (heart failure), <2.0 (SVT). Narrow therapeutic index. Toxicity: bradycardia, AV block, vomiting. Correct hypokalaemia before starting.");
+addP("captopril_p","Captopril oral (heart failure)","cardio","wt",0.1,"mg/kg","8h","PO",6,1,216,
+  "Neonate: 0.01-0.05mg/kg/dose q8-12h — profound hypotension risk. Avoid if ductus-dependent lesion.",
+  "Start at lowest dose if eGFR <30. Monitor CrCl and K+",null,
+  "Start: 0.1mg/kg/dose q8h. Titrate up to 0.5mg/kg/dose (max 6mg/dose). BP and renal monitoring.");
+addP("furosemide_p","Furosemide IV/oral","cardio","wt",1,"mg/kg","6-12h","IV/PO",40,0,216,
+  "Neonate: 0.5-1mg/kg IV q24h (preterm), q12-24h (term). Neonatal renal function affects response.",
+  "May need higher dose in renal impairment for effect. Monitor electrolytes",null,
+  "Max 40mg/dose. Electrolyte monitoring (K+, Na+). Ototoxicity with high doses or rapid IV injection.");
+addP("amiodarone_p","Amiodarone IV (VT/VF)","cardio","wt",5,"mg/kg","single/infusion","IV",300,0,216,
+  "Same weight-based dosing. Neonatal arrhythmia: specialist only.",null,null,
+  "VF/pulseless VT: 5mg/kg IV bolus (max 300mg) after 3rd shock. Stable VT: 5mg/kg over 20-60 min (max 300mg). ECG monitoring. Dilute in 5% dextrose only.");
+
+// ── NEUROLOGY ────────────────────────────────────────────────────────────────
+addP("phenobarb","Phenobarbitone IV (neonatal seizures)","neuro","wt",20,"mg/kg","loading","IV",40,0,3,
+  "NEONATES PRIMARILY. Loading: 20mg/kg IV over 20-30 min. Second dose: 10mg/kg if seizures continue. Maintenance: 2.5-5mg/kg/day.",null,null,
+  "Monitor respiratory rate during loading — respiratory depression risk. TDM: target 20-40 mg/L. Sedation monitoring.");
+addP("levetiracetam_p","Levetiracetam IV/oral","neuro","wt",10,"mg/kg","12h","IV/PO",500,1,216,null,
+  "Reduce maintenance dose if eGFR <50",null,
+  "Loading: 20-60mg/kg IV over 15 min. Maintenance: 10-30mg/kg/12h. Max 500mg/dose (child); 1500mg/dose (adolescent). Well tolerated. Behavioural side effects.");
+addP("phenytoin_p","Phenytoin IV (status)","neuro","wt",20,"mg/kg","loading","IV",1000,1,216,null,null,{severe:0.75},
+  "Loading: 20mg/kg IV at max 1mg/kg/min (neonate) or 50mg/min (child). ECG and BP monitoring mandatory. Fosphenytoin preferred (less toxic, faster infusion). TDM: target 10-20 mg/L.");
+addP("sodium_valproate_p","Sodium valproate IV","neuro","wt",15,"mg/kg","loading","IV",800,1,216,null,null,{severe:0.75},
+  "Status epilepticus: 15-20mg/kg loading over 3-5 min, then 1-2mg/kg/h infusion. AVOID in children <2y with suspected mitochondrial disease. LFTs monitoring. Fatal hepatotoxicity in <2y.");
+
+// ── ANTIFUNGAL ───────────────────────────────────────────────────────────────
+addP("fluconazole_p","Fluconazole IV/oral","antifungal","wt",6,"mg/kg","24h","IV/PO",400,0,216,
+  "Neonate: 6mg/kg q72h (preterm <2wk), q48h (term <2wk), q24h (>2wk).",
+  "Halve dose if eGFR <50",null,
+  "Max 400mg/dose. Loading dose 12mg/kg day 1. Fluconazole-resistant Candida: liposomal amphotericin B.");
+addP("amphot_p","Liposomal amphotericin B IV","antifungal","wt",3,"mg/kg","24h","IV",5,0,216,
+  "Same weight-based dosing. Neonates: 3mg/kg q24h.",
+  "No dose adjustment needed (not renally cleared)",null,
+  "Premedicate with paracetamol + antihistamine. IV hydration before each dose. Renal monitoring. Less nephrotoxic than conventional amphotericin.");
+
+// ── HIV / ARV ─────────────────────────────────────────────────────────────────
+addP("zidovudine_p","Zidovudine (AZT) oral/IV","hiv","wt",2,"mg/kg","6h","PO/IV",300,0,216,
+  "PMTCT: neonate 4mg/kg oral q12h x6 weeks (term); 2mg/kg q12h (preterm <30wk). IV: 1.5mg/kg q6h.",
+  "Reduce dose 50% if eGFR <10",null,
+  "FBC at baseline, 2 weeks, monthly. Avoid if Hb <7g/dL. Macrocytic anaemia common.");
+addP("lopinavir_p","Lopinavir/ritonavir (LPV/r) oral","hiv","wt",12,"mg/kg (lopinavir)","12h","PO",400,3,216,null,null,null,
+  "Weight-band dosing preferred — see WHO HIV guidelines. 12mg/kg/dose q12h (14-25kg). 10mg/kg/dose (>25kg). NOT for neonates <14 days. GI side effects. Store refrigerated.");
+addP("dolutegravir_p","Dolutegravir (DTG) oral","hiv","wt",null,"Weight-band","24h","PO",50,36,216,null,null,null,
+  "WHO weight-band dosing: 14-<20kg: 20mg OD. 20-<25kg: 25mg OD. 25-<30kg: 30mg OD. >=30kg: 50mg OD. Do not crush tablets. Neural tube defect counselling if female adolescent.");
+addP("efavirenz_p","Efavirenz (EFV) oral","hiv","wt",null,"Weight-band","24h (nocte)","PO",600,36,216,null,null,null,
+  "Weight-band dosing: 14-<20kg: 200mg. 20-<25kg: 250mg. 25-<32.5kg: 300mg. 32.5-<40kg: 350mg. >=40kg: 400mg. Nocte dosing reduces CNS effects. Avoid <3y or <10kg.");
+addP("nevirapine_pmtct","Nevirapine (NVP) PMTCT dose","hiv","wt",null,"Fixed by weight","single/daily","PO",2,0,6,
+  "PMTCT prophylaxis: birth dose 2mg/kg single dose. Daily prophylaxis: 2mg/kg/day (term), 2mg/kg/day increasing to 4mg/kg/day at 2 weeks (preterm). Duration depends on maternal regimen.",null,null,"WHO PMTCT 2022 guidelines.");
+
+// ── TB ───────────────────────────────────────────────────────────────────────
+addP("rifampicin_p","Rifampicin oral","tb","wt",15,"mg/kg","24h","PO",600,0,216,
+  "Neonate: 10-20mg/kg q24h. Same formulation challenge — rifampicin suspensions available.",null,{severe:0.75},
+  "Max 600mg/dose. Orange discolouration. CYP inducer — drug interactions. LFTs monthly. WHO 2022: 15mg/kg/day (10-20mg/kg range).");
+addP("isoniazid_p","Isoniazid oral","tb","wt",10,"mg/kg","24h","PO",300,0,216,
+  "Neonate: 10-15mg/kg q24h.",null,{severe:0.75},
+  "Max 300mg/dose. Pyridoxine supplementation mandatory (1-2mg/kg/day). LFTs monthly. Slow acetylators have higher levels.");
+addP("pyrazinamide_p","Pyrazinamide oral","tb","wt",35,"mg/kg","24h","PO",2000,0,216,null,
+  "Reduce to 25mg/kg if eGFR <30",null,
+  "Max 2g/dose. LFTs monthly. Uric acid monitoring. First 2 months only. WHO 2022: 35mg/kg/day (30-40mg/kg range).");
+addP("ethambutol_p","Ethambutol oral","tb","wt",20,"mg/kg","24h","PO",1600,24,216,null,
+  "Reduce dose and frequency if eGFR <30",null,
+  "Avoid <2y — visual acuity testing not reliable. Max 1.6g/dose. Visual acuity and colour vision monthly. WHO 2022: 20mg/kg/day (15-25mg/kg range).");
+
+// ── ONCOLOGY ─────────────────────────────────────────────────────────────────
+addP("methotrexate_it","Methotrexate intrathecal","onco","fixed",null,"Age-based fixed","single","IT",15,0,216,
+  "Same age-based dosing.",null,null,
+  "Age-based dose: <1y: 6mg. 1y: 8mg. 2y: 10mg. >=3y: 12mg. Max 15mg. Leucovorin rescue NOT required for standard IT dose. Ensure preservative-free formulation.");
+addP("vincristine_p","Vincristine IV","onco","bsa",1.5,"mg/m2","weekly","IV",2,0,216,null,null,{severe:0.75},
+  "MAX 2mg REGARDLESS OF BSA. FATAL IF INTRATHECAL — label clearly. Peripheral neuropathy monitoring. Age <1y or weight <10kg: 0.05mg/kg/dose (avoid BSA dosing).");
+addP("doxorubicin_p","Doxorubicin IV","onco","bsa",25,"mg/m2","3-4 weekly","IV",null,0,216,null,null,null,
+  "Cumulative lifetime dose limit 300mg/m2 in children (lower than adults — cardioprotection critical). Baseline ECHO mandatory. Dexrazoxane cardioprotection in high cumulative doses.");
+addP("cyclophosphamide_p","Cyclophosphamide IV","onco","bsa",500,"mg/m2","3-4 weekly","IV",null,0,216,null,
+  "Reduce dose if eGFR <30",null,
+  "Mesna mandatory (same dose as cyclophosphamide). Haemorrhagic cystitis risk. FBC nadir d8-14. Encourage high fluid intake.");
+
+// ── GI / FLUIDS ──────────────────────────────────────────────────────────────
+addP("ondansetron_p","Ondansetron IV/oral","gi","wt",0.15,"mg/kg","8h","IV/PO",8,1,216,
+  "Neonate: avoid — limited safety data.",null,{severe:0.5},
+  "Max 8mg/dose. QTc monitoring. IV: give over 15 min. Postoperative nausea: single dose 0.1mg/kg (max 4mg <40kg, max 8mg >40kg).");
+addP("omeprazole_p","Omeprazole oral/IV","gi","wt",0.7,"mg/kg","24h","PO/IV",20,1,216,null,null,{severe:0.5},
+  "Max 20mg/dose. PO preferred. IV: 0.5-1mg/kg/day. GORD: 0.7-3.5mg/kg/day.");
+addP("ors","ORS (oral rehydration salts)","gi","wt",50,"ml/kg","4h","PO",2000,0,216,
+  "Mild-moderate dehydration: 50-100ml/kg over 4h. Maintenance: 10ml/kg after each loose stool.",null,null,
+  "WHO ORS (low osmolarity). Nasogastric route if oral refused. IV fluids only if severe dehydration or shock — Hartmann's or 0.9% NaCl.");
+addP("zinc_diarrhoea","Zinc supplementation (diarrhoea)","gi","fixed",10,"mg <6months / 20mg >6months","24h","PO",20,0,60,null,null,null,
+  "WHO/UNICEF: 10mg/day for infants <6 months, 20mg/day for >6 months. 10-14 day course. Reduces duration and severity of acute diarrhoea.");
+
+// ── WEIGHT ESTIMATION FUNCTIONS ──────────────────────────────────────────────
+function ageInMonths() {
+  var v = parseFloat(document.getElementById('age-val').value)||0;
+  var u = document.getElementById('age-unit').value;
+  if(u==='days') return v/30.44;
+  if(u==='weeks') return v/4.33;
+  if(u==='years') return v*12;
+  return v;
+}
+
+function ageInYears() { return ageInMonths()/12; }
+
+function ageGroup(m) {
+  if(m<1) return {label:'Neonate',code:'neonate',color:'rhero-danger'};
+  if(m<3) return {label:'Young infant',code:'young_infant',color:'rhero-danger'};
+  if(m<12) return {label:'Infant',code:'infant',color:'rhero-high'};
+  if(m<24) return {label:'Toddler (1-2y)',code:'toddler',color:'rhero-mod'};
+  if(m<60) return {label:'Young child (2-5y)',code:'young_child',color:'rhero-mod'};
+  if(m<144) return {label:'Child (5-12y)',code:'child',color:'rhero-mod'};
+  return {label:'Adolescent (12-18y)',code:'adolescent',color:'rhero-low'};
+}
+
+function aplsWeight(m) {
+  // APLS 2011 formula
+  var y = m/12;
+  if(m<3) return 0.5; // rough estimate for young infants
+  if(m<12) return (m/2) + 4; // infant
+  if(y>=1 && y<5) return 2*y + 8;
+  if(y>=5 && y<=12) return 3*y + 7;
+  return null; // >12y not reliable
+}
+
+function bsa(wt, ht) {
+  if(!wt||!ht) return null;
+  return Math.sqrt((wt*ht)/3600);
+}
+
+function onAgeChange() {
+  var m = ageInMonths();
+  if(isNaN(m)||m<=0) return;
+  var ag = ageGroup(m);
+  var info = document.getElementById('age-band-info');
+  var est = document.getElementById('wt-est');
+  info.style.display = 'block';
+  info.textContent = 'Age group: '+ag.label+' | '+getAgeBandNote(ag.code);
+  var apls = aplsWeight(m);
+  if(apls) {
+    est.style.display = 'block';
+    document.getElementById('apls-wt').textContent = apls.toFixed(1);
+  }
+  var ht = parseFloat(document.getElementById('ht').value);
+  var mercy = ht ? ((ht*0.175)-7.7).toFixed(1) : '—';
+  document.getElementById('mercy-wt').textContent = mercy;
+}
+
+function onWtChange() { onAgeChange(); }
+
+function getAgeBandNote(code) {
+  var notes = {
+    neonate:'Neonates require specialist dosing. Use neonatal doses only. Immature renal and hepatic function.',
+    young_infant:'Use neonatal or infant doses. Rapid maturation of drug metabolism in first 3 months.',
+    infant:'Immature renal function until ~12 months. Weight-based dosing. Check neonatal note if <3 months.',
+    toddler:'Rapid growth phase. Re-weigh frequently. Higher mg/kg doses than adults for many drugs.',
+    young_child:'Standard paediatric weight-based dosing. Hepatic metabolism near adult rates by age 2-3.',
+    child:'Standard paediatric dosing. Some drugs approaching adult mg/kg dose.',
+    adolescent:'Near-adult dosing for most drugs. Check if adult max dose applicable.'
+  };
+  return notes[code]||'';
+}
+
+function pickS(g,v,el){S[g]=v;el.parentElement.querySelectorAll('.sbtn').forEach(function(b){b.classList.remove('on');});el.classList.add('on');}
+
+// ── UI BUILD ─────────────────────────────────────────────────────────────────
+function buildUI(){
+  var cr=document.getElementById('cats');
+  Object.keys(PCATS).forEach(function(k){
+    var btn=document.createElement('button');
+    btn.className='cpill'+(k==='all'?' on':'');
+    btn.textContent=PCATS[k];
+    btn.onclick=function(){S.cat=k;document.querySelectorAll('.cpill').forEach(function(x){x.classList.remove('on');});btn.classList.add('on');buildDrugs();};
+    cr.appendChild(btn);
+  });
+  buildDrugs();
+}
+
+function buildDrugs(){
+  var q=(S.query||'').toLowerCase().trim();
+  var g=document.getElementById('dgrid');
+  g.innerHTML='';
+  var visible=Object.keys(PDRUGS).filter(function(k){
+    var d=PDRUGS[k];
+    if(S.cat!=='all'&&d.cat!==S.cat) return false;
+    if(q){var s=(d.name+' '+d.cat+' '+(PCATS[d.cat]||'')).toLowerCase();return s.indexOf(q)>=0;}
+    return true;
+  });
+  document.getElementById('dcount').textContent=visible.length+' drugs';
+  if(!visible.length){g.innerHTML='<div class="no-results">No drugs found.</div>';return;}
+  visible.forEach(function(k){
+    var d=PDRUGS[k];
+    var t=document.createElement('button');
+    t.className='dtile'+(S.drug===k?' on':'');
+    t.innerHTML='<span class="dname">'+d.name+'</span><span class="dcat">'+(PCATS[d.cat]||d.cat)+'</span>';
+    t.onclick=function(){S.drug=k;buildDrugs();};
+    g.appendChild(t);
+  });
+}
+
+function onSearch(v){S.query=v.toLowerCase().trim();buildDrugs();}
+
+// ── CALCULATE ─────────────────────────────────────────────────────────────────
+function calculate(){
+  if(!S.drug){alert('Please select a drug.');return;}
+  var wt=parseFloat(document.getElementById('wt').value);
+  var ht=parseFloat(document.getElementById('ht').value)||null;
+  var ageM=ageInMonths();
+  var renal=document.getElementById('renal').value;
+  var hepatic=document.getElementById('hepatic').value;
+  var nutrition=document.getElementById('nutrition').value;
+
+  if(!wt){
+    var apls=aplsWeight(ageM);
+    if(apls){wt=apls;alert('No weight entered — using APLS estimated weight of '+wt.toFixed(1)+'kg. Verify actual weight.');}
+    else{alert('Please enter patient weight.');return;}
+  }
+  if(wt<0.3||wt>100){alert('Weight must be 0.3–100 kg for paediatric dosing.');return;}
+  if(!ageM||ageM<0){alert('Please enter patient age.');return;}
+
+  var drug=PDRUGS[S.drug];
+  var ag=ageGroup(ageM);
+  var BSA=bsa(wt,ht);
+
+  // Check age eligibility
+  if(ageM<drug.ageMin){
+    alert('WARNING: '+drug.name+' is not licensed for use under '+drug.ageMin+' months. Specialist advice required before use in this age group.');
+  }
+
+  // Calculate dose
+  var dose=0;
+  var doseDisplay='';
+  var unitDisplay=drug.unit;
+
+  if(drug.method==='wt'&&drug.dose){
+    dose=drug.dose*wt;
+  } else if(drug.method==='bsa'&&drug.dose&&BSA){
+    dose=drug.dose*BSA;
+  } else if(drug.method==='fixed'||!drug.dose){
+    // Weight-band or fixed — show guidance
+    dose=null;
+  }
+
+  // Apply max dose cap
+  if(dose&&drug.maxDose&&dose>drug.maxDose){
+    dose=drug.maxDose;
+  }
+
+  // Severity adjustment
+  var sevR=1;
+  if(S.severity==='severe'&&drug.method==='wt') sevR=1.5;
+  if(S.severity==='critical'&&drug.method==='wt') sevR=2.0;
+  // Most paediatric antibiotics already have severe dose in notes — only apply for analgesics
+  if(drug.cat==='analgesic'&&S.severity==='severe') sevR=1.0; // do not auto-increase opioids
+
+  // SAM adjustment
+  var samNote=null;
+  if(nutrition==='sam'&&drug.samAdj){
+    dose*=drug.samAdj.r;
+    samNote={t:'warning',m:drug.samAdj.m||'SAM: drug dose adjusted. Monitor closely.'};
+  }
+
+  // Renal adjustment
+  var renNote=null;
+  if(drug.renalAdj&&renal!=='normal'){
+    var renText=typeof drug.renalAdj==='string'?drug.renalAdj:drug.renalAdj;
+    renNote={t:'danger',m:'Renal impairment: '+renText+'. Specialist pharmacist advice required.'};
+  }
+  if(renal==='neonate_preterm'&&drug.neonatalNote){
+    renNote={t:'danger',m:'Preterm neonate: '+drug.neonatalNote};
+  }
+
+  // Hepatic adjustment
+  var hepNote=null;
+  if(drug.hepaticAdj&&hepatic!=='normal'){
+    if(typeof drug.hepaticAdj==='object'){
+      var hr=drug.hepaticAdj[hepatic]||drug.hepaticAdj.severe||1;
+      if(dose) dose*=hr;
+      hepNote={t:'warning',m:'Hepatic impairment: dose adjusted by factor '+hr+'.'};
+    } else {
+      hepNote={t:'warning',m:'Hepatic impairment: '+drug.hepaticAdj};
+    }
+  }
+
+  // Build flags
+  var flags=[];
+  if(ag.code==='neonate'||ag.code==='young_infant'){
+    flags.push({t:'danger',m:'NEONATE/YOUNG INFANT: Neonatal doses may differ significantly from standard paediatric doses. Immature renal and hepatic function. Use neonatal-specific guidance.'});
+    if(drug.neonatalNote) flags.push({t:'warning',m:'Neonatal dosing note: '+drug.neonatalNote});
+  }
+  if(renNote) flags.push(renNote);
+  if(hepNote) flags.push(hepNote);
+  if(samNote) flags.push(samNote);
+  if(nutrition==='sam') flags.push({t:'warning',m:'Severe acute malnutrition: altered drug distribution and metabolism. Reduced protein binding. Increased toxicity risk. Monitor closely and use conservative doses.'});
+  if(drug.notes) flags.push({t:'info',m:drug.notes});
+  if(drug.monitoring) flags.push({t:'info',m:'Monitoring: '+drug.monitoring});
+  flags.push({t:'danger',m:'PAEDIATRIC DOSING: All doses must be verified by a paediatrician or paediatric pharmacist before administration. Never extrapolate from adult doses.'});
+
+  // Render
+  if(dose){
+    doseDisplay=dose.toFixed(1);
+    unitDisplay='mg'+' ('+drug.freq+', '+drug.route+')';
+  } else {
+    doseDisplay='See note';
+    unitDisplay='Weight-band dosing — see monitoring guidance below';
+  }
+
+  document.getElementById('r-hero').className='rhero '+ag.color;
+  document.getElementById('r-dose').textContent=dose?dose.toFixed(1)+' mg':'See note';
+  document.getElementById('r-unit').textContent=unitDisplay;
+  document.getElementById('r-drug').textContent=drug.name;
+  document.getElementById('r-range').textContent=drug.freq+' | '+drug.route;
+  document.getElementById('r-wt').textContent=wt.toFixed(1)+' kg';
+  document.getElementById('r-bsa').textContent=BSA?BSA.toFixed(2)+' m²':'—';
+  document.getElementById('r-age-grp').textContent=ag.label;
+  document.getElementById('r-max').textContent=drug.maxDose?drug.maxDose+' mg':'—';
+
+  var imap={info:'i',warning:'!',danger:'X',green:'ok'};
+  document.getElementById('r-flags').innerHTML=flags.map(function(f){
+    return'<div class="flag flag-'+f.t+'"><span class="fi">'+imap[f.t]+'</span><span>'+f.m+'</span></div>';
+  }).join('');
+
+  var el=document.getElementById('result');
+  el.classList.remove('show');void el.offsetWidth;el.classList.add('show');
+  setTimeout(function(){el.scrollIntoView({behavior:'smooth',block:'nearest'});},60);
+}
+
+buildUI();
+onAgeChange();
+</script>
+</body>
+</html>
