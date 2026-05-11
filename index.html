@@ -914,10 +914,13 @@ function calculate(){
   var regR=drug.fdc?1:(regMap[S.reg]||1);
   dose*=regR;
 
-  var popR=1,popFlag=null;
+  var popR=1,popFlags=[];
+  if(CTX==="ssa"&&pop!=="subSaharanAfrica"&&pop!=="general"){var ssaAdj=drug.popAdj&&drug.popAdj["subSaharanAfrica"];if(ssaAdj&&ssaAdj.r!==1.0){popR*=ssaAdj.r;popFlags.push({t:"info",m:"[SSA context] "+ssaAdj.m});}}
   var padj=drug.popAdj&&drug.popAdj[pop];
-  if(padj){popR=padj.r;popFlag={t:padj.t,m:padj.m};}
+  if(padj){popR*=padj.r;popFlags.push({t:padj.t,m:padj.m});}
+  var popFlag=popFlags.length?popFlags[0]:null;
   dose*=popR;
+  var allPopFlags=popFlags;
 
   var renR=1,renFlag=null;
   if(drug.renal&&!drug.fdc){
@@ -939,7 +942,7 @@ function calculate(){
 
   var bnd=band(dose,drug.bands);
   var flags=[];
-  if(popFlag)flags.push(popFlag);
+  allPopFlags.forEach(function(f){flags.push(f);});
   if(renFlag)flags.push(renFlag);
   if(hepFlag)flags.push(hepFlag);
   if(drug.thresh){var dpk=dose/DW;if(dpk<drug.thresh)flags.push({t:"danger",m:"RESISTANCE RISK: "+dpk.toFixed(1)+" mg/kg below threshold of "+drug.thresh+" mg/kg."});else if(dpk<drug.thresh*1.15)flags.push({t:"warning",m:"Low-normal exposure: "+dpk.toFixed(1)+" mg/kg near resistance threshold."});}
@@ -960,7 +963,7 @@ function calculate(){
 
   var adjs=[];
   if(!drug.fdc&&regR!==1)adjs.push({c:regR>1?"ai":"ar",t:"Regimen x"+regR});
-  if(popR!==1)adjs.push({c:popR>1?"ai":"ar",t:"Population x"+popR});
+  if(popR!==1)adjs.push({c:popR>1?"ai":"ar",t:"Population x"+popR.toFixed(2)});
   if(!drug.fdc&&renR!==1)adjs.push({c:"ar",t:"Renal x"+renR});
   if(!drug.fdc&&hepR!==1)adjs.push({c:"ar",t:"Hepatic x"+hepR});
   if(!adjs.length)adjs.push({c:"an",t:"No adjustments applied"});
