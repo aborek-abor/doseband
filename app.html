@@ -923,6 +923,7 @@ function calculate(){
     if(ssaAdj&&ssaAdj.r!==1.0){popR*=ssaAdj.r;popFlags.push({t:'info',m:'[SSA context auto-applied] '+ssaAdj.m});}
   }
   // Apply the user-selected population modifier on top
+  if(CTX==='ssa'&&pop!=='subSaharanAfrica'&&pop!=='general'){var ssaAdj=drug.popAdj&&drug.popAdj['subSaharanAfrica'];if(ssaAdj&&ssaAdj.r!==1.0){popR*=ssaAdj.r;popFlags.push({t:'info',m:'[SSA context] '+ssaAdj.m});}}
   var padj=drug.popAdj&&drug.popAdj[pop];
   if(padj){popR*=padj.r;popFlags.push({t:padj.t,m:padj.m});}
   var popFlag=popFlags.length?popFlags[0]:null;
